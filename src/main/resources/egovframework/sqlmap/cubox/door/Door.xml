@@ -12,7 +12,9 @@
 		       , TD.area_id
 		       , TD.floor_id
 		       , TD.alarm_typ
-		       , TDD.doorgrp_id
+		      -- , TDD.doorgrp_id
+		       , TSD.id AS sch_doorgrp_id
+		       , TSD.nm AS sch_doorgrp_nm
 		       , TDS.id as sch_id
 		       , TDS.door_sch_nm as sch_nm
 		       , (SELECT GROUP_CONCAT( TT.id  SEPARATOR '/') FROM T_TERMINAL TT WHERE TT.door_id= TD.id ) AS terminal_id
@@ -21,9 +23,8 @@
 		       , (SELECT GROUP_CONCAT( TT.auth_id  SEPARATOR '/')  FROM T_AUTH_DOOR TT WHERE TT.door_id= TD.id ) AS auth_ids
 			   , (SELECT GROUP_CONCAT( (SELECT TA.auth_nm FROM T_AUTH TA WHERE TA.id = TT.auth_id)  SEPARATOR '/')  FROM T_AUTH_DOOR TT WHERE TT.door_id =TD.id ) AS auth_nms
 		    FROM T_DOOR TD
- LEFT OUTER JOIN T_DOORGRP_DOOR TDD ON TD.id = TDD.door_id
- LEFT OUTER JOIN T_SCH_DOORGRP TDG      ON TDD.doorgrp_id = TDG.id
- LEFT OUTER JOIN T_DOOR_SCH TDS     ON TDD.doorgrp_id = TDS.id
+ LEFT OUTER JOIN T_SCH_DOORGRP TSD ON TSD.id = TD.sch_doorgrp_id
+ LEFT OUTER JOIN T_DOOR_SCH TDS    ON TSD.door_sch_id = TDS.id
 		   WHERE TD.id = #{id}
 		GROUP BY TD.id
 	</select>
@@ -38,48 +39,46 @@
 			 , floor_id
 			 , door_nm
 			 , alarm_typ
-			 -- , created_at
-			 -- , updated_at
-		FROM T_DOOR TD
-		WHERE 1=1
+		  FROM T_DOOR TD
+	     WHERE 1=1
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(building_id)'>
-		  AND TD.building_id = #{building_id}
+		   AND TD.building_id = #{building_id}
 		</if>
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(area_id)'>
-		  AND TD.area_id = #{area_id}
+	       AND TD.area_id = #{area_id}
 		</if>
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(floor_id)'>
-		  AND TD.floor_id = #{floor_id}
+		   AND TD.floor_id = #{floor_id}
 		</if>
-	 ORDER BY TD.door_cd DESC
+	  ORDER BY TD.door_cd DESC
 	</select>
 
 
 	<insert id="insertDoor" parameterType="HashMap" useGeneratedKeys="true" keyProperty="doorId" keyColumn="id">
-		insert
-		into
-			T_DOOR ( building_cd
-			       , floor_cd
-			       , door_cd
-			       , building_id
-				   , area_id
-				   , floor_id
-				   , door_nm
-				   , alarm_typ
-				   , created_at
-				   , updated_at
-		)
-		values  ( #{buildingCd}
-				, #{floorCd}
-				, #{doorCd}
-				, #{buildingId}
-				, #{areaId}
-				, #{floorId}
-				, #{doorNm}
-				, #{alarmGroupId}
-				, NOW()
-				, NOW()
-				)
+		INSERT
+		  INTO
+	    T_DOOR ( building_cd
+	           , floor_cd
+	           , door_cd
+	           , building_id
+	    	   , area_id
+	    	   , floor_id
+	    	   , door_nm
+	    	   , alarm_typ
+	    	   , created_at
+	    	   , updated_at
+		       )
+		VALUES ( #{buildingCd}
+			   , #{floorCd}
+			   , #{doorCd}
+			   , #{buildingId}
+			   , #{areaId}
+			   , #{floorId}
+			   , #{doorNm}
+			   , #{alarmGroupId}
+			   , NOW(6)
+			   , NOW(6)
+			   )
 
 	</insert>
 
@@ -93,9 +92,37 @@
 		     , floor_id = #{floorId}
 		     , door_nm = #{doorNm}
 		     , alarm_typ = #{alarmGroupId}
-		     , updated_at = NOW()
+			 , sch_doorgrp_id = #{schDoorgrpId}
+		     , updated_at = NOW(6)
 		 WHERE id = #{id}
 	</update>
+
+
+	<update id="updateDoorBySchedule" parameterType="HashMap">
+		UPDATE T_DOOR
+		   SET sch_doorgrp_id = #{schDoorgrpId}
+		     , updated_at = NOW(6)
+		 WHERE id = #{id}
+	</update>
+
+
+	<update id="updateDoorByScheduleInit" parameterType="HashMap">
+		UPDATE T_DOOR
+		   SET sch_doorgrp_id = NULL
+		     , updated_at = NOW(6)
+		 WHERE sch_doorgrp_id = #{schDoorgrpId}
+	</update>
+
+	<!--<update id="updateDoorByScheduleInit" parameterType="HashMap">
+		UPDATE T_DOOR
+		  SET sch_doorgrp_id = NULL
+		    , updated_at = NOW()
+		WHERE sch_doorgrp_id = #{schDoorgrpId}
+          AND id IN
+		  <foreach item="item" index="doorId" collection="doorIdArr" open="(" separator="," close=")">
+			#{doorId}
+		  </foreach>
+	</update>-->
 
 
 	<delete id="deleteDoor" parameterType="HashMap" >
@@ -111,8 +138,6 @@
 		     , TB.building_cd
 		     , TB.workplace_id
 		     , TB.building_nm
-		     -- , TB.created_at
-		     -- , TB.updated_at
 		  FROM T_BUILDING TB
 		 WHERE 1=1
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(id)'>
@@ -132,8 +157,6 @@
 		     , area_id
 		     , floor_cd
 		     , floor_nm
-		     -- , created_at
-		     -- , updated_at
 		  FROM T_FLOOR TF
 		 WHERE 1=1
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(id)'>
@@ -153,8 +176,6 @@
 		SELECT id
 		     , building_id
 		     , area_nm
---		     , created_at
---		     , updated_at
 		  FROM T_AREA TA
 		 WHERE 1=1
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(id)'>
@@ -167,10 +188,8 @@
 
 
 	<select id="selectWorkplaceList" parameterType="HashMap" resultType="HashMap">
-		SELECT id
-             , workplace_nm
-		     -- , created_at
-		     -- , updated_at
+		SELECT TW.id
+             , TW.workplace_nm
 		  FROM T_WORKPLACE TW
 		 WHERE 1=1
 		<if test='@aero.cubox.util.CommonUtils@notEmpty(id)'>
@@ -180,21 +199,19 @@
 
 
 	<select id="selectTerminalDetail" parameterType="HashMap" resultType="HashMap">
-		SELECT id
-			 , terminal_cd
-			 , terminal_typ
-			 , door_id
-			 , mgmt_num
-			 , ip_addr
-			 , complex_auth_typ
-			 , face_auth_typ
-			 , op_mode_typ
-			 , online_yn
-			 -- , created_at
-			 -- , updated_at
+		SELECT TT.id
+			 , TT.terminal_cd
+			 , TT.terminal_typ
+			 , TT.door_id
+			 , TT.mgmt_num
+			 , TT.ip_addr
+			 , TT.complex_auth_typ
+			 , TT.face_auth_typ
+			 , TT.op_mode_typ
+			 , TT.online_yn
 		  FROM T_TERMINAL TT
 		 WHERE 1 = 1
-           AND use_yn = 'Y'
+           AND TT.use_yn = 'Y'
 	</select>
 
 
@@ -238,7 +255,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 	<update id="updateDoorIdForTerminal" parameterType="HashMap">
 		UPDATE T_TERMINAL
 		   SET door_id = #{doorId}
-		     , updated_at= NOW()
+		     , updated_at= NOW(6)
 		 WHERE id = #{id}
 	</update>
 
@@ -252,7 +269,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		VALUES
 		     ( #{authId}
 			 , #{doorId}
-			 , NOW()
+			 , NOW(6)
 			  )
 	</insert>
 
@@ -277,8 +294,8 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 			 ( #{buildingCd}
 			 , #{workplaceId}
 			 , #{buildingNm}
-			 , NOW()
-			 , NOW()
+			 , NOW(6)
+			 , NOW(6)
 			 )
 	</insert>
 
@@ -287,7 +304,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		   SET building_cd = #{buildingCd}
 		     , workplace_id = #{workplaceId}
 		     , building_nm = #{buildingNm}
-		     , updated_at = NOW()
+		     , updated_at = NOW(6)
 		 WHERE id = #{id}
 	</update>
 
@@ -301,8 +318,8 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		VALUES
 			 ( #{buildingId}
 			 , #{areaNm}
-			 , NOW()
-			 , NOW()
+			 , NOW(6)
+			 , NOW(6)
 			 )
 	</insert>
 
@@ -310,7 +327,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		UPDATE T_AREA
 		   SET building_id = #{buildingId}
 		     , area_nm = #{areaNm}
-		     , updated_at= NOW()
+		     , updated_at= NOW(6)
 		 WHERE id = #{id}
 	</update>
 
@@ -330,8 +347,8 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 			 , #{buildingId}
 			 , #{areaId}
 			 , #{floorNm}
-			 , NOW()
-			 , NOW()
+			 , NOW(6)
+			 , NOW(6)
 			 )
 	</insert>
 
@@ -342,7 +359,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		     , building_id = #{buildingId}
 		     , area_id = #{areaId}
 		     , floor_nm= #{floorNm}
-			 , updated_at = NOW()
+			 , updated_at = NOW(6)
 		 WHERE id = #{id}
 	</update>
 
@@ -352,11 +369,13 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		     ( auth_id
 		     , building_id
 		     , created_at
+		     , updated_at
 		     )
 		VALUES
 			 ( #{authId}
 			 , #{buildingId}
-			 , NOW()
+			 , NOW(6)
+			 , NOW(6)
 			 )
 	</insert>
 

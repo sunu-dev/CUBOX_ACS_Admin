@@ -144,15 +144,15 @@
 <%--                        </div>--%>
 <%--                    </td>--%>
 <%--                </tr>--%>
-                <tr>
+                <tr style="display:none;">
                     <th>출입문</th>
                     <td style="display: flex;">
-                    <textarea id="schDoorNms" name="schDoorNms" rows="10" cols="33" class="w_600px color_disabled" style="border-color: #ccc; border-radius: 2px;
-                              font-size: 14px; line-height: 1.5; padding: 2px 10px;" disabled>
-                    </textarea>
-                        <div class="ml_10" style="position: relative;">
-                            <button id="btnEdit" type="button" class="btn_small color_basic" style="position: absolute; bottom: 0; width: 60px; display: none;" onclick="openPopup('doorEditPopup')">선택</button>
-                        </div>
+                        <textarea id="schDoorNms" name="schDoorNms" rows="10" cols="33" class="w_600px color_disabled" style="border-color: #ccc; border-radius: 2px;
+                                  font-size: 14px; line-height: 1.5; padding: 2px 10px;" disabled>
+                        </textarea>
+                            <div class="ml_10" style="position: relative;">
+                                <button id="btnEdit" type="button" class="btn_small color_basic" style="width:60px; position:absolute; bottom:0;" onclick="openPopup('doorEditPopup')">선택</button>
+                            </div>
                     </td>
                 </tr>
             </tbody>

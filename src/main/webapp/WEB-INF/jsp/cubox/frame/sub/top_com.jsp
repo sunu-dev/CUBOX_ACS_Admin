@@ -69,7 +69,7 @@
 	<c:if test="${sessionScope.loginVO.role_id ne '00008'}"><input type="checkbox" id="menu_state" checked></c:if>
 	<nav>
 		<c:if test="${sessionScope.loginVO.role_id ne '00008'}"><label for="menu_state"><i class="fa"></i></label></c:if>
-		<div class="left_title">
+		<div class="left_title" style="background-color: #FFFFFF">
 			<a href="/main.do">
 				<img src="/img/logo/logo_<spring:eval expression="@property['Globals.site.main.id']" />_w.png" alt="logo" />
 			</a>

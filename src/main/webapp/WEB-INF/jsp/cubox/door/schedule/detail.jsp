@@ -105,6 +105,7 @@
                 let end = {hour: "", min: "", sec: ""};
 
                 if (ifEnd) {
+                    console.log("ifEnd");
                     startId = this.id.replace("end", "start");
                     endId = this.id;
 
@@ -125,7 +126,9 @@
                                 tmpStart = arr.eq(i).val().split(":");
                                 // 초 단위 중복 validation
                                 if (end.hour == Number(tmpStart[0]) && end.min == Number(tmpStart[1])) {
+                                    console.log("1. hour == min");
                                     if (end.sec < Number(tmpStart[2])) {
+                                        console.log("1. 그냥 색칠");
                                         colorSchedule(start, end, day, schNum);
                                         return;
                                     } else if (end.sec >= Number(tmpStart[2])) {
@@ -139,6 +142,7 @@
                     }
 
                 } else {
+                    console.log("ifStart");
                     startId = this.id;
                     endId = this.id.replace("start", "end");
 
@@ -159,7 +163,9 @@
                                 tmpEnd = arr.eq(i).val().split(":");
                                 // 초 단위 중복 validation
                                 if (start.hour == Number(tmpEnd[0]) && start.min == Number(tmpEnd[1])) {
+                                    console.log("2. hour == min");
                                     if (start.sec > Number(tmpEnd[2])) {
+                                        console.log("2. 그냥 색칠");
                                         colorSchedule(start, end, day, schNum);
                                         return;
                                     } else if (start.sec <= Number(tmpEnd[2])) {
@@ -210,7 +216,7 @@
     function setDoorGroupInfo() {
         let doorGrList = [];
         let doorGrHtml = [];
-        <c:forEach items="${doorGroupList}" var="dList">
+        <c:forEach items="${schDoorGroupList}" var="dList">
         doorGrList.push(${dList.id});
         doorGrHtml.push('${dList.nm}');
         </c:forEach>
@@ -252,10 +258,13 @@
 
     // 이미 색칠되어 있는지 여부확인
     function ifValid(mode, startId, endId, start, end, day, schNum) {
+        console.log("mode == " + mode);
+
         let result = true; // 다른 스케쥴과 겹치는지 여부
         if (mode === "S") result = false;
 
-        while (result) {
+        // while (result) {
+        if (result) {
             if (start.hour != end.hour) { // 시작시간과 종료시간이 다른 hour 칸에 있을 때
                 for (let i = Number(start.hour); i <= Number(end.hour); i++) {
 
@@ -265,6 +274,7 @@
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
                                 console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
                                 result = false;
+                                // result = false;
                                 break;
                             }
                         }
@@ -274,6 +284,7 @@
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
                                 console.log("2. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
+                                // result = false;
                                 break;
                             }
                         }
@@ -283,6 +294,7 @@
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
                                 console.log("3. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
+                                // result = false;
                                 break;
                             }
                         }
@@ -296,6 +308,7 @@
                         if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
                             console.log("4. 색칠되어있고 같은 스케쥴 아님");
                             result = false;
+                            // result = false;
                             break;
                         }
                     }
@@ -327,8 +340,8 @@
                 if (thisId.split("_")[1] != schNum) {
                     let isStart = sameDaySch.eq(i).hasClass("start");
                     if ((isStart && $("#" + thisId.replace("start", "end")).val() != "") || (!isStart && $("#" + thisId.replace("end", "start")).val())) {
-                        // console.log("=다른 스케쥴=");
-                        // console.log($("#" + thisId).val());
+                        console.log("=다른 스케쥴=");
+                        console.log($("#" + thisId).val());
                         schTime.push($("#" + thisId).val());
                     }
                 }
@@ -939,7 +952,6 @@
             <input type="hidden" id="scheduleId" value="${doorScheduleDetail.id}">
             <input type="hidden" id="daySchCnt" value="0">
             <input type="hidden" id="doorIds" value="">
-            <input type="hidden" id="schDoorIds" value="">
             <tr>
                 <th>출입문 스케쥴 명</th>
                 <td>
@@ -967,7 +979,7 @@
 <%--                    </div>--%>
 <%--                </td>--%>
 <%--            </tr>--%>
-            <tr>
+            <tr style="display:none;">
                 <th>출입문</th>
                 <td style="display: flex;">
                     <textarea id="schDoorNms" name="schDoorNms" rows="10" cols="33" class="w_600px color_disabled" style="border-color: #ccc; border-radius: 2px;
@@ -978,18 +990,6 @@ ${dName}</c:forEach></textarea>
                     </div>
                 </td>
             </tr>
-<%--            <tr>--%>
-<%--                <th>출입문 권한그룹</th>--%>
-<%--                <td style="display: flex;">--%>
-<%--                    <textarea id="schAuthGrp" name="schAuthGrp" rows="10" cols="33" class="w_600px color_disabled" style="border-color: #ccc; border-radius: 2px;--%>
-<%--                              font-size: 14px; line-height: 1.5; padding: 2px 10px;" disabled>--%>
-<%--                    </textarea>--%>
-<%--                    <div class="ml_10" style="position: relative;">--%>
-<%--                        <button id="btnEditAuth" type="button" class="btn_small color_basic" style="position: absolute; bottom: 0; width: 60px; display: none;" onclick="openPopup('doorEditPopup')">선택</button>--%>
-<%--                    </div>--%>
-<%--                </td>--%>
-<%--                </td>--%>
-<%--            </tr>--%>
             </tbody>
         </table>
     </div>

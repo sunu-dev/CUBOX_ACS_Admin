@@ -3,7 +3,7 @@
 
 <mapper namespace="door.group">
 
-    <select id="selectDoorGroupList"  parameterType="HashMap" resultType="HashMap">
+    <select id="selectSchDoorGroupList"  parameterType="HashMap" resultType="HashMap">
         SELECT A.id
              , A.nm
              , A.door_sch_id
@@ -12,25 +12,24 @@
              , DATE_FORMAT(A.updated_at, '%Y-%m-%d') as updated_at
              , A.door_cnt
           FROM
-             ( SELECT TD.id
-                    , TD.nm
-                    , TD.door_sch_id
+             ( SELECT TSD.id
+                    , TSD.nm
+                    , TSD.door_sch_id
                     , TDC.door_sch_nm
-                    , (select COUNT(TDD.door_id) FROM T_DOORGRP_DOOR TDD where TDD.doorgrp_id = TD.id )AS door_cnt
-                    , TD.created_at
-                    , TD.updated_at
-        --         FROM T_DOORGRP TD
-                    FROM T_SCH_DOORGRP TD
-            LEFT JOIN T_DOOR_SCH TDC on TD.door_sch_id = TDC.id
+                    , (SELECT COUNT(TD.id) FROM T_DOOR TD WHERE TD.sch_doorgrp_id = TSD.id ) AS door_cnt
+                    , TSD.created_at
+                    , TSD.updated_at
+                 FROM T_SCH_DOORGRP TSD
+            LEFT JOIN T_DOOR_SCH TDC on TSD.door_sch_id = TDC.id
                 WHERE 1=1
               <if test='@aero.cubox.util.CommonUtils@notEmpty(id)'>
-                  AND TD.id = #{id}
+                  AND TSD.id = #{id}
               </if>
               <if test='@aero.cubox.util.CommonUtils@notEmpty(keyword)'>
-                  AND TD.nm like CONCAT('%',#{keyword},'%')
+                  AND TSD.nm like CONCAT('%',#{keyword},'%')
               </if>
               <if test='@aero.cubox.util.CommonUtils@notEmpty(doorSchId)'>
-                  AND TD.door_sch_id = #{doorSchId}
+                  AND TSD.door_sch_id = #{doorSchId}
               </if>
              ) A
       ORDER BY A.created_at DESC
@@ -43,7 +42,6 @@
         SELECT COUNT(*)
           FROM (
                 SELECT TD.id
-                 -- FROM T_DOORGRP TD
                   FROM T_SCH_DOORGRP TD
              LEFT JOIN T_DOOR_SCH TDC on TD.door_sch_id = TDC.id
                  WHERE 1=1
@@ -58,43 +56,44 @@
 
 
     <select id="selectDoorGroupDetail"   parameterType="int" resultType="HashMap">
-        SELECT TD.id
-             , TD.nm
-             , TD.door_sch_id
+        SELECT TSD.id
+             , TSD.nm
+             , TSD.door_sch_id
              , TDC.door_sch_nm
-             , (SELECT GROUP_CONCAT( TDD.door_id  SEPARATOR '/')  FROM T_DOORGRP_DOOR TDD WHERE TDD.doorgrp_id= TD.id ) AS door_ids
-             , (SELECT GROUP_CONCAT( (SELECT A.door_nm FROM T_DOOR A where A.id = TDD.door_id ) SEPARATOR '/')  FROM T_DOORGRP_DOOR TDD WHERE TDD.doorgrp_id= TD.id ) AS door_nms
-             , (select COUNT(TDD.door_id) from T_DOORGRP_DOOR TDD where TDD.doorgrp_id = TD.id) AS door_cnt
-             , DATE_FORMAT(TD.created_at, '%Y-%m-%d') as created_at
-             , DATE_FORMAT(TD.updated_at, '%Y-%m-%d') as updated_at
-        -- FROM T_DOORGRP TD
-           FROM T_SCH_DOORGRP TD
-   LEFT JOIN T_DOOR_SCH TDC on TD.door_sch_id = TDC.id
-       WHERE TD.id = #{id}
+             , (SELECT GROUP_CONCAT( TD.id  SEPARATOR '/')  FROM T_DOOR TD WHERE TD.sch_doorgrp_id = TSD.id ) AS door_ids
+             , (SELECT GROUP_CONCAT( TD.door_nm  SEPARATOR '/')  FROM T_DOOR TD WHERE TD.sch_doorgrp_id = TSD.id )  AS door_nms
+             , (SELECT COUNT(TD.id) FROM T_DOOR TD WHERE TD.sch_doorgrp_id = TSD.id ) AS door_cnt
+             , DATE_FORMAT(TSD.created_at, '%Y-%m-%d') as created_at
+             , DATE_FORMAT(TSD.updated_at, '%Y-%m-%d') as updated_at
+          FROM T_SCH_DOORGRP TSD
+     LEFT JOIN T_DOOR_SCH TDC ON TSD.door_sch_id = TDC.id
+         WHERE TSD.id = #{id}
     </select>
+
 
 
 
     <insert id="insertDoorGroup" parameterType="HashMap" useGeneratedKeys="true" keyProperty="doorgrpId" keyColumn="id">
         INSERT
-        INTO T_DOORGRP
-        ( nm
-        , door_sch_id
-        , created_at
-        , updated_at
-           )
+          INTO T_SCH_DOORGRP
+             ( nm
+             , door_sch_id
+             , created_at
+             , updated_at
+                )
         VALUES
-            ( #{nm}
-            , #{doorSchId}
-            , NOW()
-            , NOW()
-            )
+             ( #{nm}
+             , #{doorSchId}
+             , NOW(6)
+             , NOW(6)
+             )
     </insert>
 
 
+
     <update id="updateDoorGroup" parameterType="HashMap">
-        UPDATE T_DOORGRP
-           SET updated_at= NOW()
+        UPDATE T_SCH_DOORGRP
+           SET updated_at= NOW(6)
         <if test="doorSchId != null and doorSchId != ''">
              , door_sch_id = #{doorSchId}
         </if>
@@ -105,19 +104,20 @@
     </update>
 
     <update id="updateDoorGroupBatchInit" parameterType="HashMap">
-        UPDATE T_DOORGRP
+        UPDATE T_SCH_DOORGRP
            SET door_sch_id = null
-             , updated_at= NOW()
+             , updated_at= NOW(6)
          WHERE id = #{id}
     </update>
 
 
     <delete id="deleteDoorGroup" parameterType="int" >
         DELETE
-          FROM T_DOORGRP
+          FROM T_SCH_DOORGRP
          WHERE id = #{id}
     </delete>
 
+<!--
     <insert id="insertDoorInDoorGroup" parameterType="HashMap">
         INSERT
           INTO T_DOORGRP_DOOR
@@ -128,28 +128,31 @@
             , #{doorgrpId}
             )
     </insert>
+-->
 
-
+<!--
     <update id="updateDoorInDoorGroup" parameterType="HashMap">
         UPDATE T_DOORGRP_DOOR
            SET doorgrp_id = #{doorgrpId}
          WHERE door_id = #{doorId}
     </update>
+-->
 
+<!--
 
     <delete id="deleteDoorInDoorGroup" parameterType="HashMap" >
         DELETE
         FROM T_DOORGRP_DOOR
         WHERE doorgrp_id = #{doorgrpId}
     </delete>
+-->
 
 
     <select id="selectDoorGroupNameVerification" parameterType="HashMap" resultType="int">
-        SELECT COUNT(TD.id) AS vCnt
-        -- FROM T_DOORGRP TD
-            FROM T_DOORGRP TD
-        WHERE 1 = 1
-          AND replace(TD.nm, ' ', '') = replace(#{doorGroupNm}, ' ', '')
+        SELECT COUNT(TSD.id) AS vCnt
+          FROM T_SCH_DOORGRP TSD
+         WHERE 1 = 1
+           AND replace(TSD.nm, ' ', '') = replace(#{doorGroupNm}, ' ', '')
     </select>
 
 

@@ -49,7 +49,7 @@
 
         // 출입문 알람그룹 명 유효성 체크
         $("#alNm").focusout(function() {
-            // TODO : 출입문스케쥴명 유효성 체크 (ajax)
+
         });
 
         // 유형 - 기본시간
@@ -100,7 +100,7 @@
 
     // 수정 취소
     function fnCancel() {
-        $(".title_tx").html("출입문 스케쥴 - 상세");
+        $(".title_tx").html("출입문 알람 그룹 - 상세");
         $("#btnEdit").css("display", "none");
         $("#btnboxDetail").css("display", "block");
         $("#btnboxEdit").css("display", "none");
@@ -111,7 +111,7 @@
 
     // 수정 버튼
     function fnEditMode() {
-        if (confirm("해당 스케쥴을 수정하시겠습니까?")) {
+        if (confirm("해당 알람그룹을 수정하시겠습니까?")) {
             $(".title_tx").html("출입문 알람 그룹 - 수정");
             $("#btnEdit").css("display", "inline-block");
             $("#btnboxDetail").css("display", "none");

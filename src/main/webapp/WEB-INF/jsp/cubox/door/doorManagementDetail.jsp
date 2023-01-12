@@ -22,8 +22,11 @@
         text-align: center;
     }
     .tb_write_02 tbody tr {
-        height: 57.5px;
-        /*height: 52px;*/
+        /*height: 57px;*/
+        height: 52px;
+    }
+    .h_65 {
+        height: 65px !important;
     }
     .detailList tr td {
         text-align: center;
@@ -89,6 +92,9 @@
         padding-right:0;
         padding-left:12px;
     }
+    .hidden {
+        display: none;
+    }
     .title_box {
         margin-top: 10px;
     }
@@ -116,11 +122,9 @@
             $("#btnExcelDownload, #btnExcelUpload").css("display", "none"); // 엑셀 다운로드, 업로드 버튼
             $(".hideSelectBtn").remove(); // 단말기코드, 권한그룹 선택 버튼
             $(".paddingForBtn").attr("colspan", "2").removeClass("paddingForBtn"); // 단말기코드, 권한그룹 길이 조정
-            let schVal = ($("#selDoorGroup option:selected").val() === "") ? "없음" : $("#selDoorGroup option:selected").text();
-            $("#selDoorGroup option:selected").text(schVal); // 스케쥴
-            let alGrpVal = ($("#doorAlarmGroup option:selected").val() === "") ? "없음" : $("#doorAlarmGroup option:selected").text();
-            $("#doorAlarmGroup option:selected").text(alGrpVal); // 알람그룹
         }
+
+
 
         // 빌딩 선택 시,
         $(".selectBuilding").on('click', function() {
@@ -329,6 +333,8 @@
     // 출입문 속성 보여주기
     function viewDoorDetail() {
         $(".doorDetailList").css("display", "table-row-group");
+        $(".notShown").removeClass("hidden");
+        $(".tb_write_02 tbody tr").removeClass("h_65"); // 읽기 모드 시 행 크기 조절'
         hideBuildingDetail();
         hideFloorDetail();
         viewButtons();
@@ -337,6 +343,7 @@
     // 출입문 속성 숨기기
     function hideDoorDetail() {
         $(".doorDetailList").css("display", "none");
+        $(".tb_write_02 tbody tr").addClass("h_65");
         hideButtons();
     }
 
@@ -471,7 +478,6 @@
             data: { doorId: doorId },
             dataType: "json",
             success: function (result) {
-                // TODO : 알람그룹 가져오기, 스케쥴id
                 console.log(result);
 
                 let path = [];
@@ -481,7 +487,8 @@
                 $("#doorCd").val(dInfo.door_cd);                                        // 출입문 코드
                 $(".doorDetailList #dBuilding").val(dInfo.building_id);                 // 빌딩
                 $(".doorDetailList #dFloor").val(dInfo.floor_id);                       // 층
-                $("#selDoorGroup").val(dInfo.doorgrp_id);                               // 스케쥴
+                $("#selSchDoorGroup").val(dInfo.sch_doorgrp_nm);                        // 스케쥴 그룹
+                $("#selSchedule").val(dInfo.sch_nm);                                    // 스케쥴
                 $("#doorAlarmGroup").val(dInfo.alarm_typ);                              // 알람그룹
                 $("#terminalId").val(dInfo.terminal_id);                                // 단말기 id
                 $("#terminalCd").val(dInfo.terminal_cd);                                // 단말기 코드
@@ -490,11 +497,21 @@
                 if (dInfo.auth_nms != undefined || dInfo.auth_nms != null) {            // 권한그룹 이름
                     $("#authGroupNm").val(dInfo.auth_nms.split("/ ").join("\r\n"));
                 }
-
                 path = [$(".doorDetailList #dBuilding option:checked").text(), $(".doorDetailList #dFloor option:checked").text(), dInfo.door_nm];
                 $("#doorPath").text(path.join(" > "));                                   // 경로
+                validValue();
             }
         });
+    }
+
+    // 알람그룹, 스케쥴 그룹, 스케쥴 값 없을 시 '없음'으로 표기
+    function validValue() {
+        let schGrpVal = ($("#selSchDoorGroup").val() === "") ? "없음" : $("#selSchDoorGroup").val();
+        $("#selSchDoorGroup").val(schGrpVal); // 스케쥴 그룹
+        let schVal = ($("#selSchedule").val() === "") ? "없음" : $("#selSchedule").val();
+        $("#selSchedule").val(schVal); // 스케쥴
+        let alGrpVal = ($("#doorAlarmGroup option:selected").val() === "") ? "없음" : $("#doorAlarmGroup option:selected").text();
+        $("#doorAlarmGroup option:selected").text(alGrpVal); // 알람그룹
     }
 
     // 출입문 관리 - 수정 취소
@@ -567,6 +584,8 @@
             } else if (val === "door") {
                 setTitle("add", "출입문");
                 viewDoorDetail();
+                $(".notShown").addClass("hidden"); // 스케쥴 그룹, 스케쥴 행 display hidden
+                $(".tb_write_02 tbody tr").addClass("h_65");
                 $("#doorNm").focus();
             }
 
@@ -791,8 +810,7 @@
     // popup open (공통)
     function openPopup(popupNm) {
         if (popupNm === "termPickPopup") {
-            fnGetTerminalListAjax() // 단말기 목록
-
+            fnGetTerminalListAjax(); // 단말기 목록
         } else if (popupNm === "authPickPopup") {
             fnGetAuthGroupListAjax(); // 출입문 권한그룹 목록
         }
@@ -873,12 +891,18 @@
                         if (terminal.doorNm === undefined || terminal.doorNm === null) {
                             terminal.doorNm = "";
                         }
+                        if (terminal.useYn === "Y") {
+                            terminal.useYn = "사용중";
+                        } else {
+                            terminal.useYn = "";
+                        }
                         let tag = "<tr class='h_35px' style='text-align:center'><td style='padding:0 14px;'>";
                         tag += "<input type='radio' value='" + terminal.id + "' name='checkOne'></td>";
                         tag += "<td>" + terminal.terminalCd + "</td>";
                         tag += "<td>" + terminal.mgmtNum + "</td>";
                         tag += "<td>" + terminal.terminalTyp + "</td>";
-                        tag += "<td>" + terminal.doorNm + "</td></tr>";
+                        tag += "<td>" + terminal.doorNm + "</td>";
+                        tag += "<td>" + terminal.useYn + "</td></tr>";
                         $("#tbTerminal").append(tag);
                     });
 
@@ -944,8 +968,9 @@
             doorNm: $("#doorNm").val(),
             buildingId: $(".doorDetailList #dBuilding").val(),
             floorId: $(".doorDetailList #dFloor").val(),
-            // scheduleId: $("#doorSchedule").val(),
-            doorGroupId: $("#selDoorGroup").val(),
+            // schDoorGroup : $("#selSchDoorGroup").val(),
+            // scheduleId : $("#selSchedule").val(),
+            // doorGroupId: $("#selDoorGroup").val(),
             alarmGroupId: $("#doorAlarmGroup").val(),
             terminalIds: $("#terminalId").val(),
             authGrIds: $("#authGroupId").val()
@@ -1460,16 +1485,34 @@
 <%--                            </select>--%>
 <%--                        </td>--%>
 <%--                    </tr>--%>
-                    <tr>
+
+                    <tr class="notShown">
+                        <th>스케쥴 그룹</th>
+                        <td colspan="2">
+                            <input type="text" id="selSchDoorGroup" name="doorEdit" maxlength="30" class="input_com" value="" disabled/>
+                        </td>
+<%--                        <td colspan="2">--%>
+<%--                            <select name="doorEdit" id="selSchDoorGroup" class="form-control" style="padding-left:10px;" disabled>--%>
+<%--                                <option value="" name="selected">선택</option>--%>
+<%--                                <c:forEach items="${schDoorGroupList}" var="schDoorGroup" varStatus="status">--%>
+<%--                                    <option value='<c:out value="${schDoorGroup.id}"/>'><c:out value="${schDoorGroup.nm}"/></option>--%>
+<%--                                </c:forEach>--%>
+<%--                            </select>--%>
+<%--                        </td>--%>
+
+                    </tr>
+                    <tr class="notShown">
                         <th>스케쥴</th>
                         <td colspan="2">
-                            <select name="doorEdit" id="selDoorGroup" class="form-control" style="padding-left:10px;" disabled>
-                                <option value="" name="selected">선택</option>
-                                <c:forEach items="${doorGroupList}" var="doorGroup" varStatus="status">
-                                <option value='<c:out value="${doorGroup.id}"/>'><c:out value="${doorGroup.nm}"/></option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" id="selSchedule" name="doorEdit" maxlength="30" class="input_com" value="" disabled/>
                         </td>
+<%--                        <td colspan="2">--%>
+<%--&lt;%&ndash;                            <select name="doorEdit" id="selDoorGroup" class="form-control" style="padding-left:10px;" disabled>&ndash;%&gt;--%>
+<%--                            <select name="doorEdit" id="selSchedule" class="form-control" style="padding-left:10px;" disabled>--%>
+<%--                                <option value="" name="selected">선택</option>--%>
+<%--                                <option value='<c:out value="${schDoorGroupList.sch_id}"/>'><c:out value="${schDoorGroupList.sch_nm}"/></option>--%>
+<%--                            </select>--%>
+<%--                        </td>--%>
                     </tr>
                     <tr>
                         <th>알람 그룹</th>
@@ -1607,10 +1650,11 @@
             <table class="tb_list tb_write_02 tb_write_p1">
                 <colgroup>
                     <col style="width:5%">
-                    <col style="width:28%">
                     <col style="width:20%">
-                    <col style="width:22%">
+                    <col style="width:20%">
+                    <col style="width:20%">
                     <col style="width:25%">
+                    <col style="width:10%">
                 </colgroup>
                 <thead>
                 <tr>
@@ -1619,6 +1663,7 @@
                     <th>관리번호</th>
                     <th>단말기유형</th>
                     <th>출입문명</th>
+                    <th>사용여부</th>
                 </tr>
                 </thead>
                 <tbody id="tbTerminal">

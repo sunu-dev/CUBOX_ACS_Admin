@@ -93,7 +93,7 @@ public class DoorGroupController {
             paramMap.put("srchCnt", srchRecPerPage);
             paramMap.put("offset", autoOffset(srchPage, srchRecPerPage));
 
-            List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);
+            List<HashMap> doorGroupList = doorGroupService.getSchDoorGroupList(paramMap);
             int totalCnt = doorGroupService.getDoorGroupListCount(paramMap);
 
             PaginationVO pageVO = new PaginationVO();
@@ -143,7 +143,7 @@ public class DoorGroupController {
             paramMap.put("srchCnt", srchRecPerPage);
             paramMap.put("offset", autoOffset(srchPage, srchRecPerPage));
 
-            List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);
+            List<HashMap> doorGroupList = doorGroupService.getSchDoorGroupList(paramMap);
             int totalCnt = doorGroupService.getDoorGroupListCount(paramMap);
 
             PaginationVO pageVO = new PaginationVO();
@@ -166,7 +166,7 @@ public class DoorGroupController {
     }
 
 
-    // 출입문 그룹 관리 상세
+    // 스케쥴 출입문 그룹 관리 상세
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     public String detail(ModelMap model, @PathVariable int id, HttpServletRequest request) throws Exception {
 
@@ -181,7 +181,7 @@ public class DoorGroupController {
         return "cubox/door/group/detail";
     }
 
-    // 출입문 그룹 관리 등록화면
+    // 스케쥴 출입문 그룹 관리 등록화면
     @RequestMapping(value = "/add.do", method = RequestMethod.GET)
     public String addGroupView(ModelMap model, @RequestParam Map<String, Object> commandMap, RedirectAttributes redirectAttributes) throws Exception {
 
@@ -196,7 +196,7 @@ public class DoorGroupController {
         return "cubox/door/group/add";
     }
 
-    // 출입문 그룹 관리 등록
+    // 스케쥴 출입문 그룹 관리 등록
     @ResponseBody
     @RequestMapping(value = "/save.do", method = RequestMethod.POST)
     public ModelAndView saveDoorGroup(ModelMap model, @RequestParam Map<String, Object> commandMap, RedirectAttributes redirectAttributes) throws Exception {
@@ -314,7 +314,7 @@ public class DoorGroupController {
     public void excelDownloadDoorGroup(ModelMap model, @RequestParam Map<String, Object> commandMap, HttpServletResponse response) throws Exception {
 
         HashMap<String, Object> paramMap = new HashMap();
-        List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);
+        List<HashMap> schDoorGroupList = doorGroupService.getSchDoorGroupList(paramMap);
 
         ///// Create Excel /////
         Workbook wb = new XSSFWorkbook();
@@ -354,16 +354,16 @@ public class DoorGroupController {
         }
 
         // Body
-        for (int i = 0; i < doorGroupList.size(); i++) {
+        for (int i = 0; i < schDoorGroupList.size(); i++) {
             row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(i + 1);
-            row.createCell(1).setCellValue(doorGroupList.get(i).get("nm").toString());
-            if (doorGroupList.get(i).containsKey("door_sch_nm")) {
-                row.createCell(2).setCellValue(doorGroupList.get(i).get("door_sch_nm").toString());
+            row.createCell(1).setCellValue(schDoorGroupList.get(i).get("nm").toString());
+            if (schDoorGroupList.get(i).containsKey("door_sch_nm")) {
+                row.createCell(2).setCellValue(schDoorGroupList.get(i).get("door_sch_nm").toString());
             }
-            row.createCell(3).setCellValue(Integer.parseInt(doorGroupList.get(i).get("door_cnt").toString()));
-            row.createCell(4).setCellValue(doorGroupList.get(i).get("created_at").toString());
-            row.createCell(5).setCellValue(doorGroupList.get(i).get("updated_at").toString());
+            row.createCell(3).setCellValue(Integer.parseInt(schDoorGroupList.get(i).get("door_cnt").toString()));
+            row.createCell(4).setCellValue(schDoorGroupList.get(i).get("created_at").toString());
+            row.createCell(5).setCellValue(schDoorGroupList.get(i).get("updated_at").toString());
         }
 
         // Date

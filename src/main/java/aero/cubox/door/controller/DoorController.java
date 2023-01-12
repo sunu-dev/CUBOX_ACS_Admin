@@ -88,21 +88,20 @@ public class DoorController {
         //todo 세션처리
 
         HashMap paramMap = new HashMap();
-        List<Map> workplaceList = doorService.getWorkplaceList(paramMap); //사업장 목록
-        List<Map> buildingList = doorService.getBuildingList(paramMap);   //빌딩 목록
-       // List<Map> areaList = doorService.getAreaList(paramMap);           //지역 목록
-        List<HashMap> floorList = doorService.getFloorList(paramMap);     //층 목록
+        List<Map> workplaceList = doorService.getWorkplaceList(paramMap);                       //사업장 목록
+        List<Map> buildingList = doorService.getBuildingList(paramMap);                         //빌딩 목록
+       // List<Map> areaList = doorService.getAreaList(paramMap);                               //지역 목록
+        List<HashMap> floorList = doorService.getFloorList(paramMap);                           //층 목록
 
-        // List<HashMap> scheduleList = doorScheduleService.getDoorScheduleList(paramMap);      // 스케쥴 목록
-        List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);      // 스케쥴 목록
-        List<HashMap> doorAlarmGrpList = doorAlarmService.getDoorAlarmGrpList(paramMap); // 출입물 알람 그룹 목록
+        List<HashMap> schDoorGroupList = doorGroupService.getSchDoorGroupList(paramMap);        // 스케쥴 목록
+        List<HashMap> doorAlarmGrpList = doorAlarmService.getDoorAlarmGrpList(paramMap);        // 출입물 알람 그룹 목록
 
         model.addAttribute("workplaceList", workplaceList);
         model.addAttribute("buildingList", buildingList);
        // model.addAttribute("areaList", areaList);
         model.addAttribute("floorList", floorList);
         model.addAttribute("doorAlarmGrpList", doorAlarmGrpList);
-        model.addAttribute("doorGroupList", doorGroupList);
+        model.addAttribute("schDoorGroupList", schDoorGroupList);
         //model.addAttribute("scheduleList", scheduleList);
 
         return "cubox/door/doorManagementDetail";
@@ -193,23 +192,23 @@ public class DoorController {
         String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
         //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
         String floorId = StringUtil.nvl(commandMap.get("floorId"), "");
-        String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
-        String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
+//        String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
+//        String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
         String alarmGroupId = StringUtil.nvl(commandMap.get("alarmGroupId"), "");
         String terminalIds = StringUtil.nvl(commandMap.get("terminalIds"), "");
         String authGrIds = StringUtil.isNullToString(commandMap.get("authGrIds"));
 
         HashMap param = new HashMap();
 
-        param.put("doorNm", doorNm);        //출입문 명
-        param.put("buildingId", buildingId);//빌딩 ID
-        //param.put("areaId", areaId);        //지역 ID
-        param.put("floorId", floorId);      //층 ID
-        param.put("doorScheduleId", scheduleId); //출입문 스케쥴 ID
-        param.put("doorGroupId", doorGroupId); //출입문 스케쥴 ID
-        param.put("alarmGroupId", alarmGroupId); //알람 그룹 ID
-        param.put("terminalIds", terminalIds);   //단말기 ID - 복수저장?
-        param.put("authGrIds", authGrIds);       //권한그룹ID - 복수저장?
+        param.put("doorNm", doorNm);                    //출입문 명
+        param.put("buildingId", buildingId);            //빌딩 ID
+        //param.put("areaId", areaId);                  //지역 ID
+        param.put("floorId", floorId);                  //층 ID
+//        param.put("doorScheduleId", scheduleId);        //스케쥴 ID
+//        param.put("doorGroupId", doorGroupId);        //출입문 스케쥴 ID
+        param.put("alarmGroupId", alarmGroupId);        //알람 그룹 ID
+        param.put("terminalIds", terminalIds);          //단말기 ID - 복수저장?
+        param.put("authGrIds", authGrIds);              //권한그룹ID - 복수저장?
 
         String newDoorId = "";
         try {
@@ -250,8 +249,8 @@ public class DoorController {
             String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
             //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
             String floorId = StringUtil.nvl(commandMap.get("floorId"), "");
-            String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
-            String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
+//            String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
+//            String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
             String alarmGroupId = StringUtil.nvl(commandMap.get("alarmGroupId"), "");
             String terminalIds = StringUtil.nvl(commandMap.get("terminalIds"), "");
             String authGrIds = StringUtil.nvl(commandMap.get("authGrIds"), "");
@@ -261,11 +260,11 @@ public class DoorController {
             param.put("buildingId", buildingId);
             //param.put("areaId", areaId);
             param.put("floorId", floorId);
-            param.put("doorScheduleId", scheduleId);
+//            param.put("doorScheduleId", scheduleId);
             param.put("alarmGroupId", alarmGroupId);
             param.put("terminalIds", terminalIds);
             param.put("authGrIds", authGrIds);
-            param.put("doorGroupId", doorGroupId);
+//            param.put("doorGroupId", doorGroupId);
         }
         try {
             doorService.updateDoor(param);

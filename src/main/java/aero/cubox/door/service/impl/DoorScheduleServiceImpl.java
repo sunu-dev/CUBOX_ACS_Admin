@@ -59,6 +59,7 @@ public class DoorScheduleServiceImpl extends EgovAbstractServiceImpl implements 
         doorScheduleDAO.addSchedule(commandMap);
 
         newScheduleId = commandMap.get("scheduleId").toString();
+/*
 
         HashMap paramMap = new HashMap();
 
@@ -78,6 +79,7 @@ public class DoorScheduleServiceImpl extends EgovAbstractServiceImpl implements 
                 }
             }
         }
+*/
 
         return newScheduleId;
     }
@@ -89,7 +91,7 @@ public class DoorScheduleServiceImpl extends EgovAbstractServiceImpl implements 
     @Override
     public void updateSchedule(Map<String, Object> commandMap) {
         doorScheduleDAO.updateSchedule(commandMap);
-
+/*
         HashMap paramMap = new HashMap();
 
         String doorGroupIds = commandMap.get("doorGroupIds").toString();
@@ -114,6 +116,8 @@ public class DoorScheduleServiceImpl extends EgovAbstractServiceImpl implements 
                 doorGroupDAO.updateDoorGroup(paramMap);
             }
         }
+        
+        */
     }
 
 

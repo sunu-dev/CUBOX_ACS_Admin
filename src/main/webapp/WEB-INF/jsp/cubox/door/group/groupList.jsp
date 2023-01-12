@@ -22,7 +22,7 @@
 <script type="text/javascript">
     $(function() {
         fnGetDoorGroupListAjax();
-        $(".title_tx").html("출입문 그룹 관리 - 목록");
+        $(".title_tx").html("스케쥴 출입문 그룹 관리 - 목록");
         fnGetDoorGroupListAjax();
 
 

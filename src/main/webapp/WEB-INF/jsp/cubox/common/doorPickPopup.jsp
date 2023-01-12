@@ -125,8 +125,6 @@ function setDoors(type) {
                     doorList = $("#gpDoorIds").val().split("/");
                 } else if (type === "AlarmGroup" && $("#doorIds").val() !== "") {
                     doorList = $("#doorIds").val().split("/");
-                } else if (type === "Schedule") {
-                    // doorList = $("#")
                 }
 
                 $.each(doorList, function(i, door) {

@@ -180,9 +180,9 @@ public class DoorScheduleController {
     public String showScheduleAddView(ModelMap model, @RequestParam Map<String, Object> commandMap, RedirectAttributes redirectAttributes) throws Exception {
 
         HashMap<String, Object> paramMap = new HashMap();
-        List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);
+        List<HashMap> schDoorGroupList = doorGroupService.getSchDoorGroupList(paramMap);
 
-        model.addAttribute("doorGroupList", doorGroupList);
+        model.addAttribute("schDoorGroupList", schDoorGroupList);
         return "cubox/door/schedule/add";
     }
 
@@ -201,10 +201,10 @@ public class DoorScheduleController {
         paramMap.put("doorSchId", id);
 
         HashMap doorScheduleDetail = doorScheduleService.getDoorScheduleDetail(id);
-        List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);
+        List<HashMap> schDoorGroupList = doorGroupService.getSchDoorGroupList(paramMap);
 
         model.addAttribute("doorScheduleDetail", doorScheduleDetail);
-        model.addAttribute("doorGroupList", doorGroupList);
+        model.addAttribute("schDoorGroupList", schDoorGroupList);
 
         return "cubox/door/schedule/detail";
     }
@@ -568,7 +568,7 @@ public class DoorScheduleController {
 
             HashMap<String, Object> paramMap = new HashMap();
 
-            List<HashMap> doorGroupList = doorGroupService.getDoorGroupList(paramMap);
+            List<HashMap> doorGroupList = doorGroupService.getSchDoorGroupList(paramMap);
 
             model.addAttribute("doorGroupList", doorGroupList);
 

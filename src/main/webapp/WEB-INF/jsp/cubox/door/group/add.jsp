@@ -39,7 +39,7 @@
 
     $(function () {
 
-        $(".title_tx").html("출입문 그룹 관리 - 등록");
+        $(".title_tx").html("스케쥴 출입문 그룹 관리 - 등록");
         $("#gpNm").focus();
 
         $("#listBtn").hide();
@@ -125,7 +125,7 @@
             <tbody id="tdGroupDetail">
             <input type="hidden" id="gpDoorIds" value="">
             <tr>
-                <th>출입문 그룹 명</th>
+                <th>스캐쥴 출입문 그룹 명</th>
                 <td>
                     <input type="text" id="gpNm" name="gpNm" maxlength="35" value="" class="input_com w_600px" onkeyup="charCheck(this)" onkeydown="charCheck(this)">
                 </td>

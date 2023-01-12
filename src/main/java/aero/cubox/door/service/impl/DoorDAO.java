@@ -30,6 +30,14 @@ public class DoorDAO extends EgovAbstractMapper {
 	public void updateDoor(Map<String, Object> paramMap) {
 		update(sqlNameSpace+"updateDoor", paramMap);
 	}
+	public void updateDoorBySchedule(Map<String, Object> paramMap) {
+		update(sqlNameSpace+"updateDoorBySchedule", paramMap);
+	}
+
+	public void updateDoorByScheduleInit(Map<String, Object> paramMap) {
+		update(sqlNameSpace+"updateDoorByScheduleInit", paramMap);
+	}
+
 	public void deleteDoor(Map<String, Object> paramMap) {
 		delete(sqlNameSpace+"deleteDoor", paramMap);
 	}

@@ -8,7 +8,7 @@ public interface DoorGroupService {
 
 
     //출입문 그룹
-    List<HashMap> getDoorGroupList(Map<String, Object> commandMap);
+    List<HashMap> getSchDoorGroupList(Map<String, Object> commandMap);
 
     int getDoorGroupListCount(Map<String, Object> commandMap);
 
