@@ -105,6 +105,7 @@
                 let end = {hour: "", min: "", sec: ""};
 
                 if (ifEnd) {
+                    console.log("ifEnd");
                     startId = this.id.replace("end", "start");
                     endId = this.id;
 
@@ -139,6 +140,7 @@
                     }
 
                 } else {
+                    console.log("ifStart");
                     startId = this.id;
                     endId = this.id.replace("start", "end");
 
@@ -253,6 +255,7 @@
     // 이미 색칠되어 있는지 여부확인
     function ifValid(mode, startId, endId, start, end, day, schNum) {
 
+        console.log("if Valid mode === " + mode);
         let result = true; // 다른 스케쥴과 겹치는지 여부
         if (mode === "S") result = false;
 
@@ -264,7 +267,7 @@
                         for (let j = Number(start.min); j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                // console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
+                                console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
                                 result = false;
                                 break;
                             }
@@ -273,7 +276,7 @@
                         for (let j = 0; j <= Number(end.min); j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                // console.log("2. 색칠되어있고 같은 스케쥴 아님");
+                                console.log("2. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
                                 break;
                             }
@@ -282,7 +285,7 @@
                         for (let j = 0; j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                // console.log("3. 색칠되어있고 같은 스케쥴 아님");
+                                console.log("3. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
                                 break;
                             }
@@ -295,7 +298,7 @@
                     for (let j = Number(start.min); j <= Number(end.min); j++) {
                         let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                         if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                            // console.log("4. 색칠되어있고 같은 스케쥴 아님");
+                            console.log("4. 색칠되어있고 같은 스케쥴 아님");
                             result = false;
                             break;
                         }
@@ -316,7 +319,7 @@
         let isFirst = ($("." + day + "_" + schNum).length > 0) ? false : true;  // 최초등록?
 
         if (isFirst) {
-            // console.log("최초 등록");
+            console.log("최초 등록");
             let sameDaySch = $("." + day + "_timepick");
             let schTime = [];
             let startVal = $("#" + startId).val();
@@ -364,9 +367,9 @@
             //     schTime3 = schTime[3].split(":").slice(0, -1).join(":");
             // }
 
-            if ((startVal.split(":").slice(0, -1).join(":") !== schTime0.split(":").slice(0, -1).join(":")
-                || (startVal.split(":").slice(0, -1).join(":") !== schTime2.split(":").slice(0, -1).join(":")))) {  // 분 같을 때 초 단위 비교
-                // console.log("start 분 단위 겹침");
+            if ((startVal.split(":").slice(0, -1).join(":") === ((schTime1 !== undefined) && (schTime1.split(":").slice(0, -1).join(":")))
+                || (startVal.split(":").slice(0, -1).join(":") === ((schTime3 !== undefined) && (schTime3.split(":").slice(0, -1).join(":")))))) {  // 분 같을 때 초 단위 비교
+                // console.log("ifStart 일 때, 다른 스케쥴의 end 분 단위와 겹침");
                 result = true;
 
             } else {
