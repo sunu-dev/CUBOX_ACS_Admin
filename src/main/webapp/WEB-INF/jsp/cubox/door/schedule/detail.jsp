@@ -126,9 +126,7 @@
                                 tmpStart = arr.eq(i).val().split(":");
                                 // 초 단위 중복 validation
                                 if (end.hour == Number(tmpStart[0]) && end.min == Number(tmpStart[1])) {
-                                    console.log("1. hour == min");
                                     if (end.sec < Number(tmpStart[2])) {
-                                        console.log("1. 그냥 색칠");
                                         colorSchedule(start, end, day, schNum);
                                         return;
                                     } else if (end.sec >= Number(tmpStart[2])) {
@@ -163,9 +161,7 @@
                                 tmpEnd = arr.eq(i).val().split(":");
                                 // 초 단위 중복 validation
                                 if (start.hour == Number(tmpEnd[0]) && start.min == Number(tmpEnd[1])) {
-                                    console.log("2. hour == min");
                                     if (start.sec > Number(tmpEnd[2])) {
-                                        console.log("2. 그냥 색칠");
                                         colorSchedule(start, end, day, schNum);
                                         return;
                                     } else if (start.sec <= Number(tmpEnd[2])) {
@@ -258,7 +254,6 @@
 
     // 이미 색칠되어 있는지 여부확인
     function ifValid(mode, startId, endId, start, end, day, schNum) {
-        console.log("mode == " + mode);
 
         let result = true; // 다른 스케쥴과 겹치는지 여부
         if (mode === "S") result = false;
@@ -272,9 +267,8 @@
                         for (let j = Number(start.min); j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
+                                // console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
                                 result = false;
-                                // result = false;
                                 break;
                             }
                         }
@@ -282,9 +276,8 @@
                         for (let j = 0; j <= Number(end.min); j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                console.log("2. 색칠되어있고 같은 스케쥴 아님");
+                                // console.log("2. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
-                                // result = false;
                                 break;
                             }
                         }
@@ -292,9 +285,8 @@
                         for (let j = 0; j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                console.log("3. 색칠되어있고 같은 스케쥴 아님");
+                                // console.log("3. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
-                                // result = false;
                                 break;
                             }
                         }
@@ -306,9 +298,8 @@
                     for (let j = Number(start.min); j <= Number(end.min); j++) {
                         let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                         if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                            console.log("4. 색칠되어있고 같은 스케쥴 아님");
+                            // console.log("4. 색칠되어있고 같은 스케쥴 아님");
                             result = false;
-                            // result = false;
                             break;
                         }
                     }
@@ -316,12 +307,15 @@
             }
         }
 
-        if (!result) isFirstReg(day, schNum, startId, endId);
+        if (!result) {
+            result = isFirstReg(day, schNum, startId, endId);
+        }
         return result;
     }
 
     // 최초 등록인지 체크
     function isFirstReg(day, schNum, startId, endId) {
+        let result = false;
         let isFirst = ($("." + day + "_" + schNum).length > 0) ? false : true;  // 최초등록?
 
         if (isFirst) {
@@ -346,6 +340,7 @@
                     }
                 }
             }
+
             // 있는지 없는지 먼저 확인
             if (!fnIsEmpty(schTime[0])) {
                 schTime0 = schTime[0];
@@ -372,20 +367,28 @@
             //     schTime3 = schTime[3].split(":").slice(0, -1).join(":");
             // }
 
-            if ((startVal <= schTime0 && endVal >= schTime1) || (startVal <= schTime2 && endVal >= schTime3)) {
-                // console.log("시작시간, 종료시간 둘다 오버된 시간");
-                initTimepicker(startId, endId);
+            if ((startVal.split(":").slice(0, -1).join(":") !== schTime0.split(":").slice(0, -1).join(":")
+                || (startVal.split(":").slice(0, -1).join(":") !== schTime2.split(":").slice(0, -1).join(":")))) {  // 분 같을 때 초 단위 비교
+                // console.log("start 분 단위 겹침");
+                result = true;
+
+            } else {
+                if ((startVal <= schTime0 && endVal >= schTime1) || (startVal <= schTime2 && endVal >= schTime3)) {
+                    // console.log("시작시간, 종료시간 둘다 오버된 시간");
+                    initTimepicker(startId, endId);
+                }
+
+                if ((startVal >= schTime0 && startVal <= schTime1) || (startVal >= schTime2 && startVal <= schTime3)) {
+                    // console.log("시작시간이 기존의 스케쥴과 겹침");
+                    $("#" + startId).val("");
+                }
+
+                if ((endVal >= schTime0 && endVal <= schTime1) || (endVal >= schTime2 && endVal <= schTime3)) {
+                    // console.log("종료시간이 기존의 스케쥴과 겹침");
+                    $("#" + endId).val("");
+                }
             }
 
-            if ((startVal >= schTime0 && startVal <= schTime1) || (startVal >= schTime2 && startVal <= schTime3)) {
-                // console.log("시작시간이 기존의 스케쥴과 겹침");
-                $("#" + startId).val("");
-            }
-
-            if ((endVal >= schTime0 && endVal <= schTime1) || (endVal >= schTime2 && endVal <= schTime3)) {
-                // console.log("종료시간이 기존의 스케쥴과 겹침");
-                $("#" + endId).val("");
-            }
 
         } else {
             console.log("이미 같은 시간대에 다른 스케쥴 존재");
@@ -395,6 +398,7 @@
             $("#" + endId).val(tmpEnd.hour + ":" + tmpEnd.min + ":" + tmpEnd.sec);
         }
 
+        return result;
     }
 
     // 시간 유효성 체크

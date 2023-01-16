@@ -194,12 +194,24 @@
                 url: "<c:url value='/door/terminal/confirmUse.do' />",
                 data: { terminalId: selTerminal },
                 dataType: "json",
+                async: true,
                 success: function (result) {
                     let cnt = result.terminalUseCnt;
                     console.log(cnt);
+                    // if (cnt == 1) {
+                    //     // alert("이미 사용중인 단말기입니다.");
+                    //     // $("input[name=checkOne]").prop("checked", false);
+                    //     // if ($("#terminalId").val() !== "") {  // 수정 시 원래대로 체크
+                    //     //     $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);
+                    //     // }
+                    // } else {
+                    //     $("#terminalId").val(selTerminal);              // set terminalId
+                    //     $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
+                    //     $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
+                    //     closePopup('termPickPopup');
+                    // }
 
-                    if (cnt == 1) {
-                        alert("이미 사용중인 단말기입니다.");
+                    if (cnt === 1 && !confirm("이미 사용중인 단말기입니다. 현재 출입문에 계속 연결하시겠습니까?")) {
                         $("input[name=checkOne]").prop("checked", false);
                         if ($("#terminalId").val() !== "") {  // 수정 시 원래대로 체크
                             $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);

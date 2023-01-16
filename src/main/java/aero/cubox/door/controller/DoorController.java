@@ -939,8 +939,9 @@ public class DoorController {
                 String floorCd = getValue(row.getCell(6)).replaceAll("\n", "<br>");                 // 층 코드
                 String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>");                  // 출입문 명
                 String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>");                  // 출입문 코드
+                String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>");              // 단말기 코드
 
-                String errorMsg = validExcel(buildingNm, buildingCd, floorNm, floorCd, doorNm, doorCd);
+                String errorMsg = validExcel(buildingNm, buildingCd, floorNm, floorCd, doorNm, doorCd, terminalCd);
                 if (!errorMsg.equals("")) {
                     modelAndView.addObject("resultCode", "N");
                     modelAndView.addObject("message", errorMsg);
@@ -978,7 +979,7 @@ public class DoorController {
     }
 
 
-    public String validExcel(String buildingNm, String buildingCd, String floorNm, String floorCd, String doorNm, String doorCd) {
+    public String validExcel(String buildingNm, String buildingCd, String floorNm, String floorCd, String doorNm, String doorCd, String terminalCd) {
         String errorMsg = "";
 
         if (buildingNm.equals("") || buildingNm == null) {
@@ -993,6 +994,8 @@ public class DoorController {
             errorMsg = "=== ErrorCode (" + ED01 + ") ===\n출입문 이름이 누락되었습니다. \n관리자에게 문의하세요.";
         } else if (doorCd.equals("") || doorCd == null) {
             errorMsg = "=== ErrorCode (" + ED02 + ") ===\n출입문 코드가 누락되었습니다. \n관리자에게 문의하세요.";
+        } else if (terminalCd.equals("") || terminalCd == null) {
+            System.out.println("터미널코드 누락");
         }
 
         return errorMsg;
