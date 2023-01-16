@@ -54,7 +54,7 @@
 
         // 유형 - 기본시간
         $("#alType").change(function() {
-            console.log($(this).val());
+            // console.log($(this).val());
             chkAlType();
         });
 
@@ -62,7 +62,7 @@
 
     // 유형:기본시간 --> 시간 고정
     function chkAlType() {
-        if ($("#alType").val() == "default") {
+        if ($("#alType").val() == "Y") {
             $("#alTime").val(defaultTime).attr("disabled", true);
         } else {
             $("#alTime").val("").attr("disabled", false);

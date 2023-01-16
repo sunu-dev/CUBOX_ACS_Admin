@@ -85,9 +85,9 @@
         $.ajax({
             type : "POST",
             data : {
-                nm: doorSchNm,
-                doorGroupIds: doorIds
-                // ,useYn: useYn
+                nm: doorSchNm
+                ,useYn: useYn
+                ,doorGroupIds: doorIds
                 // ,doorIds: doorIds
             },
             dataType : "json",

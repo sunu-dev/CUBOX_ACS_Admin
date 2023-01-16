@@ -342,7 +342,10 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		     , created_at
 			 , updated_at)
 		VALUES
-			 ( #{buildingCd}
+			 ((SELECT building_cd
+				FROM
+					T_BUILDING
+				WHERE id = #{buildingId})
 			 , #{floorCd}
 			 , #{buildingId}
 			 , #{areaId}
