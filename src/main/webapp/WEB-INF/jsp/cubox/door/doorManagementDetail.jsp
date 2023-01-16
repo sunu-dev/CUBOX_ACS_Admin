@@ -971,6 +971,7 @@
         let doorId = $("#doorId").val();
         let data = {
             doorNm: $("#doorNm").val(),
+            doorCd: $("#doorCd").val(),
             buildingId: $(".doorDetailList #dBuilding").val(),
             floorId: $(".doorDetailList #dFloor").val(),
             // schDoorGroup : $("#selSchDoorGroup").val(),

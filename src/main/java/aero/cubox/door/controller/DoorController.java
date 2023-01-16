@@ -189,6 +189,7 @@ public class DoorController {
         modelAndView.setViewName("jsonView");
 
         String doorNm = StringUtil.nvl(commandMap.get("doorNm"), "");
+        String doorCd = StringUtil.nvl(commandMap.get("doorCd"), "");
         String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
         //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
         String floorId = StringUtil.nvl(commandMap.get("floorId"), "");
@@ -201,6 +202,7 @@ public class DoorController {
         HashMap param = new HashMap();
 
         param.put("doorNm", doorNm);                    //출입문 명
+        param.put("doorCd", doorCd);                    //출입문 코드
         param.put("buildingId", buildingId);            //빌딩 ID
         //param.put("areaId", areaId);                  //지역 ID
         param.put("floorId", floorId);                  //층 ID
