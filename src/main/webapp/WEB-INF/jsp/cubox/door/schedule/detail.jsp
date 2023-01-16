@@ -255,10 +255,10 @@
     // 이미 색칠되어 있는지 여부확인
     function ifValid(mode, startId, endId, start, end, day, schNum) {
 
+        console.log("if Valid mode === " + mode);
         let result = true; // 다른 스케쥴과 겹치는지 여부
         if (mode === "S") result = false;
 
-        // while (result) {
         if (result) {
             if (start.hour != end.hour) { // 시작시간과 종료시간이 다른 hour 칸에 있을 때
                 for (let i = Number(start.hour); i <= Number(end.hour); i++) {
@@ -267,7 +267,7 @@
                         for (let j = Number(start.min); j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                // console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
+                                console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
                                 result = false;
                                 break;
                             }
@@ -276,7 +276,7 @@
                         for (let j = 0; j <= Number(end.min); j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                // console.log("2. 색칠되어있고 같은 스케쥴 아님");
+                                console.log("2. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
                                 break;
                             }
@@ -285,7 +285,7 @@
                         for (let j = 0; j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                // console.log("3. 색칠되어있고 같은 스케쥴 아님");
+                                console.log("3. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
                                 break;
                             }
@@ -298,7 +298,7 @@
                     for (let j = Number(start.min); j <= Number(end.min); j++) {
                         let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                         if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                            // console.log("4. 색칠되어있고 같은 스케쥴 아님");
+                            console.log("4. 색칠되어있고 같은 스케쥴 아님");
                             result = false;
                             break;
                         }
@@ -334,8 +334,8 @@
                 if (thisId.split("_")[1] != schNum) {
                     let isStart = sameDaySch.eq(i).hasClass("start");
                     if ((isStart && $("#" + thisId.replace("start", "end")).val() != "") || (!isStart && $("#" + thisId.replace("end", "start")).val())) {
-                        console.log("=다른 스케쥴=");
-                        console.log($("#" + thisId).val());
+                        // console.log("=다른 스케쥴=");
+                        // console.log($("#" + thisId).val());
                         schTime.push($("#" + thisId).val());
                     }
                 }
@@ -367,9 +367,9 @@
             //     schTime3 = schTime[3].split(":").slice(0, -1).join(":");
             // }
 
-            if ((startVal.split(":").slice(0, -1).join(":") !== schTime0.split(":").slice(0, -1).join(":")
-                || (startVal.split(":").slice(0, -1).join(":") !== schTime2.split(":").slice(0, -1).join(":")))) {  // 분 같을 때 초 단위 비교
-                // console.log("start 분 단위 겹침");
+            if ((startVal.split(":").slice(0, -1).join(":") === ((schTime1 !== undefined) && (schTime1.split(":").slice(0, -1).join(":")))
+                || (startVal.split(":").slice(0, -1).join(":") === ((schTime3 !== undefined) && (schTime3.split(":").slice(0, -1).join(":")))))) {  // 분 같을 때 초 단위 비교
+                // console.log("ifStart 일 때, 다른 스케쥴의 end 분 단위와 겹침");
                 result = true;
 
             } else {
@@ -391,7 +391,7 @@
 
 
         } else {
-            console.log("이미 같은 시간대에 다른 스케쥴 존재");
+            // console.log("이미 같은 시간대에 다른 스케쥴 존재");
             let tmpStart = $("div." + day + "_" + schNum).first().val();
             let tmpEnd = $("div." + day + "_" + schNum).last().val();
             $("#" + startId).val(tmpStart.hour + ":" + tmpStart.min + ":" + tmpStart.sec); // 수정 시
@@ -571,7 +571,6 @@
         let validCnt = 0; // 시작,종료시간 있는 데이터 카운트, 최대 21
 
         if (clearPickers('save')) {
-            console.log("true");
             $.each($("input[name=timepicker]"), function (i, pick) {
                 let pId = $(pick).attr("id");    // mon_1_start
                 let weekday = pId.split("_")[0]; // 요일 mon
@@ -601,8 +600,8 @@
                     });
                 });
             });
-            console.log("fnDaySchValidation type : " + type);
-            console.log(data);
+            // console.log("fnDaySchValidation type : " + type);
+            // console.log(data);
 
             if (validCnt == 0) { // 입력한 스케쥴 하나도 없을 경우
                 if (type === "Add") alert("등록한 스케쥴이 없습니다.");
@@ -681,9 +680,9 @@
             if (!confirm("완성되지 않은 스케쥴이 있습니다. \n계속 진행하시겠습니까?")) {
                 return false;
             } else {
-                console.log(tmpList);
+                // console.log(tmpList);
                 for (let i in tmpList) {
-                    console.log($(tmpList[i]).val());
+                    // console.log($(tmpList[i]).val());
                     $(tmpList[i]).val("");
                 }
                 return true;
@@ -805,7 +804,7 @@
     /////////////////  요일별 스케쥴 뿌려주기 ajax - start  /////////////////////
 
     function fnGetScheduleByDayDetail() {
-        console.log("fnGetScheduleByDayDetail");
+        // console.log("fnGetScheduleByDayDetail");
 
         $.ajax({
             type : "POST",
