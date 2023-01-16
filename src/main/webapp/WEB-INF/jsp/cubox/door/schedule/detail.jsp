@@ -105,7 +105,6 @@
                 let end = {hour: "", min: "", sec: ""};
 
                 if (ifEnd) {
-                    console.log("ifEnd");
                     startId = this.id.replace("end", "start");
                     endId = this.id;
 
@@ -140,7 +139,6 @@
                     }
 
                 } else {
-                    console.log("ifStart");
                     startId = this.id;
                     endId = this.id.replace("start", "end");
 
@@ -258,7 +256,6 @@
         let result = true; // 다른 스케쥴과 겹치는지 여부
         if (mode === "S") result = false;
 
-        // while (result) {
         if (result) {
             if (start.hour != end.hour) { // 시작시간과 종료시간이 다른 hour 칸에 있을 때
                 for (let i = Number(start.hour); i <= Number(end.hour); i++) {
@@ -319,7 +316,7 @@
         let isFirst = ($("." + day + "_" + schNum).length > 0) ? false : true;  // 최초등록?
 
         if (isFirst) {
-            console.log("최초 등록");
+            // console.log("최초 등록");
             let sameDaySch = $("." + day + "_timepick");
             let schTime = [];
             let startVal = $("#" + startId).val();
@@ -334,8 +331,8 @@
                 if (thisId.split("_")[1] != schNum) {
                     let isStart = sameDaySch.eq(i).hasClass("start");
                     if ((isStart && $("#" + thisId.replace("start", "end")).val() != "") || (!isStart && $("#" + thisId.replace("end", "start")).val())) {
-                        console.log("=다른 스케쥴=");
-                        console.log($("#" + thisId).val());
+                        // console.log("=다른 스케쥴=");
+                        // console.log($("#" + thisId).val());
                         schTime.push($("#" + thisId).val());
                     }
                 }
@@ -391,7 +388,7 @@
 
 
         } else {
-            console.log("이미 같은 시간대에 다른 스케쥴 존재");
+            // console.log("이미 같은 시간대에 다른 스케쥴 존재");
             let tmpStart = $("div." + day + "_" + schNum).first().val();
             let tmpEnd = $("div." + day + "_" + schNum).last().val();
             $("#" + startId).val(tmpStart.hour + ":" + tmpStart.min + ":" + tmpStart.sec); // 수정 시
@@ -571,7 +568,6 @@
         let validCnt = 0; // 시작,종료시간 있는 데이터 카운트, 최대 21
 
         if (clearPickers('save')) {
-            console.log("true");
             $.each($("input[name=timepicker]"), function (i, pick) {
                 let pId = $(pick).attr("id");    // mon_1_start
                 let weekday = pId.split("_")[0]; // 요일 mon
@@ -601,8 +597,8 @@
                     });
                 });
             });
-            console.log("fnDaySchValidation type : " + type);
-            console.log(data);
+            // console.log("fnDaySchValidation type : " + type);
+            // console.log(data);
 
             if (validCnt == 0) { // 입력한 스케쥴 하나도 없을 경우
                 if (type === "Add") alert("등록한 스케쥴이 없습니다.");
@@ -681,9 +677,9 @@
             if (!confirm("완성되지 않은 스케쥴이 있습니다. \n계속 진행하시겠습니까?")) {
                 return false;
             } else {
-                console.log(tmpList);
+                // console.log(tmpList);
                 for (let i in tmpList) {
-                    console.log($(tmpList[i]).val());
+                    // console.log($(tmpList[i]).val());
                     $(tmpList[i]).val("");
                 }
                 return true;
@@ -805,7 +801,7 @@
     /////////////////  요일별 스케쥴 뿌려주기 ajax - start  /////////////////////
 
     function fnGetScheduleByDayDetail() {
-        console.log("fnGetScheduleByDayDetail");
+        // console.log("fnGetScheduleByDayDetail");
 
         $.ajax({
             type : "POST",
