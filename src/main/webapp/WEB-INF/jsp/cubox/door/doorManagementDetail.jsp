@@ -179,7 +179,7 @@
             } else {
                 pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#dFloor option:checked").text()];
             }
-            console.log(pathArr);
+            // console.log(pathArr);
             $("#doorPath").text(pathArr.join(" > "));
         });
 
@@ -197,26 +197,24 @@
                 async: true,
                 success: function (result) {
                     let cnt = result.terminalUseCnt;
-                    console.log(cnt);
-                    // if (cnt == 1) {
-                    //     // alert("이미 사용중인 단말기입니다.");
-                    //     // $("input[name=checkOne]").prop("checked", false);
-                    //     // if ($("#terminalId").val() !== "") {  // 수정 시 원래대로 체크
-                    //     //     $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);
-                    //     // }
-                    // } else {
-                    //     $("#terminalId").val(selTerminal);              // set terminalId
-                    //     $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
-                    //     $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
-                    //     closePopup('termPickPopup');
-                    // }
 
-                    if (cnt === 1 && !confirm("이미 사용중인 단말기입니다. 현재 출입문에 계속 연결하시겠습니까?")) {
-                        $("input[name=checkOne]").prop("checked", false);
-                        if ($("#terminalId").val() !== "") {  // 수정 시 원래대로 체크
-                            $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);
+                    if (cnt === 1) {
+                        if (confirm("이미 사용중인 단말기입니다. 현재 출입문에 계속 연결하시겠습니까?")) {
+                            // 계속 연결, set terminal
+                            $("#terminalId").val(selTerminal);              // set terminalId
+                            $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
+                            $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
+                            closePopup('termPickPopup');
+                        } else {
+                            // 연결 취소, 원상복구
+                            $("input[name=checkOne]").prop("checked", false);
+                            if ($("#terminalId").val() !== "") {            // 수정 시 원래대로 체크
+                                $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);
+                                closePopup('termPickPopup');
+                            }
                         }
                     } else {
+                        // set terminal
                         $("#terminalId").val(selTerminal);              // set terminalId
                         $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
                         $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
@@ -528,7 +526,6 @@
 
     // 출입문 관리 - 수정 취소
     function fnCancelEditMode() {
-        console.log("fnCancelEditMode");
         let authType = $("#authType").val();
 
         // [확인, 취소] --> [수정, 삭제] 버튼으로 변환
@@ -573,10 +570,7 @@
 
     // 출입문 관리 - 추가
     function fnAdd() {
-        console.log("fnAdd");
         let val = $("input[name=createNode]:checked").val();
-
-        console.log(val);
 
         if ($("input[name=createNode]:checked").length > 0) {
             setType(val);
@@ -608,7 +602,6 @@
     // 출입문 관리 - 취소
     function fnCancel() {
         let authType = $("#authType").val();
-        console.log("fnCancel " + authType);
 
         if (authType === "building") {
             let buildingId = $("#buildingId").val();
@@ -997,9 +990,8 @@
             data.doorId = doorId;
             mode = "U";
         }
-
-        console.log(url);
-        console.log(data);
+        // console.log(url);
+        // console.log(data);
 
         $.ajax({
             type: "POST",
@@ -1009,20 +1001,17 @@
             success: function (returnData) {
                 console.log(returnData);
 
-                if (returnData.resultCode === "Y") {
+                if (returnData.resultCode === "Y" && returnData.newDoorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
 
-                    if ("C" === mode ) {
-                        if (returnData.newDoorId !== "" ) {
-                            getDoorDetail(returnData.newDoorId); //
-                        }
+                    if ("C" === mode) {
+                        getDoorDetail(returnData.newDoorId);
                     } else if ("U" === mode) {
                         getDoorDetail(doorId);
                     }
 
                 } else {
-                    //등록에 문제가 발생
                     alert("등록에 실패하였습니다.");
                 }
             }
@@ -1042,6 +1031,7 @@
         let buildingId = $("#buildingId").val();
         let data = {
             buildingNm : $("#buildingNm").val()
+            , buildingCd : $("#buildingCd").val()
             , workplaceId : 1
         };
 
@@ -1063,16 +1053,13 @@
             success: function (returnData) {
                 console.log(returnData);
 
-                if (returnData.resultCode == "Y") {
+                if (returnData.resultCode == "Y" && returnData.newBuildingId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
 
                     if ("C" === mode ) {
-                        if (returnData.newBuildingId !== "" ) {
-                            console.log(returnData.newBuildingId);
-
-                            getBuildingDetail(returnData.newBuildingId); //
-                        }
+                        console.log(returnData.newBuildingId);
+                        getBuildingDetail(returnData.newBuildingId);
                     } else if ("U" === mode) {
                         getBuildingDetail(buildingId);
                     }
@@ -1097,6 +1084,7 @@
         let floorId = $("#floorId").val();
         let data = {
             floorNm : $("#floorNm").val()
+            , floorCd : $("#floorCd").val()
             , buildingId : $(".floorDetailList #dBuilding").val()
             // , authGrIds: $("#authGroupId").val()
         };
@@ -1119,14 +1107,12 @@
             success: function (returnData) {
                 console.log(returnData);
 
-                if (returnData.resultCode == "Y") {
+                if (returnData.resultCode == "Y" && returnData.newFloorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
 
                     if ("C" === mode ) {
-                        if (returnData.newfloorId !== "" ) {
-                            getFloorDetail(returnData.newfloorId); //
-                        }
+                        getFloorDetail(returnData.newfloorId);
                     } else if ("U" === mode) {
                         getFloorDetail(floorId);
                     }
@@ -1146,8 +1132,6 @@
     /////////////////  출입문 삭제 ajax - start  /////////////////////
 
     function fnDeleteDoorAjax() {
-        console.log("fnDeleteDoorAjax");
-        console.log($("#doorId").val());
 
         if (confirm("삭제 하시겠습니까?")) {
             $.ajax({
