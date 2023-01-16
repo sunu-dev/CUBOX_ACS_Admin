@@ -79,7 +79,7 @@ function userCheck() {
 
 // 출입문선택 반영
 function setDoors(type) {
-    console.log("setDoors type = " + type);
+    // console.log("setDoors type = " + type);
 
     let doorGpIds = "";
     let doorGpHtml = [];
