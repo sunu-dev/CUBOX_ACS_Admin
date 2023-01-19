@@ -22,7 +22,6 @@
         text-align: center;
     }
     .tb_write_02 tbody tr {
-        /*height: 57px;*/
         height: 52px;
     }
     .h_65 {
@@ -51,7 +50,6 @@
         width: 100%;
         height: 631px;
         border-bottom: 1px solid #ccc;
-        padding: 10px 45px;
         padding: 10px 45px;
         overflow: auto;
     }
@@ -124,8 +122,6 @@
             $(".paddingForBtn").attr("colspan", "2").removeClass("paddingForBtn"); // 단말기코드, 권한그룹 길이 조정
         }
 
-
-
         // 빌딩 선택 시,
         $(".selectBuilding").on('click', function() {
             let val = $(this).val();
@@ -188,7 +184,6 @@
             let selTerminal = $("input[name=checkOne]:checked").val();
             let chkTerminal = $("input[name=checkOne]:checked").closest("tr").children();
 
-            // TODO : 등록된 단말기 여부 확인
             $.ajax({
                 type: "GET",
                 url: "<c:url value='/door/terminal/confirmUse.do' />",
@@ -327,7 +322,6 @@
 
         $("option[name='selected']").prop("selected", true);
         $("#titleProp").text("속성");
-
     }
 
     // 권한 타입 set
@@ -558,7 +552,7 @@
         $("#btnCancel").css("display", "inline-block");
         $("[name=doorEdit]").prop("disabled", false);
 
-       if (authType === "floor") {
+        if (authType === "floor") {
             // $("#btnFloorAuthPick").removeClass("disabled");
         } else if (authType === "door") {
            $("#btnTerminalPick, #btnDoorAuthPick").removeClass("disabled");
@@ -638,7 +632,6 @@
                 getDoorDetail(doorId);
             }
         }
-
     }
 
     // 빌딩 validation
@@ -652,7 +645,6 @@
         if ($("#buildingId").val() == "" && !fnBuildingNameValidAjax()) {
             return;
         }
-
         return result;
     }
 
@@ -991,8 +983,6 @@
             data.doorId = doorId;
             mode = "U";
         }
-        // console.log(url);
-        // console.log(data);
 
         $.ajax({
             type: "POST",
@@ -1108,7 +1098,7 @@
             success: function (returnData) {
                 console.log(returnData);
 
-                if (returnData.resultCode == "Y" && returnData.newFloorId !== "") {
+                if (returnData.resultCode === "Y" && returnData.newFloorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
 
@@ -1143,7 +1133,7 @@
                 success: function (returnData) {
                     console.log(returnData);
 
-                    if (returnData.resultCode == "Y") {
+                    if (returnData.resultCode === "Y") {
                         // 삭제 성공
                         alert("해당 출입문 정보를 삭제하였습니다.");
                         fnGetDoorListAjax();
@@ -1174,7 +1164,7 @@
                 success: function (returnData) {
                     console.log(returnData);
 
-                    if (returnData.resultCode == "Y") {
+                    if (returnData.resultCode === "Y") {
                         alert("해당 빌딩 정보를 삭제하였습니다.");
                         fnGetDoorListAjax();
                         initDetail();
@@ -1486,7 +1476,7 @@
                     <tr class="notShown">
                         <th>스케쥴 그룹</th>
                         <td colspan="2">
-                            <input type="text" id="selSchDoorGroup" name="doorEdit" maxlength="30" class="input_com" value="" disabled/>
+                            <input type="text" id="selSchDoorGroup" name="doorEditDisabled" maxlength="30" class="input_com" value="" disabled/>
                         </td>
 <%--                        <td colspan="2">--%>
 <%--                            <select name="doorEdit" id="selSchDoorGroup" class="form-control" style="padding-left:10px;" disabled>--%>
@@ -1501,7 +1491,7 @@
                     <tr class="notShown">
                         <th>스케쥴</th>
                         <td colspan="2">
-                            <input type="text" id="selSchedule" name="doorEdit" maxlength="30" class="input_com" value="" disabled/>
+                            <input type="text" id="selSchedule" name="doorEditDisabled" maxlength="30" class="input_com" value="" disabled/>
                         </td>
 <%--                        <td colspan="2">--%>
 <%--&lt;%&ndash;                            <select name="doorEdit" id="selDoorGroup" class="form-control" style="padding-left:10px;" disabled>&ndash;%&gt;--%>

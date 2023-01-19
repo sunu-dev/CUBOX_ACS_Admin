@@ -89,10 +89,6 @@
             $("#alUseYn").focus();
             return;
         }
-        // else if (fnIsEmpty($("#doorIds").val() || $("#alDoorCnt").val()) == 0) {
-        //     alert("출입문을 선택해주세요.");
-        //     return;
-        // }
 
         if (confirm("저장하시겠습니까?")) {
             fnSaveAlarmGroupAjax();
@@ -124,7 +120,7 @@
             },
             dataType: "json",
             success: function(result) {
-                console.log("fnSave : " + result.resultCode);
+                console.log(result);
                 if (result.resultCode === "Y" && result.newDoorId !== "") {
                     alert("저장되었습니다.");
                     window.location.href = '/door/alarm/detail/' + result.newDoorId;

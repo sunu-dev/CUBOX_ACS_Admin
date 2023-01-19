@@ -55,7 +55,7 @@
         // 유형 - 기본시간
         $("#alType").change(function() {
             // console.log($(this).val());
-            // chkAlType();
+            chkAlType();
         });
 
     });
@@ -85,10 +85,6 @@
             alert("사용여부를 선택해주세요.");
             $("#alUseYn").focus(); return;
         }
-        // else if (fnIsEmpty($("#doorIds").val() || $("#alDoorCnt").val()) == 0) {
-        //     alert("출입문을 선택해주세요.");
-        //     return;
-        // }
 
         if (confirm("출입문 알람그룹을 저장하시겠습니까?")) {
             fnUpdateAlarmGroupAjax();

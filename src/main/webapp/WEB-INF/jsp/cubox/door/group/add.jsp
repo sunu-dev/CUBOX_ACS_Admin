@@ -40,10 +40,10 @@
     $(function () {
 
         $(".title_tx").html("스케쥴 출입문 그룹 관리 - 등록");
-        $("#gpNm").focus();
-
-        $("#listBtn").hide();
         modalPopup("doorEditPopup", "출입문 선택", 900, 600);
+
+        $("#gpNm").focus();
+        $("#listBtn").hide();
 
         // 출입문 그룹 명 유효성 체크
         $("#gpNm").focusout(function () {
@@ -51,7 +51,6 @@
         });
 
     });
-
 
     // 출입문 저장, 등록
     function fnSave() {
@@ -98,7 +97,7 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result.resultCode);
+                console.log(result);
 
                 if (result.resultCode === "Y" && result.newDoorId !== "") {
                     alert("저장되었습니다.");
