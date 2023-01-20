@@ -148,11 +148,15 @@ public class DoorAlarmController {
     public String detail(ModelMap model, @PathVariable int id, HttpServletRequest request) throws Exception {
 
         HashMap doorGroupDetail = doorAlarmService.getDoorAlarmGrpDetail(id);
+        List<HashMap> doorAlarmTypeList = doorAlarmService.getDoorAlarmTypeList();
+        List<HashMap> alarmUseTypeList = doorAlarmService.getAlarmUseTypeList();
 
         HashMap parmaMap = new HashMap();
         List<HashMap> scheduleList = doorScheduleService.getDoorScheduleList(parmaMap);      // 스케쥴 목록
 
         model.addAttribute("doorGroupDetail", doorGroupDetail);
+        model.addAttribute("doorAlarmTypeList", doorAlarmTypeList);
+        model.addAttribute("alarmUseTypeList", alarmUseTypeList);
 
         return "cubox/door/alarm/detail";
     }
@@ -162,6 +166,12 @@ public class DoorAlarmController {
     @RequestMapping(value = "/add.do", method = RequestMethod.GET)
     public String showAlarmGroupAddView(ModelMap model, @RequestParam Map<String, Object> commandMap, RedirectAttributes redirectAttributes) throws Exception {
 
+        List<HashMap> doorAlarmTypeList = doorAlarmService.getDoorAlarmTypeList();
+        List<HashMap> alarmUseTypeList = doorAlarmService.getAlarmUseTypeList();
+
+        model.addAttribute("doorAlarmTypeList", doorAlarmTypeList);
+        model.addAttribute("alarmUseTypeList", alarmUseTypeList);
+
         return "cubox/door/alarm/add";
     }
 
@@ -170,15 +180,30 @@ public class DoorAlarmController {
     // 출입문 알람 그룹 등록
     @ResponseBody
     @RequestMapping(value = "/save.do", method = RequestMethod.POST)
-    public ModelAndView addAalarmGroup(ModelMap model, @RequestParam Map<String, Object> commandMap, RedirectAttributes redirectAttributes) throws Exception {
+    public ModelAndView addAlarmGroup(ModelMap model, @RequestParam Map<String, Object> commandMap, RedirectAttributes redirectAttributes) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jsonView");
 
         String resultCode = "Y";
         String newDoorId = "";
+
+        String nm = StringUtil.nvl(commandMap.get("nm"), "");
+        String time = StringUtil.nvl(commandMap.get("time"), "0");
+        String alarmUseType = StringUtil.nvl(commandMap.get("alarm_use_type"), "");
+        String doorAlarmType = StringUtil.nvl(commandMap.get("door_alarm_type"), "");
+        String doorIds = StringUtil.nvl(commandMap.get("doorIds"), "");
+
+        HashMap param = new HashMap();
+
+        param.put("nm", nm);
+        param.put("time", time);
+        param.put("alarmUseType", alarmUseType);
+        param.put("doorAlarmType", doorAlarmType);
+        param.put("doorIds", doorIds);
+
         try {
-            newDoorId = doorAlarmService.addDoorAlarmGrp(commandMap);
+            newDoorId = doorAlarmService.addDoorAlarmGrp(param);
         } catch (Exception e) {
             e.getStackTrace();
             resultCode = "N";
@@ -208,19 +233,23 @@ public class DoorAlarmController {
         }
 
         String nm = StringUtil.nvl(commandMap.get("nm"), "");
-        String time = StringUtil.nvl(commandMap.get("time"), "");
-        String envYn = StringUtil.nvl(commandMap.get("envYn"), "");
-        String deleteYn = StringUtil.nvl(commandMap.get("deleteYn"), "");
+        String time = StringUtil.nvl(commandMap.get("time"), "0");
+        String alarmUseType = StringUtil.nvl(commandMap.get("alarm_use_type"), "");
+        String doorAlarmType = StringUtil.nvl(commandMap.get("door_alarm_type"), "");
         String doorIds = StringUtil.nvl(commandMap.get("doorIds"), "");
+//        String envYn = StringUtil.nvl(commandMap.get("envYn"), "");
+//        String deleteYn = StringUtil.nvl(commandMap.get("deleteYn"), "");
 
         HashMap param = new HashMap();
 
         param.put("id", id);
         param.put("nm", nm);
         param.put("time", time);
-        param.put("envYn", envYn);
-        param.put("deleteYn", deleteYn);
+        param.put("alarmUseType", alarmUseType);
+        param.put("doorAlarmType", doorAlarmType);
         param.put("doorIds", doorIds);
+//        param.put("envYn", envYn);
+//        param.put("deleteYn", deleteYn);
 
         try {
             doorAlarmService.updateDoorAlarmGrp(param);
@@ -229,7 +258,6 @@ public class DoorAlarmController {
             e.getStackTrace();
             resultCode = "N";
         }
-
         model.addAttribute("resultCode", resultCode);
 
         return modelAndView;
@@ -249,8 +277,6 @@ public class DoorAlarmController {
             e.getStackTrace();
             resultCode = "N";
         }
-
-
         model.addAttribute("resultCode", resultCode);
 
         return modelAndView;

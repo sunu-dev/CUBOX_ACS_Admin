@@ -37,14 +37,12 @@
 
 <script type="text/javascript">
 
-    const defaultTime = 60; // 기본 시간 설정
+    // const defaultTime = 60; // 기본 시간 설정
 
     $(function() {
         $(".title_tx").html("출입문 알람 그룹 - 등록");
 
-        // modalPopup("doorListPopup", "출입문 목록", 450, 550);
         modalPopup("doorEditPopup", "출입문 등록", 900, 600);
-
         chkAlType();
 
         // 출입문 알람그룹 명 유효성 체크
@@ -53,8 +51,7 @@
         });
 
         // 유형 - 기본시간
-        $("#alType").change(function() {
-            // console.log($(this).val());
+        $("#alUseYn").change(function() {
             chkAlType();
         });
 
@@ -62,10 +59,11 @@
 
     // 유형:기본시간 --> 시간 고정
     function chkAlType() {
-        if ($("#alType").val() == "Y") {
-            $("#alTime").val(defaultTime).attr("disabled", true);
+        if ($("#alUseYn").val() === "AUT001") { // 장시간 알람
+            $("#alTime").attr("disabled", false);
+            $("#alTime").focus();
         } else {
-            $("#alTime").val("").attr("disabled", false);
+            $("#alTime").val("").attr("disabled", true);
         }
     }
 
@@ -76,17 +74,17 @@
             alert("출입문 알람 그룹 명을 입력해주세요.");
             $("#alNm").focus();
             return;
-        } else if (fnIsEmpty($("#alType").val())) {
-            alert("유형을 선택해주세요.");
-            $("#alType").focus();
-            return;
-        } else if (fnIsEmpty($("#alTime").val())) {
-            alert("시간을 입력해주세요.");
-            $("#alTime").focus();
-            return;
         } else if (fnIsEmpty($("#alUseYn").val())) {
             alert("사용여부를 선택해주세요.");
             $("#alUseYn").focus();
+            return;
+        } else if (fnIsEmpty($("#alTime").val()) && $("#alUseYn").val() === "AUT001") {
+            alert("시간을 입력해주세요.");
+            $("#alTime").focus();
+            return;
+        } else if (fnIsEmpty($("#alType").val())) {
+            alert("유형을 선택해주세요.");
+            $("#alType").focus();
             return;
         }
 
@@ -102,20 +100,19 @@
 
     function fnSaveAlarmGroupAjax() {
         let alNm = $("#alNm").val();
-        let envYn = $("#alType").val();
+        let alUseYn = $("#alUseYn").val(); // 사용
         let alTime = $("#alTime").val();
-        let deleteYn = $("#alUseYn").val();
+        let alType = $("#alType").val();  // 알람유형
         let doorIds = $("#doorIds").val();
-        // TODO : 저장할 때 #alTime disabled 된 것 풀어줘야 함.
 
         $.ajax({
             type: "POST",
             url: "<c:url value='/door/alarm/save.do'/>",
             data: {
                 nm: alNm,
+                alarm_use_type: alUseYn,
                 time: alTime,
-                envYn: envYn,
-                deleteYn: deleteYn,
+                door_alarm_type: alType,
                 doorIds: doorIds
             },
             dataType: "json",
@@ -167,12 +164,13 @@
                 </td>
             </tr>
             <tr>
-                <th>유형</th>
+                <th>사용</th>
                 <td>
-                    <select id="alType" name="alType" class="form-control input_com w_600px" style="padding-left:10px;">
+                    <select id="alUseYn" name="alUseYn" class="form-control input_com w_600px" style="padding-left:10px;">
                         <option value="" selected>선택</option>
-                        <option value="Y">기본 시간</option>
-                        <option value="N">지정시간</option>
+                        <c:forEach items="${alarmUseTypeList}" var="alarmUseType">
+                            <option value="${alarmUseType.cd}">${alarmUseType.cd_nm}</option>
+                        </c:forEach>
                     </select>
                 </td>
             </tr>
@@ -184,12 +182,13 @@
                 </td>
             </tr>
             <tr>
-                <th>사용</th>
+                <th>알람유형</th>
                 <td>
-                    <select id="alUseYn" name="alUseYn" class="form-control input_com w_600px" style="padding-left:10px;">
+                    <select id="alType" name="alType" class="form-control input_com w_600px" style="padding-left:10px;">
                         <option value="" selected>선택</option>
-                        <option value="Y">사용</option>
-                        <option value="N">미사용</option>
+                        <c:forEach items="${doorAlarmTypeList}" var="doorAlarmType">
+                            <option value="${doorAlarmType.cd}">${doorAlarmType.cd_nm}</option>
+                        </c:forEach>
                     </select>
                 </td>
             </tr>

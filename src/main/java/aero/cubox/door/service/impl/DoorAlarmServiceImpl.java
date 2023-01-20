@@ -119,5 +119,14 @@ public class DoorAlarmServiceImpl extends EgovAbstractServiceImpl implements Doo
         return doorAlarmDAO.getDoorAlarmGroupNameVerification(param);
     }
 
+    @Override
+    public List<HashMap> getDoorAlarmTypeList() {
+        return doorAlarmDAO.getDoorAlarmTypeList();
+    }
+
+    @Override
+    public List<HashMap> getAlarmUseTypeList() {
+        return doorAlarmDAO.getAlarmUseTypeList();
+    }
 
 }
