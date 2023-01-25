@@ -53,4 +53,12 @@ public class DoorAlarmDAO extends EgovAbstractMapper {
         update(sqlNameSpace+"deleteDoorInDoorAlarmGroup", paramMap);
     }
 
+    public List<HashMap> getDoorAlarmTypeList() {
+        return selectList(sqlNameSpace+"selectDoorAlarmTypeList");
+    }
+
+    public List<HashMap> getAlarmUseTypeList() {
+        return selectList(sqlNameSpace+"selectAlarmUseTypeList");
+    }
+
 }

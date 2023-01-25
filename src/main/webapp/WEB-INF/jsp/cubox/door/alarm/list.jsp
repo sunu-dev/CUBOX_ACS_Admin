@@ -65,20 +65,20 @@
         <table class="tb_list">
             <colgroup>
                 <col style="width:4%">
-                <col style="width:36%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
-                <col style="width:10%">
+                <col style="width:30%">
+                <col style="width:11%">
+                <col style="width:11%">
+                <col style="width:11%">
+                <col style="width:11%">
+                <col style="width:11%">
+                <col style="width:11%">
             </colgroup>
             <thead>
             <tr>
                 <th>No.</th>
                 <th>출입문 알람 그룹명</th>
-                <th>유형</th>
-                <th>시간</th>
+                <th>알람유형</th>
+                <th>시간(초)</th>
                 <th>출입문 수</th>
                 <th>사용</th>
                 <th>등록일자</th>
@@ -95,10 +95,10 @@
                 <tr>
                     <td>${(pagination.totRecord - (pagination.totRecord-status.index)+1)  + ( (pagination.curPage - 1)  *  pagination.recPerPage ) }</td>
                     <td><a href='/door/alarm/detail/<c:out value="${sList.id}"/>'><c:out value="${sList.nm}"/></a></td>
-                    <td><c:choose><c:when test="${sList.env_yn eq 'Y'}">사용</c:when><c:otherwise>미사용</c:otherwise></c:choose></td>
+                    <td>${sList.door_alarm_nm}</td>
                     <td><c:out value="${sList.time}"/></td>
                     <td><c:out value="${sList.door_cnt}"/></td>
-                    <td><c:choose><c:when test="${sList.delete_yn eq 'Y'}">사용</c:when><c:otherwise>미사용</c:otherwise></c:choose></td>
+                    <td>${sList.alarm_use_nm}</td>
                     <td><c:out value="${sList.created_at}"/></td>
                     <td><c:out value="${sList.updated_at}"/></td>
                 </tr>
