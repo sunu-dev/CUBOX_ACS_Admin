@@ -7,8 +7,10 @@
         SELECT A.id
              , A.nm
              , A.time
-             , A.env_yn
-             , A.delete_yn
+             , A.door_alarm_typ
+             , (select cd_nm from T_CMMN_CD TCC where TCC.cd like A.door_alarm_typ) door_alarm_nm
+             , A.alarm_use_typ
+             , (select cd_nm from T_CMMN_CD TCC where TCC.cd like A.alarm_use_typ) alarm_use_nm
              , (select COUNT(TDA.door_id) from T_DOOR_ALARM TDA where TDA.dooralram_grp_id = A.id)  as door_cnt
              , DATE_FORMAT(A.created_at, '%Y-%m-%d') as created_at
              , DATE_FORMAT(A.updated_at, '%Y-%m-%d') as updated_at
@@ -16,8 +18,8 @@
              SELECT TDG.id
                   , TDG.nm
                   , TDG.time
-                  , TDG.env_yn
-                  , TDG.delete_yn
+                  , TDG.door_alarm_typ
+                  , TDG.alarm_use_typ
                   , TDG.created_at
                   , TDG.updated_at
                FROM T_DOORALARM_GRP TDG
@@ -56,8 +58,8 @@
         SELECT TDG.id
              , TDG.nm
              , TDG.time
-             , TDG.env_yn
-             , TDG.delete_yn
+             , TDG.door_alarm_typ
+             , TDG.alarm_use_typ
              , (select COUNT(TDA.door_id) from T_DOOR_ALARM TDA where TDA.dooralram_grp_id = TDG.id) AS door_cnt
              , (SELECT GROUP_CONCAT( TDA.door_id  SEPARATOR '/') FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id = TDG.id ) AS door_ids
              , (SELECT GROUP_CONCAT( (SELECT A.door_nm FROM T_DOOR A where A.id = TDA.door_id ) SEPARATOR '/')  FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id= TDG.id ) AS door_nms
@@ -76,16 +78,16 @@
           INTO T_DOORALARM_GRP
              ( nm
              , time
-             , env_yn
-             , delete_yn
+             , alarm_use_typ
+             , door_alarm_typ
              , created_at
              , updated_at
              )
         VALUES
              ( #{nm}
              , #{time}
-             , #{envYn}
-             , #{deleteYn}
+             , #{alarmUseType}
+             , #{doorAlarmType}
              , NOW(6)
              , NOW(6)
              )
@@ -97,8 +99,8 @@
         UPDATE T_DOORALARM_GRP
            SET nm = #{nm}
              , time = #{time}
-             , env_yn = #{envYn}
-             , delete_yn = #{deleteYn}
+             , door_alarm_typ = #{doorAlarmType}
+             , alarm_use_typ = #{alarmUseType}
              , updated_at= NOW(6)
          WHERE id = #{id}
     </update>
@@ -144,5 +146,22 @@
            AND replace(TDG.nm, ' ', '') = replace(#{nm}, ' ', '')
     </select>
 
+    <select id="selectDoorAlarmTypeList" resultType="HashMap">
+        SELECT
+            cd
+             , cd_nm
+        FROM T_CMMN_CD
+        WHERE 1=1
+          AND cd_typ = 'DoorAlarmTyp'
+    </select>
+
+    <select id="selectAlarmUseTypeList" resultType="HashMap">
+        SELECT
+            cd
+             , cd_nm
+        FROM T_CMMN_CD
+        WHERE 1=1
+          AND cd_typ = 'AlarmUseTyp'
+    </select>
 
 </mapper>

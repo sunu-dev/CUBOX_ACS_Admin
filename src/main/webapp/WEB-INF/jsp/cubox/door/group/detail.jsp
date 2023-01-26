@@ -144,9 +144,9 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result.resultCode);
+                console.log(result);
 
-                if( result.resultCode == "Y" ) {
+                if(result.resultCode === "Y") {
                     alert("수정이 완료되었습니다.");
                     window.location.href = '/door/group/detail/' + id;
                 } else {

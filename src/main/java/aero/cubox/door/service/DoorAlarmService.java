@@ -16,4 +16,8 @@ public interface DoorAlarmService {
     void deleteDoorAlarmGrp(int commandMap);
 
     int getDoorAlarmGroupNameVerification(HashMap<String, Object> param);
+
+    List<HashMap> getDoorAlarmTypeList();
+
+    List<HashMap> getAlarmUseTypeList();
 }

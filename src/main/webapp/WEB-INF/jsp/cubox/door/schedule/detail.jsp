@@ -680,9 +680,7 @@
             if (!confirm("완성되지 않은 스케쥴이 있습니다. \n계속 진행하시겠습니까?")) {
                 return false;
             } else {
-                // console.log(tmpList);
                 for (let i in tmpList) {
-                    // console.log($(tmpList[i]).val());
                     $(tmpList[i]).val("");
                 }
                 return true;
@@ -804,7 +802,6 @@
     /////////////////  요일별 스케쥴 뿌려주기 ajax - start  /////////////////////
 
     function fnGetScheduleByDayDetail() {
-        // console.log("fnGetScheduleByDayDetail");
 
         $.ajax({
             type : "POST",
@@ -839,7 +836,6 @@
                     });
 
                     $("#daySchCnt").val(cnt);
-
                 }
             }
         });

@@ -42,10 +42,7 @@
     $(function() {
         $(".title_tx").html("출입문 알람 그룹 - 상세");
 
-        // modalPopup("doorListPopup", "출입문 목록", 450, 550);
         modalPopup("doorEditPopup", "출입문 수정", 900, 600);
-
-        // chkAlType();
 
         // 출입문 알람그룹 명 유효성 체크
         $("#alNm").focusout(function() {
@@ -53,21 +50,20 @@
         });
 
         // 유형 - 기본시간
-        $("#alType").change(function() {
-            // console.log($(this).val());
-            // chkAlType();
+        $("#alUseYn").change(function() {
+            chkAlType();
         });
 
     });
 
     // 유형:기본시간 --> 시간 고정
-    // function chkAlType() {
-    //     if ($("#alType").val() == "Y") {
-    //         $("#alTime").val(defaultTime).attr("disabled", true);
-    //     } else {
-    //         $("#alTime").val("").attr("disabled", false);
-    //     }
-    // }
+    function chkAlType() {
+        if ($("#alUseYn").val() === "AUT001") { // 장시간 알람
+            $("#alTime").attr("disabled", false);
+        } else {
+            $("#alTime").val("").attr("disabled", true);
+        }
+    }
 
     // 수정 확인
     function fnSave() {
@@ -75,20 +71,18 @@
         if (fnIsEmpty($("#alNm").val())) {
             alert("출입문 알람 그룹 명을 입력해주세요.");
             $("#alNm").focus(); return;
-        } else if (fnIsEmpty($("#alType").val())) {
-            alert("유형을 선택해주세요.");
-            $("#alType").focus(); return;
-        } else if (fnIsEmpty($("#alTime").val())) {
-            alert("시간을 입력해주세요.");
-            $("#alTime").focus(); return;
         } else if (fnIsEmpty($("#alUseYn").val())) {
             alert("사용여부를 선택해주세요.");
             $("#alUseYn").focus(); return;
+        } else if (fnIsEmpty($("#alTime").val()) && $("#alUseYn").val() === "AUT001") { // 장시간알람일 때
+            alert("시간을 입력해주세요.");
+            $("#alTime").focus(); return;
+        } else if (fnIsEmpty($("#alType").val())) {
+            alert("유형을 선택해주세요.");
+            $("#alType").focus();
+            return;
         }
-        // else if (fnIsEmpty($("#doorIds").val() || $("#alDoorCnt").val()) == 0) {
-        //     alert("출입문을 선택해주세요.");
-        //     return;
-        // }
+
 
         if (confirm("출입문 알람그룹을 저장하시겠습니까?")) {
             fnUpdateAlarmGroupAjax();
@@ -157,22 +151,23 @@
 
     function fnUpdateAlarmGroupAjax() {
         let alNm = $("#alNm").val();
-        let envYn = $("#alType").val();
+        let alUseYn = $("#alUseYn").val(); // 사용
         let alTime = $("#alTime").val();
-        let deleteYn = $("#alUseYn").val();
+        let alType = $("#alType").val();  // 알람유형
         let doorIds = $("#doorIds").val();
         let url = "<c:url value='/door/alarm/modify/${doorGroupDetail.id}'/>"
-        // TODO : 저장할 때 #alTime disabled 된 것 풀어줘야 함.
 
         $.ajax({
             type: "POST",
             url: url,
             data: {
                 nm: alNm,
-                envYn: envYn,
+                alarm_use_type: alUseYn,
                 time: alTime,
-                deleteYn: deleteYn,
+                door_alarm_type: alType,
                 doorIds: doorIds
+                // envYn: envYn,
+                // deleteYn: deleteYn,
             },
             dataType: "json",
             success: function(result) {
@@ -229,29 +224,36 @@
                 </td>
             </tr>
             <tr>
-                <th>유형</th>
+                <th>사용</th>
                 <td>
-                    <select id="alType" name="detail" class="form-control input_com w_600px" style="padding-left:10px;" disabled>
+                    <select id="alUseYn" name="detail" class="form-control input_com w_600px" style="padding-left:10px;" disabled>
                         <option value="">선택</option>
-                        <option value="Y" <c:if test="${doorGroupDetail.env_yn eq 'Y'}" >selected </c:if>>기본시간</option>
-                        <option value="N" <c:if test="${doorGroupDetail.env_yn eq 'N'}" >selected </c:if>>지정시간</option>
+                        <c:forEach items="${alarmUseTypeList}" var="alarmUseType" varStatus="status">
+                            <option value="${alarmUseType.cd}" <c:if test="${doorGroupDetail.alarm_use_typ eq alarmUseType.cd}">selected</c:if>>
+                                    ${alarmUseType.cd_nm}
+                            </option>
+                        </c:forEach>
                     </select>
                 </td>
             </tr>
             <tr>
                 <th>시간</th>
                 <td>
-                    <input type="number" id="alTime" name="detail" min="1" max="9999" maxlength="4" value="${doorGroupDetail.time}" class="input_com w_600px"
+                    <input type="number" id="alTime" name="<c:if test='${doorGroupDetail.alarm_use_typ eq "AUT001"}'>detail</c:if>" min="1" max="9999" maxlength="4"
+                           value="<c:if test='${doorGroupDetail.alarm_use_typ eq "AUT001"}'>${doorGroupDetail.time}</c:if>" class="input_com w_600px"
                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');this.value = this.value.slice(0,this.maxLength);" disabled>&ensp;초
                 </td>
             </tr>
             <tr>
-                <th>사용</th>
+                <th>알람유형</th>
                 <td>
-                    <select id="alUseYn" name="detail" class="form-control input_com w_600px" style="padding-left:10px;" disabled>
+                    <select id="alType" name="detail" class="form-control input_com w_600px" style="padding-left:10px;" disabled>
                         <option value="">선택</option>
-                        <option value="Y" <c:if test="${doorGroupDetail.delete_yn eq 'Y'}" >selected </c:if>>사용</option>
-                        <option value="N" <c:if test="${doorGroupDetail.delete_yn eq 'N'}" >selected </c:if>>미사용</option>
+                        <c:forEach items="${doorAlarmTypeList}" var="doorAlarmType" varStatus="status">
+                            <option value="${doorAlarmType.cd}" <c:if test="${doorGroupDetail.door_alarm_typ eq doorAlarmType.cd}">selected</c:if>>
+                                    ${doorAlarmType.cd_nm}
+                            </option>
+                        </c:forEach>
                     </select>
                 </td>
             </tr>
