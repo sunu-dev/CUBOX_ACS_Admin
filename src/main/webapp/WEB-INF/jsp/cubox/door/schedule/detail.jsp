@@ -192,13 +192,13 @@
 
                 if (schCnt !== 0) {
                     // 요일 별 스케쥴 보기 버튼
-                    $("#btnAddByDay").html("요일 별 스케쥴 보기");
+                    $("#btnAddByDay").html("보기");
                     $("#btnDaySchDetail").css("display", "block");
                     $("#btnDaySchAdd").css("display", "none");
                     $("#daySchCnt").val(schCnt); // 0 or 21
                 } else {
                     // 요일 별 스케쥴 등록 버튼
-                    $("#btnAddByDay").html("요일 별 스케쥴 등록");
+                    $("#btnAddByDay").html("등록");
                     $("#btnDaySchDetail").css("display", "none");
                     $("#btnDaySchAdd").css("display", "block");
                     $(".sch1_timepick").prop("disabled", false);
@@ -749,6 +749,7 @@
     /////////////////  출입문 스케쥴 수정 ajax - start  /////////////////////
 
     function fnUpdateScheduleAjax() {
+
         let doorSchNm = $("#schNm").val();
         let useYn = $("#schUseYn").val();
         let doorGroupIds = $("#doorIds").val();
@@ -802,14 +803,17 @@
     /////////////////  요일별 스케쥴 뿌려주기 ajax - start  /////////////////////
 
     function fnGetScheduleByDayDetail() {
+        let url = "<c:url value='/door/schedule/day/detail/${doorScheduleDetail.id}'/>";
 
         $.ajax({
             type : "POST",
             data : {},
             dataType : "json",
             async: false,
-            url : "<c:url value='/door/schedule/day/detail/${doorScheduleDetail.id}'/>",
+            url : url,
             success : function(result) {
+                console.log(result);
+
                 if (result.resultCode === "Y") {
                     console.log(result.scheduleByDayDetailList);
 
@@ -864,7 +868,7 @@
 
                 if (result.resultCode === "Y") {
                     alert("저장되었습니다.");
-                    $("#btnAddByDay").html("요일 별 스케쥴 보기");
+                    $("#btnAddByDay").html("보기");
                     fnDaySchDetailMode();
                 } else {
                     alert("등록에 실패하였습니다.");
@@ -922,7 +926,7 @@
                 if (result.resultCode === "Y") {
                     alert("삭제되었습니다.");
                     fnDaySchInit();
-                    $("#btnAddByDay").html("요일 별 스케쥴 등록");
+                    $("#btnAddByDay").html("등록");
                     $("#btnDaySchAdd").css("display", "block");
                     $("#btnDaySchDetail").css("display", "none");
                     $("#btnDaySchEdit").css("display", "none");
@@ -959,13 +963,21 @@
                 </td>
             </tr>
             <tr>
-                <th>사용</th>
+                <th>사용여부</th>
                 <td>
-                    <select id="schUseYn" name="detail" class="form-control w_600px color_disabled" style="padding-left:10px;" disabled>
+                    <select id="schUseYn" name="detail" class="form-control w_200px color_disabled" style="padding-left:10px;" disabled>
                         <option value="" name="selected">선택</option>
                         <option value="Y" <c:if test="${doorScheduleDetail.use_yn eq 'Y'}" >selected </c:if>>사용</option>
                         <option value="N" <c:if test="${doorScheduleDetail.use_yn eq 'N'}" >selected </c:if>>미사용</option>
                     </select>
+                </td>
+            </tr>
+            <tr>
+                <th>요일 별 스케쥴</th>
+                <td>
+                    <a href='javascript:openPopup("addByDayPopup")'>
+                        <div class="btn_small color_basic" id="btnAddByDay" style="text-align: center; display: inline-block; width: 60px;">보기</div>
+                    </a>
                 </td>
             </tr>
 <%--            <tr>--%>
@@ -998,13 +1010,12 @@ ${dName}</c:forEach></textarea>
     <button class="btn_middle color_basic" onclick="location='/door/schedule/list.do'">목록</button>
     <button class="btn_middle ml_5 color_basic" onclick="fnEditMode();">수정</button>
     <button class="btn_middle ml_5 color_basic" onclick="fnDelete();">삭제</button>
-    <button class="btn_middle ml_10 color_color1" id="btnAddByDay" onclick="openPopup('addByDayPopup');">요일 별 스케쥴 등록</button>
+<%--    <button class="btn_middle ml_10 color_color1" id="btnAddByDay" onclick="openPopup('addByDayPopup');">요일 별 스케쥴 등록</button>--%>
 </div>
 <div class="right_btn mt_20" id="btnboxEdit" style="display:none;">
     <button class="btn_middle color_basic" onclick="fnSave();">저장</button>
     <button class="btn_middle ml_5 color_basic" onclick="fnCancel();">취소</button>
 </div>
-
 <%--  요일 별 스케쥴 등록 modal  --%>
 <div id="addByDayPopup" class="example_content" style="display: none;">
     <c:set var="days" value="${fn:split('월,화,수,목,금,토,일',',')}"/>

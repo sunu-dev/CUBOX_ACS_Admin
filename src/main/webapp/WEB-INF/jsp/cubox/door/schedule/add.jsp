@@ -74,6 +74,36 @@
     }
 
 
+    /////////////////  출입문 알람 그룹 명 중복체크 ajax - start  /////////////////////
+
+    function fnVerifyName() {
+        let nm = $("#schNm").val();
+
+        $.ajax({
+            type: "GET",
+            url: '<c:url value="/door/schedule/name/verification.do" />',
+            dataType: "json",
+            data: { nm: nm },
+            success: function(result) {
+                console.log(result);
+                if (result.doorScheduleNameVerificationCnt != 0) {
+                    alert("이미 존재하는 출입문 스케쥴 명입니다.");
+                    $("#schNm").val("");
+                    $("#schNm").focus();
+                    $("#verifyInfo").css("display", "none");
+                    $("#verifyInfo").attr("stat", "false");
+                } else {
+                    // 사용가능한 이름
+                    // $("#verifyInfo").css("display", "block");
+                    $("#verifyInfo").attr("stat", "true");
+                }
+            }
+        });
+    }
+
+    /////////////////  출입문 알람 그룹 명 중복체크 ajax - start  /////////////////////
+
+
     /////////////////  출입문 스케쥴 저장 ajax - start  /////////////////////
 
     function fnSaveScheduleAjax() {
@@ -119,15 +149,20 @@
                 <input type="hidden" id="doorIds" value="">
                 <tr>
                     <th>출입문 스케쥴 명</th>
-                    <td>
+                    <td style="display: flex;">
                         <input type="text" id="schNm" name="schNm" maxlength="35" size="50" value=''
                                class="w_600px input_com" onkeyup="charCheck(this)" onkeydown="charCheck(this)">
+                        <div class="ml_10" style="display: none; position: relative;">
+                            <button type="button" class="btn_small color_basic" onclick="fnVerifyName()" style="width:60px; position:absolute; bottom:0; display:block;">중복확인</button>
+                        </div>
+                        <div id="verifyInfo" stat="false" style="display:none; position: relative; font-size: smaller; margin: auto 70px; color: blue;">* 사용가능한 출입문 스케쥴 명</div>
                     </td>
+
                 </tr>
                 <tr>
-                    <th>사용</th>
+                    <th>사용여부</th>
                     <td>
-                        <select id="schUseYn" name="schUseYn" class="form-control w_600px" style="padding-left:10px;">
+                        <select id="schUseYn" name="schUseYn" class="form-control w_200px" style="padding-left:10px;">
                             <option value="" name="selected">선택</option>
                             <option value="Y">사용</option>
                             <option value="N">미사용</option>

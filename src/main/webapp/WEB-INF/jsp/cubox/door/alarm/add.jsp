@@ -33,6 +33,7 @@
         background-color: #eee !important;
         opacity: 1;
     }
+
 </style>
 
 <script type="text/javascript">
@@ -46,9 +47,9 @@
         chkAlType();
 
         // 출입문 알람그룹 명 유효성 체크
-        $("#alNm").focusout(function() {
-            // TODO : 출입문스케쥴명 유효성 체크 (ajax)
-        });
+        // $("#alNm").focusout(function() {
+        //     fnVerifyName();
+        // });
 
         // 유형 - 기본시간
         $("#alUseYn").change(function() {
@@ -74,6 +75,9 @@
             alert("출입문 알람 그룹 명을 입력해주세요.");
             $("#alNm").focus();
             return;
+        } else if ($("#verifyInfo").attr("stat") !== "true") {
+            alert("출입문 알람 그룹 명 중복확인을 해주세요.");
+            return;
         } else if (fnIsEmpty($("#alUseYn").val())) {
             alert("사용여부를 선택해주세요.");
             $("#alUseYn").focus();
@@ -94,6 +98,36 @@
             return;
         }
     }
+
+
+    /////////////////  출입문 알람 그룹 명 중복체크 ajax - start  /////////////////////
+
+    function fnVerifyName() {
+        let nm = $("#alNm").val();
+
+        $.ajax({
+            type: "GET",
+            url: '<c:url value="/door/alarm/name/verification.do" />',
+            dataType: "json",
+            data: { nm: nm },
+            success: function(result) {
+                console.log(result);
+                if (result.doorAlarmGroupNameVerificationCnt != 0) {
+                    alert("이미 존재하는 출입문 알람그룹 명입니다.");
+                    $("#alNm").val("");
+                    $("#alNm").focus();
+                    $("#verifyInfo").css("display", "none");
+                    $("#verifyInfo").attr("stat", "false");
+                } else {
+                    // 사용가능한 이름
+                    // $("#verifyInfo").css("display", "block");
+                    $("#verifyInfo").attr("stat", "true");
+                }
+            }
+        });
+    }
+
+    /////////////////  출입문 알람 그룹 명 중복체크 ajax - start  /////////////////////
 
 
     /////////////////  출입문 알람그룹 저장 ajax - start  /////////////////////
@@ -158,9 +192,13 @@
             <input type="hidden" id="doorIds" value="">
             <tr>
                 <th>출입문 알람 그룹 명</th>
-                <td>
+                <td style="display: flex;">
                     <input type="text" id="alNm" name="alNm" maxlength="35" value=""
                            class="input_com w_600px" onkeyup="charCheck(this)" onkeydown="charCheck(this)">
+                    <div class="ml_10" style="display: none; position: relative;">
+                        <button type="button" class="btn_small color_basic" onclick="fnVerifyName()" style="width:60px; position:absolute; bottom:0; display:block;">중복확인</button>
+                    </div>
+                    <div id="verifyInfo" stat="false" style="display:none; position: relative; font-size: smaller; margin: auto 70px; color: blue;">* 사용가능한 출입문 알람그룹명</div>
                 </td>
             </tr>
             <tr>

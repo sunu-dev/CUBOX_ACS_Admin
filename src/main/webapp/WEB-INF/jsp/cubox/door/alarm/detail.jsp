@@ -37,8 +37,6 @@
 
 <script type="text/javascript">
 
-    const defaultTime = 60; // 기본 시간 설정
-
     $(function() {
         $(".title_tx").html("출입문 알람 그룹 - 상세");
 
