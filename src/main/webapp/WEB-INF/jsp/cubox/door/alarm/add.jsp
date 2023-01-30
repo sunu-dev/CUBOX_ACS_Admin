@@ -75,9 +75,9 @@
             alert("출입문 알람 그룹 명을 입력해주세요.");
             $("#alNm").focus();
             return;
-        } else if ($("#verifyInfo").attr("stat") !== "true") {
-            alert("출입문 알람 그룹 명 중복확인을 해주세요.");
-            return;
+        // } else if ($("#verifyInfo").attr("stat") !== "true") {
+        //     alert("출입문 알람 그룹 명 중복확인을 해주세요.");
+        //     return;
         } else if (fnIsEmpty($("#alUseYn").val())) {
             alert("사용여부를 선택해주세요.");
             $("#alUseYn").focus();

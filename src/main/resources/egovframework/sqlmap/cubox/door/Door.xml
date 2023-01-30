@@ -65,7 +65,7 @@
 	    	   , area_id
 	    	   , floor_id
 	    	   , door_nm
-	    	   , alarm_typ
+	    	   , dooralarm_grp_id
 	    	   , created_at
 	    	   , updated_at
 		       )
@@ -92,7 +92,7 @@
 		     , area_id = #{areaId}
 		     , floor_id = #{floorId}
 		     , door_nm = #{doorNm}
-		     , alarm_typ = #{alarmGroupId}
+		     , dooralarm_grp_id = #{alarmGroupId}
 			 , sch_doorgrp_id = #{schDoorgrpId}
 		     , updated_at = NOW(6)
 		 WHERE id = #{id}
@@ -256,9 +256,21 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 	<update id="updateDoorIdForTerminal" parameterType="HashMap">
 		UPDATE T_TERMINAL
 		   SET door_id = #{doorId}
+		     , door_cd = #{doorCd}
+		     , use_yn = 'Y'
 		     , updated_at= NOW(6)
 		 WHERE id = #{id}
 	</update>
+
+
+	<update id="deleteDoorIdForTerminal" parameterType="HashMap">
+		UPDATE T_TERMINAL
+		   SET door_id = NULL
+			 , door_cd = NULL
+		     , use_yn = 'N'
+		 WHERE door_id = #{doorId};
+	</update>
+
 
 	<insert id="insertDoorIdForAuthDoor" parameterType="HashMap">
 		INSERT

@@ -59,7 +59,12 @@
             alert("출입문 그룹 명을 입력해주세요.");
             $("#gpNm").focus();
             return;
+        } else if (fnIsEmpty($("#gpSchedule").val())) {
+            alert("출입문 스케쥴을 선택해주세요.");
+            $("#gpSchedule").focus();
+            return;
         }
+
         if (confirm("저장하시겠습니까?")) {
             fnSaveGroupAjax();
         } else {
