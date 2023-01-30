@@ -247,6 +247,7 @@ public class DoorController {
             modelAndView.addObject("resultMsg", "no id");
         } else {
             String doorId = commandMap.get("doorId").toString();
+            String doorCd = commandMap.get("doorCd").toString();
             String doorNm = StringUtil.nvl(commandMap.get("doorNm"), "");;
             String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
             //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
@@ -258,6 +259,7 @@ public class DoorController {
             String authGrIds = StringUtil.nvl(commandMap.get("authGrIds"), "");
 
             param.put("id", doorId);
+            param.put("doorCd", doorCd);
             param.put("doorNm", doorNm);
             param.put("buildingId", buildingId);
             //param.put("areaId", areaId);

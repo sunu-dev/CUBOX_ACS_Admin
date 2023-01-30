@@ -289,7 +289,7 @@ public class DoorAlarmController {
         modelAndView.setViewName("jsonView");
         HashMap<String, Object> param = new HashMap<String, Object>();
 
-        param.put("doorGroupNm", commandMap.get("doorGroupNm"));
+        param.put("nm", commandMap.get("nm"));
 
         int doorAlarmGroupNameVerificationCnt = doorAlarmService.getDoorAlarmGroupNameVerification(param);
 

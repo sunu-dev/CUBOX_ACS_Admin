@@ -76,6 +76,10 @@ public class DoorDAO extends EgovAbstractMapper {
 		update(sqlNameSpace+"updateDoorIdForTerminal", paramMap);
 	}
 
+	public void deleteDoorIdForTerminal(Map<String, Object> paramMap) {
+		delete(sqlNameSpace+"deleteDoorIdForTerminal", paramMap);
+	}
+
 	public void updateDoorIdForAuthDoor(Map<String, Object> paramMap) {
 		update(sqlNameSpace+"updateDoorIdForTerminal", paramMap);
 	}
@@ -86,7 +90,6 @@ public class DoorDAO extends EgovAbstractMapper {
 
 	public void deleteDoorIdForAuthDoor(Map<String, Object> paramMap) {
 		delete(sqlNameSpace+"deleteDoorIdForAuthDoor", paramMap);
-
 	}
 
 	public void insertBuilding(HashMap paramMap) {
