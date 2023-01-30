@@ -981,6 +981,8 @@
             authGrIds: $("#authGroupId").val()
         };
 
+        console.log(data);
+
         if (doorId === "") { // 등록 시
             url = "<c:url value='/door/add.do' />";
             data = data;
