@@ -65,7 +65,7 @@
 	    	   , area_id
 	    	   , floor_id
 	    	   , door_nm
-	    	   , alarm_typ
+	    	   , dooralarm_grp_id
 	    	   , created_at
 	    	   , updated_at
 		       )
@@ -92,7 +92,7 @@
 		     , area_id = #{areaId}
 		     , floor_id = #{floorId}
 		     , door_nm = #{doorNm}
-		     , alarm_typ = #{alarmGroupId}
+		     , dooralarm_grp_id = #{alarmGroupId}
 			 , sch_doorgrp_id = #{schDoorgrpId}
 		     , updated_at = NOW(6)
 		 WHERE id = #{id}

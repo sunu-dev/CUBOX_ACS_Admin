@@ -1224,8 +1224,6 @@
             async: false,
             dataType: "json",
             success: function (result) {
-                console.log(result.buildingNameVerificationCnt);
-
                 if (result.buildingNameVerificationCnt != 0) {  // 사용 불가능
                     alert("이미 사용중인 빌딩 명 입니다.");
                     $("#buildingNm").val("");
@@ -1284,8 +1282,6 @@
             async: false,
             dataType: "json",
             success: function (result) {
-                console.log(result.doorNameVerificationCnt);
-
                 if (result.doorNameVerificationCnt != 0) {  // 사용 불가능
                     alert("이미 사용중인 출입문 명 입니다.");
                     $("#doorNm").val("");
