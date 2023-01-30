@@ -318,6 +318,7 @@
             $(".doorDetailList #dBuilding").val("");
             $(".doorDetailList #dFloor").val("");
             $(".doorDetailList [name=doorEditSelect]").prop("disabled", true);
+            $(".doorDetailList [name=doorEditDisabled]").prop("disabled", true);
         }
 
         $("option[name='selected']").prop("selected", true);
@@ -636,68 +637,73 @@
 
     // 빌딩 validation
     function buildingValid() {
-        let result = true;
         if (fnIsEmpty($("#buildingNm").val())) {
             alert("빌딩(동) 명칭을 입력하세요.");
             $("#buildingNm").focus();
-            return;
+            return false;
         }
         if ($("#buildingId").val() == "" && !fnBuildingNameValidAjax()) {
-            return;
+            return false;
         }
-        return result;
+        return true;
     }
 
     // 층 validation
     function floorValid() {
-        let result = true;
         if (fnIsEmpty($("#floorNm").val())) {
             alert("층 명칭을 입력하세요.");
             $("#floorNm").focus();
-            return;
+            return false;
         }
         if (fnIsEmpty($(".floorDetailList #dBuilding").val())) {
             alert("빌딩(동)을 선택해주세요.");
             $(".floorDetailList #dBuilding").focus();
-            return;
+            return false;
         }
         if ($("#floorId").val() == "" && !fnFloorNameValidAjax()) {
-            return;
+            return false;
         }
-        return result;
+        return true;
     }
 
     // 출입문 validation
     function doorValid() {
-        let result = true;
         // validation
         if (fnIsEmpty($("#doorNm").val())) {
             alert("출입문 명칭을 입력하세요.");
             $("#doorNm").focus();
-            return;
+            return false;
+        }
+        if (fnIsEmpty($("#doorCd").val())) {
+            alert("출입문 코드를 입력하세요.");
+            $("#doorCd").focus();
+            return false;
         }
         if (fnIsEmpty($(".doorDetailList #dBuilding").val())) {
             alert("빌딩(동)을 선택해주세요");
             $(".doorDetailList #dBuilding").focus();
-            return;
+            return false;
         }
         if (fnIsEmpty($(".doorDetailList #dFloor").val())) {
             alert("층을 선택해주세요");
             $(".doorDetailList #dFloor").focus();
-            return;
+            return false;
+        }
+        if (fnIsEmpty($("#doorAlarmGroup").val())) {
+            alert("알람그룹을 선택해주세요.");
+            $("#doorAlarmGroup").focus();
+            return false;
         }
         // 출입문 명 중복확인
         if ($("#doorId").val() == "" && !fnDoorNameValidAjax()) {
-            return;
+            return false;
         }
 
-        return result;
+        return true;
     }
 
     // 출입문 저장
     function fnSave() {
-        // disabled 해제
-        $(":disabled").prop("disabled", false);
 
         let authType = $("#authType").val();
         if (authType === "building") {
@@ -958,6 +964,7 @@
     /////////////////  출입문 저장 ajax - start  /////////////////////
 
     function fnSaveDoorAjax() {
+
         let url = "";
         let mode = "";
         let doorId = $("#doorId").val();
