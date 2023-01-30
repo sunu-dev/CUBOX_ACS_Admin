@@ -12,6 +12,7 @@
 		       , TD.area_id
 		       , TD.floor_id
 		       , TD.alarm_typ
+		       , TD.dooralarm_grp_id
 		      -- , TDD.doorgrp_id
 		       , TSD.id AS sch_doorgrp_id
 		       , TSD.nm AS sch_doorgrp_nm

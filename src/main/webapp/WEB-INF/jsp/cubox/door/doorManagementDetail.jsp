@@ -493,7 +493,7 @@
                 $(".doorDetailList #dFloor").val(dInfo.floor_id);                       // 층
                 $("#selSchDoorGroup").val(dInfo.sch_doorgrp_nm);                        // 스케쥴 그룹
                 $("#selSchedule").val(dInfo.sch_nm);                                    // 스케쥴
-                $("#doorAlarmGroup").val(dInfo.alarm_typ);                              // 알람그룹
+                $("#doorAlarmGroup").val(dInfo.dooralarm_grp_id);                       // 알람그룹
                 $("#terminalId").val(dInfo.terminal_id);                                // 단말기 id
                 $("#terminalCd").val(dInfo.terminal_cd);                                // 단말기 코드
                 $("#mgmtNum").val(dInfo.mgmt_num);                                      // 단말기 관리번호

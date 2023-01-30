@@ -539,7 +539,7 @@ public class DoorScheduleController {
         modelAndView.setViewName("jsonView");
         HashMap<String, Object> param = new HashMap<String, Object>();
 
-        param.put("doorGroupNm", commandMap.get("doorGroupNm"));
+        param.put("doorSchNm", commandMap.get("nm"));
 
         int doorScheduleNameVerificationCnt = doorScheduleService.getDoorScheduleNameVerification(param);
 
