@@ -187,30 +187,36 @@ public class DoorController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jsonView");
+        //  / building_cd / floor_cd /  /  /  /  /  / alarm_typ
+        // sch_doorgrp_id /  /  /
 
         String doorNm = StringUtil.nvl(commandMap.get("doorNm"), "");
         String doorCd = StringUtil.nvl(commandMap.get("doorCd"), "");
         String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
-        //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
+        String buildingCd = doorService.getBuildingCd(buildingId);
         String floorId = StringUtil.nvl(commandMap.get("floorId"), "");
-//        String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
-//        String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
+        String floorCd = doorService.getFloorCd(floorId);
         String alarmGroupId = StringUtil.nvl(commandMap.get("alarmGroupId"), "");
         String terminalIds = StringUtil.nvl(commandMap.get("terminalIds"), "");
         String authGrIds = StringUtil.isNullToString(commandMap.get("authGrIds"));
+//        String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
+//        String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
+//        String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
 
         HashMap param = new HashMap();
 
         param.put("doorNm", doorNm);                    //출입문 명
         param.put("doorCd", doorCd);                    //출입문 코드
         param.put("buildingId", buildingId);            //빌딩 ID
-        //param.put("areaId", areaId);                  //지역 ID
+        param.put("buildingCd", buildingCd);            //빌딩 코드
         param.put("floorId", floorId);                  //층 ID
-//        param.put("doorScheduleId", scheduleId);        //스케쥴 ID
-//        param.put("doorGroupId", doorGroupId);        //출입문 스케쥴 ID
+        param.put("floorCd", floorCd);                  //층 코드
         param.put("alarmGroupId", alarmGroupId);        //알람 그룹 ID
         param.put("terminalIds", terminalIds);          //단말기 ID - 복수저장?
         param.put("authGrIds", authGrIds);              //권한그룹ID - 복수저장?
+//        param.put("areaId", areaId);                  //지역 ID
+//        param.put("doorScheduleId", scheduleId);      //스케쥴 ID
+//        param.put("doorGroupId", doorGroupId);        //출입문 스케쥴 ID
 
         String newDoorId = "";
         try {
@@ -248,26 +254,30 @@ public class DoorController {
         } else {
             String doorId = commandMap.get("doorId").toString();
             String doorCd = commandMap.get("doorCd").toString();
-            String doorNm = StringUtil.nvl(commandMap.get("doorNm"), "");;
+            String doorNm = StringUtil.nvl(commandMap.get("doorNm"), "");
             String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
-            //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
+            String buildingCd = doorService.getBuildingCd(buildingId);
             String floorId = StringUtil.nvl(commandMap.get("floorId"), "");
-//            String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
-//            String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
+            String floorCd = doorService.getFloorCd(floorId);
             String alarmGroupId = StringUtil.nvl(commandMap.get("alarmGroupId"), "");
             String terminalIds = StringUtil.nvl(commandMap.get("terminalIds"), "");
             String authGrIds = StringUtil.nvl(commandMap.get("authGrIds"), "");
+//            String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
+//            String doorGroupId = StringUtil.nvl(commandMap.get("doorGroupId"), "");
+//            String scheduleId = StringUtil.nvl(commandMap.get("scheduleId"), "");
 
             param.put("id", doorId);
             param.put("doorCd", doorCd);
             param.put("doorNm", doorNm);
             param.put("buildingId", buildingId);
-            //param.put("areaId", areaId);
+            param.put("buildingCd", buildingCd);
             param.put("floorId", floorId);
-//            param.put("doorScheduleId", scheduleId);
+            param.put("floorCd", floorCd);
             param.put("alarmGroupId", alarmGroupId);
             param.put("terminalIds", terminalIds);
             param.put("authGrIds", authGrIds);
+//            param.put("areaId", areaId);
+//            param.put("doorScheduleId", scheduleId);
 //            param.put("doorGroupId", doorGroupId);
         }
         try {
@@ -301,6 +311,8 @@ public class DoorController {
 
         try {
             doorService.deleteDoor(commandMap);
+            System.out.println("deleteDoor----------------------------------");
+            System.out.println(commandMap);
         } catch (Exception e) {
             e.getStackTrace();
             modelAndView.addObject("resultCode", "N");
@@ -309,6 +321,7 @@ public class DoorController {
 
         return modelAndView;
     }
+
 
 
 

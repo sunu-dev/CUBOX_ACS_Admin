@@ -258,7 +258,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		   SET door_id = #{doorId}
 		     , door_cd = #{doorCd}
 		     , use_yn = 'Y'
-		     , updated_at= NOW(6)
+		     , updated_at = NOW(6)
 		 WHERE id = #{id}
 	</update>
 
@@ -268,6 +268,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		   SET door_id = NULL
 			 , door_cd = NULL
 		     , use_yn = 'N'
+		     , updated_at = NOW(6)
 		 WHERE door_id = #{doorId};
 	</update>
 
@@ -320,6 +321,13 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		     , updated_at = NOW(6)
 		 WHERE id = #{id}
 	</update>
+
+	<select id="selectBuildingCd" parameterType="String" resultType="String">
+		SELECT building_cd
+		  FROM T_BUILDING
+		 WHERE 1 = 1
+		   AND id = #{buildingId}
+	</select>
 
 	<insert id="insertArea" parameterType="HashMap" useGeneratedKeys="true" keyProperty="areaId" keyColumn="id">
 		INSERT
@@ -441,6 +449,13 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		DELETE
 		FROM T_FLOOR
 	</delete>
+
+	<select id="selectFloorCd" parameterType="String" resultType="String">
+		SELECT floor_cd
+		FROM T_FLOOR
+		WHERE 1 = 1
+		  AND id = #{floorId}
+	</select>
 
 
 	<select id="selectTerminalUseCnt" parameterType="HashMap" resultType="int">

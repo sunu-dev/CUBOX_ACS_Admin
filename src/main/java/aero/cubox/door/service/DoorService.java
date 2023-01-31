@@ -30,6 +30,7 @@ public interface DoorService {
     void updateBuilding(Map<String, Object> commandMap);
     void deleteBuilding(Map<String, Object> commandMap);
     void deleteBuildingAll();
+    String getBuildingCd(String buildingId);
 
     //area
     List<HashMap> getAreaList(Map<String, Object> commandMap);
@@ -46,6 +47,8 @@ public interface DoorService {
     void updateFloor(Map<String, Object> commandMap);
     void deleteFloor(Map<String, Object> commandMap);
     void deleteFloorAll();
+    String getFloorCd(String floorId);
+
 
     int getTerminalUseCnt(HashMap<String, Object> param);
 

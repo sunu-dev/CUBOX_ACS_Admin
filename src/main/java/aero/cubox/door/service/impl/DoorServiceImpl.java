@@ -80,6 +80,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
                 paramMap.put("doorId", newDoorId );
                 paramMap.put("doorCd", commandMap.get("doorCd"));
                 paramMap.put("id", commandMap.get("terminalIds"));
+
                 doorDAO.updateDoorIdForTerminal(paramMap);
             }
 
@@ -113,21 +114,23 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
         HashMap paramMap = new HashMap();
 
-        
         //출입문그룹의 스케줄에 출입문 id - Insert or Update
         if( !StringUtil.isEmpty((String) commandMap.get("doorGroupId"))){
 
             paramMap.put("doorId", commandMap.get("id") );
             paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
+
             doorGroupDAO.deleteDoorInDoorGroup(paramMap);
             doorGroupDAO.addDoorInDoorGroup(paramMap);
         }
 
         //단말기정보에 출입문 id Update
         if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
+
             paramMap.put("doorId", commandMap.get("id") );
             paramMap.put("doorCd", commandMap.get("doorCd"));
             paramMap.put("id", commandMap.get("terminalIds"));
+
             doorDAO.deleteDoorIdForTerminal(paramMap);
             doorDAO.updateDoorIdForTerminal(paramMap);
         }
@@ -181,6 +184,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
         doorDAO.deleteDoor(commandMap);
     }
+
 
     @Override
     public void deleteDoorAll() {
@@ -244,6 +248,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         }
         return newBuildingId;
     }
+
+    /**
+     * 빌딩코드 조회
+     * @param buildingId
+     * @return
+     */
+    public String getBuildingCd(String buildingId) {
+        return doorDAO.getBuildingCd(buildingId);
+    }
+
 
     /**
      * 출입문 수정
@@ -366,6 +380,15 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Override
     public void deleteFloorAll() {
         doorDAO.deleteFloorAll();
+    }
+
+    /**
+     * 층코드 조회
+     * @param floorId
+     * @return
+     */
+    public String getFloorCd(String floorId) {
+        return doorDAO.getFloorCd(floorId);
     }
 
     @Override
