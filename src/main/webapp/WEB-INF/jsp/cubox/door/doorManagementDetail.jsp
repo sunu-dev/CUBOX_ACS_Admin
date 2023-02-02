@@ -193,27 +193,31 @@
                 success: function (result) {
                     let cnt = result.terminalUseCnt;
 
-                    if (cnt === 1) {
-                        if (confirm("이미 사용중인 단말기입니다. 현재 출입문에 계속 연결하시겠습니까?")) {
-                            // 계속 연결, set terminal
+                    if ($("#terminalId").val() === selTerminal) { // 선택한 단말기가 선택되어 있는 단말기와 같을 때
+                        closePopup("termPickPopup");
+                    } else {
+                        if (cnt === 1) {
+                            if (confirm("이미 사용중인 단말기입니다. 현재 출입문에 계속 연결하시겠습니까?")) {
+                                // 계속 연결, set terminal
+                                $("#terminalId").val(selTerminal);              // set terminalId
+                                $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
+                                $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
+                                closePopup('termPickPopup');
+                            } else {
+                                // 연결 취소, 원상복구
+                                $("input[name=checkOne]").prop("checked", false);
+                                if ($("#terminalId").val() !== "") {            // 수정 시 원래대로 체크
+                                    $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);
+                                    closePopup('termPickPopup');
+                                }
+                            }
+                        } else {
+                            // set terminal
                             $("#terminalId").val(selTerminal);              // set terminalId
                             $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
                             $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
                             closePopup('termPickPopup');
-                        } else {
-                            // 연결 취소, 원상복구
-                            $("input[name=checkOne]").prop("checked", false);
-                            if ($("#terminalId").val() !== "") {            // 수정 시 원래대로 체크
-                                $('input[name=checkOne]:input[value=' + $("#terminalId").val() + ']').prop("checked", true);
-                                closePopup('termPickPopup');
-                            }
                         }
-                    } else {
-                        // set terminal
-                        $("#terminalId").val(selTerminal);              // set terminalId
-                        $("#terminalCd").val(chkTerminal.eq(1).html()); // 단말기 코드
-                        $("#mgmtNum").val(chkTerminal.eq(2).html());    // 단말기 관리번호
-                        closePopup('termPickPopup');
                     }
                 }
             });
@@ -884,7 +888,7 @@
                 // 값 초기화
                 $("#tbTerminal").empty();
                 $("#srchMachine").val("");
-                console.log(result.terminalList);
+                // console.log(result.terminalList);
 
                 if (result.terminalList.length > 0) {
                     $.each(result.terminalList, function (i, terminal) {
