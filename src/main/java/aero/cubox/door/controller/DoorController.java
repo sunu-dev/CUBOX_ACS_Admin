@@ -309,8 +309,6 @@ public class DoorController {
 
         try {
             doorService.deleteDoor(commandMap);
-            System.out.println("deleteDoor----------------------------------");
-            System.out.println(commandMap);
         } catch (Exception e) {
             e.getStackTrace();
             modelAndView.addObject("resultCode", "N");
@@ -319,9 +317,6 @@ public class DoorController {
 
         return modelAndView;
     }
-
-
-
 
 
 

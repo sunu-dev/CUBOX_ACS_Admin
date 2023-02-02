@@ -167,19 +167,33 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         HashMap paramMap = new HashMap();
 
         //단말기정보에 출입문 id - Update
-        if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
-            paramMap.put("doorId", doorId );
-            paramMap.put("id", commandMap.get("terminalIds"));
-            doorDAO.updateDoorIdForTerminal(paramMap);
+        if(!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
+
+            paramMap.put("doorId", doorId);
+//            paramMap.put("doorCd", commandMap.get("doorCd"));
+//            paramMap.put("id", commandMap.get("terminalIds"));
+
+            doorDAO.deleteDoorIdForTerminal(paramMap);
+//            doorDAO.updateDoorIdForTerminal(paramMap);
         }
 
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+        if(!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
-            paramMap.put("doorId", doorId );
-            paramMap.put("authId", commandMap.get("authGrIds"));
+            paramMap.put("doorId", doorId);
+            String authGrIds = "";
+            authGrIds = commandMap.get("authGrIds").toString();
 
-            doorDAO.deleteDoorIdForAuthDoor(paramMap);
+            if (authGrIds.length() > 0) {
+                String[] authGrIdArr = authGrIds.split("/");
+                for (int i = 0; i < authGrIdArr.length; i++) {
+                    paramMap.put("authId", authGrIdArr[i]);
+                    doorDAO.deleteDoorIdForAuthDoor(paramMap);
+                }
+            }
+
+//            paramMap.put("authId", commandMap.get("authGrIds"));
+//            doorDAO.deleteDoorIdForAuthDoor(paramMap);
         }
 
         doorDAO.deleteDoor(commandMap);

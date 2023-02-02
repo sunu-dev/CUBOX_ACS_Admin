@@ -1133,11 +1133,20 @@
 
     function fnDeleteDoorAjax() {
 
+        let data = {
+            id: $("#doorId").val(),
+            doorCd : $("#doorCd").val(),
+            terminalIds: $("#terminalId").val(),
+            authGrIds: $("#authGroupId").val()
+        }
+        console.log("==delete data==");
+        console.log(data);
+
         if (confirm("삭제 하시겠습니까?")) {
             $.ajax({
                 type: "POST",
                 url: "<c:url value='/door/delete.do' />",
-                data: { id: $("#doorId").val() },
+                data: data,
                 dataType: "json",
                 success: function (returnData) {
                     console.log(returnData);
