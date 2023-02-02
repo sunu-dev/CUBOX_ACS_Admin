@@ -1446,7 +1446,7 @@
                     <tr>
                         <th>출입문 코드</th>
                         <td colspan="2">
-                            <input type="text" id="doorCd" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                            <input type="text" id="doorCd" name="doorEdit" maxlength="6" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
                         </td>
                     </tr>
                     <jsp:include page="/WEB-INF/jsp/cubox/common/buildingSelect.jsp" flush="false" />
@@ -1569,7 +1569,7 @@
                         <tr>
                             <th>빌딩 코드</th>
                             <td colspan="2">
-                                <input type="text" id="buildingCd" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="buildingCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
                             </td>
                         </tr>
                     </tbody>
@@ -1591,7 +1591,7 @@
                         <tr>
                             <th>층 코드</th>
                             <td colspan="2">
-                                <input type="text" id="floorCd" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="floorCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
                             </td>
                         </tr>
                         <%-- 빌딩 선택 --%>

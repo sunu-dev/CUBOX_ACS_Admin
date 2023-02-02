@@ -56,6 +56,17 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Transactional
     public String addDoor(Map<String, Object> commandMap) {
 
+        String doorCd = commandMap.get("doorCd").toString();
+
+        if (doorCd.length() < 6) {
+            String preNum = "";
+            int num = 6 - doorCd.length();
+            for (int j = 0; j < num; j++) {
+                preNum += "0";
+            }
+            commandMap.put("doorCd", preNum + doorCd);
+        }
+
         doorDAO.insertDoor(commandMap);
 
         String newDoorId = "";
@@ -63,10 +74,10 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
         HashMap paramMap = new HashMap();
 
-        if(!StringUtil.isEmpty(commandMap.get("doorId").toString() ) ){
+        if (!StringUtil.isEmpty(commandMap.get("doorId").toString())) {
 
             //도어그룹의 스케줄에 출입문 id Update
-            if( !StringUtil.isEmpty((String) commandMap.get("doorGroupId"))){
+            if (!StringUtil.isEmpty((String) commandMap.get("doorGroupId"))) {
 
                 paramMap.put("doorId", newDoorId );
                 paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
@@ -75,7 +86,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             }
 
             //단말기정보에 출입문 id Update
-            if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
+            if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
 
                 paramMap.put("doorId", newDoorId );
                 paramMap.put("doorCd", commandMap.get("doorCd"));
@@ -85,16 +96,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             }
 
             //출입권한-출입문 table에 door_id Insert
-            if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+            if (!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
                 String authGrIds = "";
                 authGrIds = commandMap.get("authGrIds").toString();
 
-                if( authGrIds.length() > 0 ){
+                if (authGrIds.length() > 0){
                     String[] authGrIdArr = authGrIds.split("/");
                     for (int i = 0; i < authGrIdArr.length; i++) {
                         paramMap.put("authId", authGrIdArr[i]);
-                        paramMap.put("doorId", newDoorId );
+                        paramMap.put("doorId", newDoorId);
 
                         doorDAO.insertDoorIdForAuthDoor(paramMap);
                     }
@@ -232,6 +243,19 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Override
     @Transactional
     public String addBuilding(HashMap paramMap) {
+
+        String buildingCd = paramMap.get("buildingCd").toString();
+
+        // buildingCd 2자리수 변형
+        if (buildingCd.length() < 2) {
+            String preNum = "";
+            int num = 2 - buildingCd.length();
+            for (int j = 0; j < num; j++) {
+                preNum += "0";
+            }
+            paramMap.put("buildingCd", preNum + buildingCd);
+        }
+
         doorDAO.insertBuilding(paramMap);
 
         String newBuildingId = "";
@@ -240,16 +264,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         paramMap.put("buildingId", newBuildingId);
 
         //출입권한-빌딩 table에 buildingId Insert
-        if( !StringUtil.isEmpty((String) paramMap.get("authGrIds")) ){
+        if(!StringUtil.isEmpty((String) paramMap.get("authGrIds"))) {
 
             String authGrIds = "";
             authGrIds = paramMap.get("authGrIds").toString();
 
-            if( authGrIds.length() > 0 ){
+            if(authGrIds.length() > 0){
                 String[] authGrIdArr = authGrIds.split("/");
                 for (int i = 0; i < authGrIdArr.length; i++) {
                     paramMap.put("authId", authGrIdArr[i]);
-                    paramMap.put("buildingId", newBuildingId );
+                    paramMap.put("buildingId", newBuildingId);
 
                     doorDAO.insertDoorIdForAuthDoor(paramMap);
                 }
@@ -365,9 +389,21 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     public Map getFloorDetail(Map<String, Object> paramMap) {
         return doorDAO.getFloorDetail(paramMap);
     }
+
     @Override
     @Transactional
     public String addFloor(HashMap paramMap) {
+        String floorCd = paramMap.get("floorCd").toString();
+
+        // floorCd 2자리수 변형
+        if (floorCd.length() < 2) {
+            String preNum = "";
+            int num = 2 - floorCd.length();
+            for (int j = 0; j < num; j++) {
+                preNum += "0";
+            }
+            paramMap.put("floorCd", preNum + floorCd);
+        }
         doorDAO.insertFloor(paramMap);
 
         String newFloorId = "";
@@ -576,7 +612,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             floorInfo.put("floorNm", "PH층");
         }
         // floorCd 2자리수 변형
-        if (floorCd.length() == 1) {
+        if (floorCd.length() < 2) {
             floorInfo.put("floorCd", "0" + floorCd);
         }
         return floorInfo;
