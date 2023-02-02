@@ -1139,8 +1139,6 @@
             terminalIds: $("#terminalId").val(),
             authGrIds: $("#authGroupId").val()
         }
-        console.log("==delete data==");
-        console.log(data);
 
         if (confirm("삭제 하시겠습니까?")) {
             $.ajax({
@@ -1158,7 +1156,6 @@
                         initDetail();
                         hideDoorDetail();
                     } else {
-                        // TODO: 실패감지가 안됨
                         alert("삭제 실패");
                     }
                 }

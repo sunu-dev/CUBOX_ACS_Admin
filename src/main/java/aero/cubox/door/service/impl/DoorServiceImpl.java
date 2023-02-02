@@ -170,8 +170,6 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         if(!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
 
             paramMap.put("doorId", doorId);
-//            paramMap.put("doorCd", commandMap.get("doorCd"));
-//            paramMap.put("id", commandMap.get("terminalIds"));
 
             doorDAO.deleteDoorIdForTerminal(paramMap);
 //            doorDAO.updateDoorIdForTerminal(paramMap);
@@ -191,9 +189,6 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
                     doorDAO.deleteDoorIdForAuthDoor(paramMap);
                 }
             }
-
-//            paramMap.put("authId", commandMap.get("authGrIds"));
-//            doorDAO.deleteDoorIdForAuthDoor(paramMap);
         }
 
         doorDAO.deleteDoor(commandMap);
