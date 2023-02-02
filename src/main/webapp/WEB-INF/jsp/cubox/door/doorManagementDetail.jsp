@@ -1133,11 +1133,18 @@
 
     function fnDeleteDoorAjax() {
 
+        let data = {
+            id: $("#doorId").val(),
+            doorCd : $("#doorCd").val(),
+            terminalIds: $("#terminalId").val(),
+            authGrIds: $("#authGroupId").val()
+        }
+
         if (confirm("삭제 하시겠습니까?")) {
             $.ajax({
                 type: "POST",
                 url: "<c:url value='/door/delete.do' />",
-                data: { id: $("#doorId").val() },
+                data: data,
                 dataType: "json",
                 success: function (returnData) {
                     console.log(returnData);
@@ -1149,7 +1156,6 @@
                         initDetail();
                         hideDoorDetail();
                     } else {
-                        // TODO: 실패감지가 안됨
                         alert("삭제 실패");
                     }
                 }
@@ -1333,6 +1339,8 @@
                 if (result.resultCode === "Y") {
                     alert("출입문 일괄등록이 완료되었습니다.");
                     fnGetDoorListAjax();
+                    initDetail();
+                    hideDoorDetail();
                 } else {
                     alert(result.message);
                 }

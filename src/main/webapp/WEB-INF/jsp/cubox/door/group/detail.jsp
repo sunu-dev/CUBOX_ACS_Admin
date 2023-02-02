@@ -54,6 +54,7 @@
             return;
         } else if (fnIsEmpty($("#gpSchedule").val())) {
             alert("출입문 스케쥴을 선택해주세요.");
+            $("#gpSchedule").focus();
             return;
         }
 

@@ -80,6 +80,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
                 paramMap.put("doorId", newDoorId );
                 paramMap.put("doorCd", commandMap.get("doorCd"));
                 paramMap.put("id", commandMap.get("terminalIds"));
+
                 doorDAO.updateDoorIdForTerminal(paramMap);
             }
 
@@ -113,21 +114,23 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
         HashMap paramMap = new HashMap();
 
-        
         //출입문그룹의 스케줄에 출입문 id - Insert or Update
         if( !StringUtil.isEmpty((String) commandMap.get("doorGroupId"))){
 
             paramMap.put("doorId", commandMap.get("id") );
             paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
+
             doorGroupDAO.deleteDoorInDoorGroup(paramMap);
             doorGroupDAO.addDoorInDoorGroup(paramMap);
         }
 
         //단말기정보에 출입문 id Update
         if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
+
             paramMap.put("doorId", commandMap.get("id") );
             paramMap.put("doorCd", commandMap.get("doorCd"));
             paramMap.put("id", commandMap.get("terminalIds"));
+
             doorDAO.deleteDoorIdForTerminal(paramMap);
             doorDAO.updateDoorIdForTerminal(paramMap);
         }
@@ -164,23 +167,33 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         HashMap paramMap = new HashMap();
 
         //단말기정보에 출입문 id - Update
-        if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
-            paramMap.put("doorId", doorId );
-            paramMap.put("id", commandMap.get("terminalIds"));
-            doorDAO.updateDoorIdForTerminal(paramMap);
+        if(!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
+
+            paramMap.put("doorId", doorId);
+
+            doorDAO.deleteDoorIdForTerminal(paramMap);
+//            doorDAO.updateDoorIdForTerminal(paramMap);
         }
 
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+        if(!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
-            paramMap.put("doorId", doorId );
-            paramMap.put("authId", commandMap.get("authGrIds"));
+            paramMap.put("doorId", doorId);
+            String authGrIds = "";
+            authGrIds = commandMap.get("authGrIds").toString();
 
-            doorDAO.deleteDoorIdForAuthDoor(paramMap);
+            if (authGrIds.length() > 0) {
+                String[] authGrIdArr = authGrIds.split("/");
+                for (int i = 0; i < authGrIdArr.length; i++) {
+                    paramMap.put("authId", authGrIdArr[i]);
+                    doorDAO.deleteDoorIdForAuthDoor(paramMap);
+                }
+            }
         }
 
         doorDAO.deleteDoor(commandMap);
     }
+
 
     @Override
     public void deleteDoorAll() {
@@ -244,6 +257,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         }
         return newBuildingId;
     }
+
+    /**
+     * 빌딩코드 조회
+     * @param buildingId
+     * @return
+     */
+    public String getBuildingCd(String buildingId) {
+        return doorDAO.getBuildingCd(buildingId);
+    }
+
 
     /**
      * 출입문 수정
@@ -366,6 +389,15 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Override
     public void deleteFloorAll() {
         doorDAO.deleteFloorAll();
+    }
+
+    /**
+     * 층코드 조회
+     * @param floorId
+     * @return
+     */
+    public String getFloorCd(String floorId) {
+        return doorDAO.getFloorCd(floorId);
     }
 
     @Override
