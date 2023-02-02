@@ -187,8 +187,6 @@ public class DoorController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jsonView");
-        //  / building_cd / floor_cd /  /  /  /  /  / alarm_typ
-        // sch_doorgrp_id /  /  /
 
         String doorNm = StringUtil.nvl(commandMap.get("doorNm"), "");
         String doorCd = StringUtil.nvl(commandMap.get("doorCd"), "");
