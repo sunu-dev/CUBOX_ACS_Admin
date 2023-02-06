@@ -237,14 +237,14 @@ public class DoorGroupController {
 
     @ResponseBody
     @RequestMapping(value="/modify/{id}", method= RequestMethod.POST)
-    public ModelAndView modify(ModelMap model, @PathVariable String id, HttpServletRequest request,@RequestParam Map<String, Object> commandMap) throws Exception {
+    public ModelAndView modify(ModelMap model, @PathVariable String id, HttpServletRequest request, @RequestParam Map<String, Object> commandMap) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jsonView");
 
         String resultCode = "Y";
 
-        if( id == null){
+        if (id == null) {
              resultCode = "N";
         } else {
             String nm = StringUtil.nvl(commandMap.get("nm"), "");

@@ -79,7 +79,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             //도어그룹의 스케줄에 출입문 id Update
             if (!StringUtil.isEmpty((String) commandMap.get("doorGroupId"))) {
 
-                paramMap.put("doorId", newDoorId );
+                paramMap.put("doorId", newDoorId);
                 paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
 
                 doorGroupDAO.addDoorInDoorGroup(paramMap);
@@ -88,7 +88,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             //단말기정보에 출입문 id Update
             if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
 
-                paramMap.put("doorId", newDoorId );
+                paramMap.put("doorId", newDoorId);
                 paramMap.put("doorCd", commandMap.get("doorCd"));
                 paramMap.put("id", commandMap.get("terminalIds"));
 
@@ -101,7 +101,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
                 String authGrIds = "";
                 authGrIds = commandMap.get("authGrIds").toString();
 
-                if (authGrIds.length() > 0){
+                if (authGrIds.length() > 0) {
                     String[] authGrIdArr = authGrIds.split("/");
                     for (int i = 0; i < authGrIdArr.length; i++) {
                         paramMap.put("authId", authGrIdArr[i]);
@@ -126,9 +126,9 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         HashMap paramMap = new HashMap();
 
         //출입문그룹의 스케줄에 출입문 id - Insert or Update
-        if( !StringUtil.isEmpty((String) commandMap.get("doorGroupId"))){
+        if (!StringUtil.isEmpty((String) commandMap.get("doorGroupId"))) {
 
-            paramMap.put("doorId", commandMap.get("id") );
+            paramMap.put("doorId", commandMap.get("id"));
             paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
 
             doorGroupDAO.deleteDoorInDoorGroup(paramMap);
@@ -136,25 +136,25 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         }
 
         //단말기정보에 출입문 id Update
-        if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
+        if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
 
-            paramMap.put("doorId", commandMap.get("id") );
+            paramMap.put("doorId", commandMap.get("id"));
             paramMap.put("doorCd", commandMap.get("doorCd"));
             paramMap.put("id", commandMap.get("terminalIds"));
 
-            doorDAO.deleteDoorIdForTerminal(paramMap);
+            doorDAO.updateDoorIdForTerminalInit(paramMap);
             doorDAO.updateDoorIdForTerminal(paramMap);
         }
 
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+        if (!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
-            paramMap.put("doorId", commandMap.get("id") );
+            paramMap.put("doorId", commandMap.get("id"));
 
             String authGrIds = "";
             authGrIds = commandMap.get("authGrIds").toString();
 
-            if( authGrIds.length() > 0 ){
+            if( authGrIds.length() > 0 ) {
                 String[] authGrIdArr = authGrIds.split("/");
                 for (int i = 0; i < authGrIdArr.length; i++) {
                     paramMap.put("authId", authGrIdArr[i]);
@@ -178,16 +178,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         HashMap paramMap = new HashMap();
 
         //단말기정보에 출입문 id - Update
-        if(!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
+        if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
 
             paramMap.put("doorId", doorId);
 
-            doorDAO.deleteDoorIdForTerminal(paramMap);
+            doorDAO.updateDoorIdForTerminalInit(paramMap);
 //            doorDAO.updateDoorIdForTerminal(paramMap);
         }
 
         //출입권한-출입문 table에 door_id Delete-Insert
-        if(!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
+        if (!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
             paramMap.put("doorId", doorId);
             String authGrIds = "";
@@ -264,12 +264,12 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         paramMap.put("buildingId", newBuildingId);
 
         //출입권한-빌딩 table에 buildingId Insert
-        if(!StringUtil.isEmpty((String) paramMap.get("authGrIds"))) {
+        if (!StringUtil.isEmpty((String) paramMap.get("authGrIds"))) {
 
             String authGrIds = "";
             authGrIds = paramMap.get("authGrIds").toString();
 
-            if(authGrIds.length() > 0){
+            if (authGrIds.length() > 0) {
                 String[] authGrIdArr = authGrIds.split("/");
                 for (int i = 0; i < authGrIdArr.length; i++) {
                     paramMap.put("authId", authGrIdArr[i]);
