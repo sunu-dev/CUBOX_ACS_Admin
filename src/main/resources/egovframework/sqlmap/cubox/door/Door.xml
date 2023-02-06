@@ -93,7 +93,6 @@
 		     , floor_id = #{floorId}
 		     , door_nm = #{doorNm}
 		     , dooralarm_grp_id = #{alarmGroupId}
-			 , sch_doorgrp_id = #{schDoorgrpId}
 		     , updated_at = NOW(6)
 		 WHERE id = #{id}
 	</update>
@@ -263,7 +262,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 	</update>
 
 
-	<update id="deleteDoorIdForTerminal" parameterType="HashMap">
+	<update id="updateDoorIdForTerminalInit" parameterType="HashMap">
 		UPDATE T_TERMINAL
 		   SET door_id = NULL
 			 , door_cd = NULL
