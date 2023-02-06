@@ -149,15 +149,14 @@
                 <input type="hidden" id="doorIds" value="">
                 <tr>
                     <th>출입문 스케쥴 명</th>
-                    <td style="display: flex;">
+                    <td>
                         <input type="text" id="schNm" name="schNm" maxlength="35" size="50" value=''
                                class="w_600px input_com" onkeyup="charCheck(this)" onkeydown="charCheck(this)">
-                        <div class="ml_10" style="display: none; position: relative;">
+                        <div class="ml_10" style="display: none; position: relative; left: 600px;">
                             <button type="button" class="btn_small color_basic" onclick="fnVerifyName()" style="width:60px; position:absolute; bottom:0; display:block;">중복확인</button>
+                            <div id="verifyInfo" stat="false" style="display:none; position: relative; font-size: smaller; margin: auto 70px; color: blue;">* 사용가능한 출입문 스케쥴 명</div>
                         </div>
-                        <div id="verifyInfo" stat="false" style="display:none; position: relative; font-size: smaller; margin: auto 70px; color: blue;">* 사용가능한 출입문 스케쥴 명</div>
                     </td>
-
                 </tr>
                 <tr>
                     <th>사용여부</th>
