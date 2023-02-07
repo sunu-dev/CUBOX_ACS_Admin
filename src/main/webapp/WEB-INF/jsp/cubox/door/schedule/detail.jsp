@@ -105,7 +105,7 @@
                 let end = {hour: "", min: "", sec: ""};
 
                 if (ifEnd) {
-                    console.log("ifEnd");
+                    // console.log("ifEnd");
                     startId = this.id.replace("end", "start");
                     endId = this.id;
 
@@ -140,7 +140,7 @@
                     }
 
                 } else {
-                    console.log("ifStart");
+                    // console.log("ifStart");
                     startId = this.id;
                     endId = this.id.replace("start", "end");
 
@@ -188,7 +188,7 @@
             url : "<c:url value='/door/schedule/day/existsCount.do'/>",
             success : function(result) {
                 let schCnt = result.getDayScheduleExistsCount;
-                console.log("fnDayExistsCountAjax = " + schCnt);
+                // console.log("fnDayExistsCountAjax = " + schCnt);
 
                 if (schCnt !== 0) {
                     // 요일 별 스케쥴 보기 버튼
@@ -255,7 +255,7 @@
     // 이미 색칠되어 있는지 여부확인
     function ifValid(mode, startId, endId, start, end, day, schNum) {
 
-        console.log("if Valid mode === " + mode);
+        // console.log("if Valid mode === " + mode);
         let result = true; // 다른 스케쥴과 겹치는지 여부
         if (mode === "S") result = false;
 
@@ -267,7 +267,7 @@
                         for (let j = Number(start.min); j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
+                                // console.log("1. 색칠되어있고 같은 스케쥴 아님"); ///// 걸리는 애가 시작인 경우
                                 result = false;
                                 break;
                             }
@@ -276,7 +276,7 @@
                         for (let j = 0; j <= Number(end.min); j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                console.log("2. 색칠되어있고 같은 스케쥴 아님");
+                                // console.log("2. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
                                 break;
                             }
@@ -285,7 +285,7 @@
                         for (let j = 0; j < 60; j++) {
                             let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                             if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                                console.log("3. 색칠되어있고 같은 스케쥴 아님");
+                                // console.log("3. 색칠되어있고 같은 스케쥴 아님");
                                 result = false;
                                 break;
                             }
@@ -298,7 +298,7 @@
                     for (let j = Number(start.min); j <= Number(end.min); j++) {
                         let divToColor = $(".timeline_" + day + ("00" + i).slice(-2) + "_" + ("00" + j).slice(-2)); // 색칠할 div
                         if ((divToColor.hasClass("colored")) && (!divToColor.hasClass(day + "_" + schNum))) {
-                            console.log("4. 색칠되어있고 같은 스케쥴 아님");
+                            // console.log("4. 색칠되어있고 같은 스케쥴 아님");
                             result = false;
                             break;
                         }
@@ -319,7 +319,7 @@
         let isFirst = ($("." + day + "_" + schNum).length > 0) ? false : true;  // 최초등록?
 
         if (isFirst) {
-            console.log("최초 등록");
+            // console.log("최초 등록");
             let sameDaySch = $("." + day + "_timepick");
             let schTime = [];
             let startVal = $("#" + startId).val();
@@ -765,7 +765,7 @@
             dataType : "json",
             url : url,
             success : function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.resultCode === "Y") {
                     alert("수정이 완료되었습니다.");
                     window.location.href = '/door/schedule/detail/${doorScheduleDetail.id}';
@@ -812,10 +812,10 @@
             async: false,
             url : url,
             success : function(result) {
-                console.log(result);
+                // console.log(result);
 
                 if (result.resultCode === "Y") {
-                    console.log(result.scheduleByDayDetailList);
+                    // console.log(result.scheduleByDayDetailList);
 
                     // 1. 초기화
                     fnDaySchInit();
@@ -864,7 +864,7 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result);
+                // console.log(result);
 
                 if (result.resultCode === "Y") {
                     alert("저장되었습니다.");
@@ -896,7 +896,7 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result);
+                // console.log(result);
 
                 if (result.resultCode === "Y") {
                     alert("저장되었습니다.");
@@ -922,7 +922,7 @@
             url: url,
             dataType: "json",
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if (result.resultCode === "Y") {
                     alert("삭제되었습니다.");
                     fnDaySchInit();

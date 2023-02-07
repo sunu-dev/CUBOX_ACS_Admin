@@ -102,7 +102,7 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result);
+                // console.log(result);
 
                 if (result.resultCode === "Y" && result.newDoorId !== "") {
                     alert("저장되었습니다.");

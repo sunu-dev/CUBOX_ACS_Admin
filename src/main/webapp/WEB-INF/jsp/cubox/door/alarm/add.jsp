@@ -111,7 +111,7 @@
             dataType: "json",
             data: { nm: nm },
             success: function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.doorAlarmGroupNameVerificationCnt != 0) {
                     alert("이미 존재하는 출입문 알람그룹 명입니다.");
                     $("#alNm").val("");
@@ -151,7 +151,7 @@
             },
             dataType: "json",
             success: function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.resultCode === "Y" && result.newDoorId !== "") {
                     alert("저장되었습니다.");
                     window.location.href = '/door/alarm/detail/' + result.newDoorId;

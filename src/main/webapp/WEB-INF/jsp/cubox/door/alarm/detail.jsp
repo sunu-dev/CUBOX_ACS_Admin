@@ -169,7 +169,7 @@
             },
             dataType: "json",
             success: function(result) {
-                console.log(result.resultCode);
+                // console.log(result.resultCode);
                 if (result.resultCode === "Y") {
                     alert("수정이 완료되었습니다.");
                     window.location.href = '/door/alarm/detail/${doorGroupDetail.id}';

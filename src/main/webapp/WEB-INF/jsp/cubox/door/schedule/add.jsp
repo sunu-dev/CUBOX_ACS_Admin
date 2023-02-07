@@ -85,7 +85,7 @@
             dataType: "json",
             data: { nm: nm },
             success: function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.doorScheduleNameVerificationCnt != 0) {
                     alert("이미 존재하는 출입문 스케쥴 명입니다.");
                     $("#schNm").val("");
@@ -123,7 +123,7 @@
             dataType : "json",
             url : url,
             success : function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.resultCode === "Y" && result.newScheduleId !== "") {
                     alert("등록이 완료되었습니다.");
                     window.location.href = '/door/schedule/detail/' + result.newScheduleId;
