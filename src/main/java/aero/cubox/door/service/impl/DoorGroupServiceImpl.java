@@ -66,12 +66,12 @@ public class DoorGroupServiceImpl extends EgovAbstractServiceImpl implements Doo
         HashMap paramMap = new HashMap();
 
         //출입권한-출입문 table에 door_id Insert
-        if( !isEmpty((String) commandMap.get("doorIds"))){
+        if (!isEmpty((String) commandMap.get("doorIds"))) {
 
             String doorIds = "";
             doorIds = commandMap.get("doorIds").toString();
 
-            if( doorIds.length() > 0 ){
+            if (doorIds.length() > 0 ) {
                 String[] doorIdArr = doorIds.split("/");
                 for (int i = 0; i < doorIdArr.length; i++) {
                     paramMap.put("id", doorIdArr[i]);
@@ -117,12 +117,12 @@ public class DoorGroupServiceImpl extends EgovAbstractServiceImpl implements Doo
         //commandMap.put("schDoorgrpId", commandMap.get("doorSchId").toString()); //클라이언트에서 전달받은 스케쥴ID
 
         //출입권한-출입문 table에 door_id Insert
-        if( !isEmpty((String) commandMap.get("doorIds"))){
+        if (!isEmpty((String) commandMap.get("doorIds"))) {
 
             String doorIds = "";
             doorIds = commandMap.get("doorIds").toString();
 
-            if( doorIds.length() > 0 ){
+            if (doorIds.length() > 0) {
 
                 String[] doorIdArr = doorIds.split("/");
                 for (int i = 0; i < doorIdArr.length; i++) {

@@ -153,7 +153,7 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result);
+                // console.log(result);
 
                 if(result.resultCode === "Y") {
                     alert("수정이 완료되었습니다.");

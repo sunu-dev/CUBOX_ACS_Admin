@@ -3,7 +3,7 @@
 
 <mapper namespace="door.alarm">
 
-    <select id="selectDoorAlarmGrpList"  parameterType="HashMap" resultType="HashMap">
+    <select id="selectDoorAlarmGrpList" parameterType="HashMap" resultType="HashMap">
         SELECT A.id
              , A.nm
              , A.time
@@ -11,7 +11,8 @@
              , (select cd_nm from T_CMMN_CD TCC where TCC.cd like A.door_alarm_typ) door_alarm_nm
              , A.alarm_use_typ
              , (select cd_nm from T_CMMN_CD TCC where TCC.cd like A.alarm_use_typ) alarm_use_nm
-             , (select COUNT(TDA.door_id) from T_DOOR_ALARM TDA where TDA.dooralram_grp_id = A.id)  as door_cnt
+             -- , (select COUNT(TDA.door_id) from T_DOOR_ALARM TDA where TDA.dooralram_grp_id = A.id) as door_cnt
+             , (select count(TD.id) from T_DOOR TD where TD.dooralarm_grp_id = A.id) as door_cnt
              , DATE_FORMAT(A.created_at, '%Y-%m-%d') as created_at
              , DATE_FORMAT(A.updated_at, '%Y-%m-%d') as updated_at
         FROM(
@@ -38,7 +39,7 @@
     </select>
 
 
-    <select id="selectDoorAlarmGrpListCount"  parameterType="HashMap" resultType="int">
+    <select id="selectDoorAlarmGrpListCount" parameterType="HashMap" resultType="int">
         SELECT COUNT(A.id)
           FROM (
                 SELECT TDG.id
@@ -54,17 +55,18 @@
     </select>
 
 
-    <select id="selectDoorAlarmGrpDetail"  parameterType="int" resultType="HashMap">
+    <select id="selectDoorAlarmGrpDetail" parameterType="int" resultType="HashMap">
         SELECT TDG.id
              , TDG.nm
              , TDG.time
              , TDG.door_alarm_typ
              , TDG.alarm_use_typ
-             , (select COUNT(TDA.door_id) from T_DOOR_ALARM TDA where TDA.dooralram_grp_id = TDG.id) AS door_cnt
-             , (SELECT GROUP_CONCAT( TDA.door_id  SEPARATOR '/') FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id = TDG.id ) AS door_ids
-             , (SELECT GROUP_CONCAT( (SELECT A.door_nm FROM T_DOOR A where A.id = TDA.door_id ) SEPARATOR '/')  FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id= TDG.id ) AS door_nms
-             -- , TDG.created_at
-             -- , TDG.updated_at
+             -- , (SELECT COUNT(TDA.door_id) FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id = TDG.id) AS door_cnt
+             , (SELECT COUNT(A.id) from T_DOOR A WHERE A.dooralarm_grp_id = TDG.id) AS door_cnt
+             -- , (SELECT GROUP_CONCAT( TDA.door_id  SEPARATOR '/') FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id = TDG.id) AS door_ids
+             , (SELECT GROUP_CONCAT( A.id  SEPARATOR '/') FROM T_DOOR A WHERE TDG.id = A.dooralarm_grp_id) AS door_ids
+             -- , (SELECT GROUP_CONCAT( (SELECT A.door_nm FROM T_DOOR A where A.id = TDA.door_id ) SEPARATOR '/')  FROM T_DOOR_ALARM TDA WHERE TDA.dooralram_grp_id= TDG.id ) AS door_nms
+             , (SELECT GROUP_CONCAT( A.door_nm SEPARATOR '/') FROM T_DOOR A WHERE TDG.id = A.dooralarm_grp_id) AS door_nms
              , DATE_FORMAT(TDG.created_at, '%Y-%m-%d') as created_at
              , DATE_FORMAT(TDG.updated_at, '%Y-%m-%d') as updated_at
           FROM T_DOORALARM_GRP TDG
@@ -120,14 +122,28 @@
              , dooralram_grp_id)
         VALUES
              ( #{doorId}
-             , #{dooralramGrpId}
+             , #{dooralarmGrpId}
              )
     </insert>
 
 
+    <update id="updateDoorAlarmGrpId" parameterType="HashMap">
+        UPDATE T_DOOR
+           SET dooralarm_grp_id = #{dooralarmGrpId}
+         WHERE id = #{doorId}
+    </update>
+
+
+    <update id="updateDoorAlarmGrpIdInit" parameterType="HashMap">
+        UPDATE T_DOOR
+           SET dooralarm_grp_id = NULL
+         WHERE dooralarm_grp_id = #{id}
+    </update>
+
+
     <update id="updateDoorInDoorAlarmGroup" parameterType="HashMap">
         UPDATE T_DOOR_ALARM
-           SET dooralram_grp_id = #{dooralramGrpId}
+           SET dooralram_grp_id = #{dooralarmGrpId}
          WHERE door_id = #{doorId}
     </update>
 
@@ -135,7 +151,7 @@
     <delete id="deleteDoorInDoorAlarmGroup" parameterType="HashMap" >
         DELETE
           FROM T_DOOR_ALARM
-         WHERE dooralram_grp_id = #{dooralramGrpId}
+         WHERE dooralram_grp_id = #{dooralarmGrpId}
     </delete>
 
 
