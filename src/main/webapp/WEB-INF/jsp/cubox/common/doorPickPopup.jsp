@@ -116,7 +116,7 @@ function setDoors(type) {
             dataType : "json",
             url : "<c:url value='/door/list.do' />",
             success : function(result) {
-                console.log(result);
+                // console.log(result);
 
                 createTree(crudType, false, result, $("#treeDiv"));
                 $("#doorSelected").empty();
