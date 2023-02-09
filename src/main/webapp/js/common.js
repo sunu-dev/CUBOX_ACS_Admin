@@ -256,6 +256,7 @@ function createTree(crudType, isMngmt, result, treeDiv) {
 	let fnArea = "getAreaDetail(this.id);";
 	let fnDoor = "getDoorDetail(this.id);";
 	let fnFloor = "getFloorDetail(this.id);";
+	let selNode = "selNode(this.id);";
 
 	d = new dTree('d'); //dtree선언
 
@@ -290,7 +291,7 @@ function createTree(crudType, isMngmt, result, treeDiv) {
 									if (isMngmt) { 	// 출입문관리일 경우
 										tag = '<span id="' + door.id + '" onclick="' + fnDoor + '">' + door.door_nm + '</span>';
 									} else {  // 그 외(그룹관리, 알람그룹)
-										tag = '<span id="' + door.id + '">' + door.door_nm + '</span>';
+										tag = '<span id="' + door.id + '" onclick="' + selNode + '">' + door.door_nm + '</span>';
 									}
 									d.add("d_" + door.id, "f_" + floor.id, tag, "#", '','','/img/page.gif');
 								}
@@ -344,4 +345,10 @@ function createTree(crudType, isMngmt, result, treeDiv) {
 	$(".nodeSel").toggleClass("nodeSel node");
 	d.openAll();
 
+}
+
+function selNode(id) {
+	if ($("#" + id).parent().hasClass("node")) {
+		$("#" + id).parent().toggleClass("node nodeSel");
+	}
 }

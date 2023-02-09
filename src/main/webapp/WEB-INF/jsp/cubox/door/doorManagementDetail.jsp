@@ -469,6 +469,11 @@
 
     // 출입문 속성 뿌려주기
     function getDoorDetail(id) {
+
+        if ($("#" + id).parent().hasClass("node")) {
+            $("#" + id).parent().toggleClass("node nodeSel");
+        }
+
         setType("door");
         initDetail();
         fnCancelEditMode();
