@@ -598,6 +598,8 @@
             }
 
             $(".nodeSel").toggleClass("nodeSel node");
+        } else {
+            alert("추가할 항목을 선택해주세요");
         }
     }
 
