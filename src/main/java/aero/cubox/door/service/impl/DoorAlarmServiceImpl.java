@@ -21,7 +21,7 @@ public class DoorAlarmServiceImpl extends EgovAbstractServiceImpl implements Doo
 
     /**
      * 출입문 알람그룹 목록 조회
-     * @param commandMap
+     * @param paramMap
      * @return
      */
     @Override
@@ -36,7 +36,7 @@ public class DoorAlarmServiceImpl extends EgovAbstractServiceImpl implements Doo
 
     /**
      * 출입문 알람그룹 상세
-     * @param int
+     * @param id
      * @return
      */
     @Override
@@ -56,20 +56,21 @@ public class DoorAlarmServiceImpl extends EgovAbstractServiceImpl implements Doo
         doorAlarmDAO.addDoorAlarmGrp(commandMap);
         newAlarmGroupId = commandMap.get("doorAlarmGrpId").toString();
 
-        commandMap.put("dooralramGrpId", newAlarmGroupId);
+        commandMap.put("dooralarmGrpId", newAlarmGroupId);
 
         //출입권한-출입문 table에 door_id Insert
-        if( !isEmpty((String) commandMap.get("doorIds"))){
+        if (!isEmpty((String) commandMap.get("doorIds"))) {
 
             String doorIds = "";
             doorIds = commandMap.get("doorIds").toString();
 
-            if( doorIds.length() > 0 ){
+            if (doorIds.length() > 0) {
 
                 String[] doorIdArr = doorIds.split("/");
                 for (int i = 0; i < doorIdArr.length; i++) {
                     commandMap.put("doorId", doorIdArr[i]);
-                    doorAlarmDAO.addDoorInDoorAlarmGroup(commandMap);
+//                    doorAlarmDAO.addDoorInDoorAlarmGroup(commandMap);
+                    doorAlarmDAO.updateDoorAlarmGrpId(commandMap);
                 }
             }
         }
@@ -84,25 +85,26 @@ public class DoorAlarmServiceImpl extends EgovAbstractServiceImpl implements Doo
     public void updateDoorAlarmGrp(Map<String, Object> commandMap) {
         doorAlarmDAO.updateDoorAlarmGrp(commandMap);
 
-        commandMap.put("dooralramGrpId", commandMap.get("id").toString());
-        doorAlarmDAO.deleteDoorInDoorAlarmGroup(commandMap);
+        commandMap.put("dooralarmGrpId", commandMap.get("id").toString());
+//        doorAlarmDAO.deleteDoorInDoorAlarmGroup(commandMap);
+        doorAlarmDAO.updateDoorAlarmGrpIdInit(commandMap);
 
         //출입권한-출입문 table에 door_id Insert
-        if( !isEmpty((String) commandMap.get("doorIds"))){
+        if (!isEmpty((String) commandMap.get("doorIds"))) {
 
             String doorIds = "";
             doorIds = commandMap.get("doorIds").toString();
 
-            if( doorIds.length() > 0 ){
+            if (doorIds.length() > 0) {
 
                 String[] doorIdArr = doorIds.split("/");
                 for (int i = 0; i < doorIdArr.length; i++) {
                     commandMap.put("doorId", doorIdArr[i]);
-                    doorAlarmDAO.addDoorInDoorAlarmGroup(commandMap);
+//                    doorAlarmDAO.addDoorInDoorAlarmGroup(commandMap);
+                    doorAlarmDAO.updateDoorAlarmGrpId(commandMap);
                 }
             }
         }
-
     }
 
     /**

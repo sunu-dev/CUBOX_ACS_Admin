@@ -18,27 +18,6 @@ canvas {
 <script type="text/javascript">
 
 	let threadRefresh;
-	const entData = [
-		{exp_day : "12-13", tot_log_cnt : "80", success_log_cnt : "50", fail_log_cnt : "30"},
-		{exp_day : "12-12", tot_log_cnt : "90", success_log_cnt : "60", fail_log_cnt : "30"},
-		{exp_day : "12-11", tot_log_cnt : "80", success_log_cnt : "60", fail_log_cnt : "20"},
-		{exp_day : "12-10", tot_log_cnt : "130", success_log_cnt : "120", fail_log_cnt : "10"},
-		{exp_day : "12-09", tot_log_cnt : "95", success_log_cnt : "80", fail_log_cnt : "15"},
-		{exp_day : "12-08", tot_log_cnt : "80", success_log_cnt : "20", fail_log_cnt : "60"},
-		{exp_day : "12-07", tot_log_cnt : "100", success_log_cnt : "90", fail_log_cnt : "10"},
-		{exp_day : "12-06", tot_log_cnt : "25", success_log_cnt : "20", fail_log_cnt : "5"},
-		{exp_day : "12-05", tot_log_cnt : "50", success_log_cnt : "35", fail_log_cnt : "15"},
-	];
-
-	const alarmData = [
-		{alarm_day : "01-01", tot_alarm_cnt : "3"},
-		{alarm_day : "04-01", tot_alarm_cnt : "1"},
-		{alarm_day : "06-05", tot_alarm_cnt : "1"},
-		{alarm_day : "07-20", tot_alarm_cnt : "2"},
-		{alarm_day : "09-10", tot_alarm_cnt : "1"},
-		{alarm_day : "10-13", tot_alarm_cnt : "5"},
-		{alarm_day : "12-12", tot_alarm_cnt : "1"},
-	];
 
 	$(function() {
 		// 숫자만 입력가능
@@ -68,8 +47,8 @@ canvas {
 			data:{},
 			dataType: "json",
 			success:function(result) {
-				console.log("getMainStatus01");
-				console.log(result);
+				// console.log("getMainStatus01");
+				// console.log(result);
 				if (result != null && result.mainStatus01 != null) {
 					fnEntHistoryChartDraw(result.mainStatus01);
 				}
@@ -184,8 +163,8 @@ canvas {
 
 	// 알람이력 차트
 	function fnAlarmHistoryChartDraw(data) {
-		console.log("fnAlarmHistoryChartDraw");
-		console.log(data);
+		// console.log("fnAlarmHistoryChartDraw");
+		// console.log(data);
 
 		let dtLabel = [],
 			data1 = [];
@@ -255,8 +234,8 @@ canvas {
 
 	// 출입이력 차트
 	function fnEntHistoryChartDraw(data) {
-		console.log("fnEntHistoryChartDraw");
-		console.log(data);
+		// console.log("fnEntHistoryChartDraw");
+		// console.log(data);
 
 		let dtLabel = [],
 			data1 = [],
@@ -342,8 +321,8 @@ canvas {
 
 
 	function fnEntHistSet (data) {
-		console.log("fnLogInfoListSet");
-		console.log(data);
+		// console.log("fnLogInfoListSet");
+		// console.log(data);
 
 		if(data == null || data.entHistList == null) {
 			$("#entHistListBody").html("<tr><th class='h_35px' colspan='6'>조회 목록이 없습니다.</th></tr>");

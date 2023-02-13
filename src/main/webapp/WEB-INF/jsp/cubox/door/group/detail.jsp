@@ -54,6 +54,7 @@
             return;
         } else if (fnIsEmpty($("#gpSchedule").val())) {
             alert("출입문 스케쥴을 선택해주세요.");
+            $("#gpSchedule").focus();
             return;
         }
 
@@ -152,7 +153,7 @@
             },
             dataType: "json",
             success: function (result) {
-                console.log(result);
+                // console.log(result);
 
                 if(result.resultCode === "Y") {
                     alert("수정이 완료되었습니다.");

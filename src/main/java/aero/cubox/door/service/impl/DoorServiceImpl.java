@@ -56,6 +56,17 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Transactional
     public String addDoor(Map<String, Object> commandMap) {
 
+        String doorCd = commandMap.get("doorCd").toString();
+
+        if (doorCd.length() < 6) {
+            String preNum = "";
+            int num = 6 - doorCd.length();
+            for (int j = 0; j < num; j++) {
+                preNum += "0";
+            }
+            commandMap.put("doorCd", preNum + doorCd);
+        }
+
         doorDAO.insertDoor(commandMap);
 
         String newDoorId = "";
@@ -63,37 +74,38 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
         HashMap paramMap = new HashMap();
 
-        if(!StringUtil.isEmpty(commandMap.get("doorId").toString() ) ){
+        if (!StringUtil.isEmpty(commandMap.get("doorId").toString())) {
 
             //도어그룹의 스케줄에 출입문 id Update
-            if( !StringUtil.isEmpty((String) commandMap.get("doorGroupId"))){
+            if (!StringUtil.isEmpty((String) commandMap.get("doorGroupId"))) {
 
-                paramMap.put("doorId", newDoorId );
+                paramMap.put("doorId", newDoorId);
                 paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
 
                 doorGroupDAO.addDoorInDoorGroup(paramMap);
             }
 
             //단말기정보에 출입문 id Update
-            if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
+            if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
 
-                paramMap.put("doorId", newDoorId );
+                paramMap.put("doorId", newDoorId);
                 paramMap.put("doorCd", commandMap.get("doorCd"));
                 paramMap.put("id", commandMap.get("terminalIds"));
+
                 doorDAO.updateDoorIdForTerminal(paramMap);
             }
 
             //출입권한-출입문 table에 door_id Insert
-            if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+            if (!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
                 String authGrIds = "";
                 authGrIds = commandMap.get("authGrIds").toString();
 
-                if( authGrIds.length() > 0 ){
+                if (authGrIds.length() > 0) {
                     String[] authGrIdArr = authGrIds.split("/");
                     for (int i = 0; i < authGrIdArr.length; i++) {
                         paramMap.put("authId", authGrIdArr[i]);
-                        paramMap.put("doorId", newDoorId );
+                        paramMap.put("doorId", newDoorId);
 
                         doorDAO.insertDoorIdForAuthDoor(paramMap);
                     }
@@ -113,34 +125,36 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
         HashMap paramMap = new HashMap();
 
-        
         //출입문그룹의 스케줄에 출입문 id - Insert or Update
-        if( !StringUtil.isEmpty((String) commandMap.get("doorGroupId"))){
+        if (!StringUtil.isEmpty((String) commandMap.get("doorGroupId"))) {
 
-            paramMap.put("doorId", commandMap.get("id") );
+            paramMap.put("doorId", commandMap.get("id"));
             paramMap.put("doorgrpId", commandMap.get("doorGroupId"));
+
             doorGroupDAO.deleteDoorInDoorGroup(paramMap);
             doorGroupDAO.addDoorInDoorGroup(paramMap);
         }
 
         //단말기정보에 출입문 id Update
-        if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
-            paramMap.put("doorId", commandMap.get("id") );
+        if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
+
+            paramMap.put("doorId", commandMap.get("id"));
             paramMap.put("doorCd", commandMap.get("doorCd"));
             paramMap.put("id", commandMap.get("terminalIds"));
-            doorDAO.deleteDoorIdForTerminal(paramMap);
+
+            doorDAO.updateDoorIdForTerminalInit(paramMap);
             doorDAO.updateDoorIdForTerminal(paramMap);
         }
 
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+        if (!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
-            paramMap.put("doorId", commandMap.get("id") );
+            paramMap.put("doorId", commandMap.get("id"));
 
             String authGrIds = "";
             authGrIds = commandMap.get("authGrIds").toString();
 
-            if( authGrIds.length() > 0 ){
+            if( authGrIds.length() > 0 ) {
                 String[] authGrIdArr = authGrIds.split("/");
                 for (int i = 0; i < authGrIdArr.length; i++) {
                     paramMap.put("authId", authGrIdArr[i]);
@@ -164,23 +178,33 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         HashMap paramMap = new HashMap();
 
         //단말기정보에 출입문 id - Update
-        if( !StringUtil.isEmpty((String) commandMap.get("terminalIds"))){
-            paramMap.put("doorId", doorId );
-            paramMap.put("id", commandMap.get("terminalIds"));
-            doorDAO.updateDoorIdForTerminal(paramMap);
+        if (!StringUtil.isEmpty((String) commandMap.get("terminalIds"))) {
+
+            paramMap.put("doorId", doorId);
+
+            doorDAO.updateDoorIdForTerminalInit(paramMap);
+//            doorDAO.updateDoorIdForTerminal(paramMap);
         }
 
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) commandMap.get("authGrIds"))){
+        if (!StringUtil.isEmpty((String) commandMap.get("authGrIds"))) {
 
-            paramMap.put("doorId", doorId );
-            paramMap.put("authId", commandMap.get("authGrIds"));
+            paramMap.put("doorId", doorId);
+            String authGrIds = "";
+            authGrIds = commandMap.get("authGrIds").toString();
 
-            doorDAO.deleteDoorIdForAuthDoor(paramMap);
+            if (authGrIds.length() > 0) {
+                String[] authGrIdArr = authGrIds.split("/");
+                for (int i = 0; i < authGrIdArr.length; i++) {
+                    paramMap.put("authId", authGrIdArr[i]);
+                    doorDAO.deleteDoorIdForAuthDoor(paramMap);
+                }
+            }
         }
 
         doorDAO.deleteDoor(commandMap);
     }
+
 
     @Override
     public void deleteDoorAll() {
@@ -219,6 +243,19 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Override
     @Transactional
     public String addBuilding(HashMap paramMap) {
+
+        String buildingCd = paramMap.get("buildingCd").toString();
+
+        // buildingCd 2자리수 변형
+        if (buildingCd.length() < 2) {
+            String preNum = "";
+            int num = 2 - buildingCd.length();
+            for (int j = 0; j < num; j++) {
+                preNum += "0";
+            }
+            paramMap.put("buildingCd", preNum + buildingCd);
+        }
+
         doorDAO.insertBuilding(paramMap);
 
         String newBuildingId = "";
@@ -227,16 +264,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         paramMap.put("buildingId", newBuildingId);
 
         //출입권한-빌딩 table에 buildingId Insert
-        if( !StringUtil.isEmpty((String) paramMap.get("authGrIds")) ){
+        if (!StringUtil.isEmpty((String) paramMap.get("authGrIds"))) {
 
             String authGrIds = "";
             authGrIds = paramMap.get("authGrIds").toString();
 
-            if( authGrIds.length() > 0 ){
+            if (authGrIds.length() > 0) {
                 String[] authGrIdArr = authGrIds.split("/");
                 for (int i = 0; i < authGrIdArr.length; i++) {
                     paramMap.put("authId", authGrIdArr[i]);
-                    paramMap.put("buildingId", newBuildingId );
+                    paramMap.put("buildingId", newBuildingId);
 
                     doorDAO.insertDoorIdForAuthDoor(paramMap);
                 }
@@ -244,6 +281,16 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         }
         return newBuildingId;
     }
+
+    /**
+     * 빌딩코드 조회
+     * @param buildingId
+     * @return
+     */
+    public String getBuildingCd(String buildingId) {
+        return doorDAO.getBuildingCd(buildingId);
+    }
+
 
     /**
      * 출입문 수정
@@ -342,9 +389,21 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     public Map getFloorDetail(Map<String, Object> paramMap) {
         return doorDAO.getFloorDetail(paramMap);
     }
+
     @Override
     @Transactional
     public String addFloor(HashMap paramMap) {
+        String floorCd = paramMap.get("floorCd").toString();
+
+        // floorCd 2자리수 변형
+        if (floorCd.length() < 2) {
+            String preNum = "";
+            int num = 2 - floorCd.length();
+            for (int j = 0; j < num; j++) {
+                preNum += "0";
+            }
+            paramMap.put("floorCd", preNum + floorCd);
+        }
         doorDAO.insertFloor(paramMap);
 
         String newFloorId = "";
@@ -366,6 +425,15 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     @Override
     public void deleteFloorAll() {
         doorDAO.deleteFloorAll();
+    }
+
+    /**
+     * 층코드 조회
+     * @param floorId
+     * @return
+     */
+    public String getFloorCd(String floorId) {
+        return doorDAO.getFloorCd(floorId);
     }
 
     @Override
@@ -424,8 +492,8 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             // 행이 없으면 패스
             if (row == null) continue;
 
-            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");                                               // 빌딩 명
-            String buildingCd = getValue(row.getCell(5)).replaceAll("\n", "<br>");                                               // 빌딩 코드
+            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                               // 빌딩 명
+            String buildingCd = getValue(row.getCell(5)).replaceAll("\n", "<br>").replaceAll("\\s", "");                                               // 빌딩 코드
 
             if (!buildingMap.containsValue(String.format("%02d", Integer.parseInt(buildingCd)))) { // buildingCd가 buildingMap에 없는 경우
                 buildingMap.put(buildingNm, String.format("%02d", Integer.parseInt(buildingCd)));
@@ -450,11 +518,11 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             if (row == null) continue;
 
             HashMap<String, String> floorInfo = replaceFloorInfo
-                                (getValue(row.getCell(2)).replaceAll("\n", "<br>")
-                                , getValue(row.getCell(6)).replaceAll("\n", "<br>"));
+                                (getValue(row.getCell(2)).replaceAll("\n", "<br>").trim()
+                                , getValue(row.getCell(6)).replaceAll("\n", "<br>").replaceAll("\\s", ""));
 
-            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");                                            // 빌딩 명
-            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).replaceAll("\n", "<br>")));   // 빌딩 코드
+            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                            // 빌딩 명
+            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).replaceAll("\n", "<br>").replaceAll("\\s", "")));   // 빌딩 코드
             String buildingId = getBuildingId(buildingList, buildingNm, buildingCd);                                                                 // 빌딩 id
             String floorNm = floorInfo.get("floorNm");                                                                                               // 층 명
             String floorCd = floorInfo.get("floorCd");                                                                                               // 층 코드
@@ -483,16 +551,20 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             Row row = sheet.getRow(i);
 
             if (row == null) continue;
+            HashMap<String, String> floorInfo = replaceFloorInfo(
+                      getValue(row.getCell(2)).replaceAll("\n", "<br>").trim()
+                    , getValue(row.getCell(6)).replaceAll("\n", "<br>").replaceAll("\\s", ""));
 
-            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");                                              // 빌딩 명
-            String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>");                                                  // 출입문 명
-            String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>");                                             // 단말기 코드
-            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).replaceAll("\n", "<br>")));     // 빌딩 코드 (2자리로 넣어야함)
-            String floorCd = getValue(row.getCell(6)).replaceAll("\n", "<br>");                                                 // 층 코드 (2자리로 넣어야함)
-            String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>");                                                  // 출입문 코드
-            String authGrIds = getValue(row.getCell(8)).replaceAll("\n", "<br>");                                               // 빌딩 명
-            String buildingId = getBuildingId(buildingList, buildingNm, buildingCd);                                                                   // 빌딩 id
-            String floorId = getFloorId(floorList, floorCd, buildingCd);                                                                               // 층 id
+            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                   // 빌딩 명
+            String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>").trim();                                       // 출입문 명
+            String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>").replaceAll("\\s", "");    // 단말기 코드
+            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).
+                                replaceAll("\n", "<br>").replaceAll("\\s", "")));                                  // 빌딩 코드 (2자리로 넣어야함)
+            String floorCd = floorInfo.get("floorCd");                                                                                             // 층 코드 (2자리로 넣어야함)
+            String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>").replaceAll("\\s", "");        // 출입문 코드
+            String authGrIds = getValue(row.getCell(8)).replaceAll("\n", "<br>");                                           // 빌딩 명
+            String buildingId = getBuildingId(buildingList, buildingNm, buildingCd);                                                               // 빌딩 id
+            String floorId = getFloorId(floorList, floorCd, buildingCd);                                                                           // 층 id
 
             // doorCd 6자리수 변형
             if (doorCd.length() < 6) {
@@ -544,7 +616,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             floorInfo.put("floorNm", "PH층");
         }
         // floorCd 2자리수 변형
-        if (floorCd.length() == 1) {
+        if (floorCd.length() < 2) {
             floorInfo.put("floorCd", "0" + floorCd);
         }
         return floorInfo;

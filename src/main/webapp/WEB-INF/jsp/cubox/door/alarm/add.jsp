@@ -111,7 +111,7 @@
             dataType: "json",
             data: { nm: nm },
             success: function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.doorAlarmGroupNameVerificationCnt != 0) {
                     alert("이미 존재하는 출입문 알람그룹 명입니다.");
                     $("#alNm").val("");
@@ -151,7 +151,7 @@
             },
             dataType: "json",
             success: function(result) {
-                console.log(result);
+                // console.log(result);
                 if (result.resultCode === "Y" && result.newDoorId !== "") {
                     alert("저장되었습니다.");
                     window.location.href = '/door/alarm/detail/' + result.newDoorId;
@@ -192,13 +192,13 @@
             <input type="hidden" id="doorIds" value="">
             <tr>
                 <th>출입문 알람 그룹 명</th>
-                <td style="display: flex;">
+                <td>
                     <input type="text" id="alNm" name="alNm" maxlength="35" value=""
                            class="input_com w_600px" onkeyup="charCheck(this)" onkeydown="charCheck(this)">
-                    <div class="ml_10" style="display: none; position: relative;">
-                        <button type="button" class="btn_small color_basic" onclick="fnVerifyName()" style="width:60px; position:absolute; bottom:0; display:block;">중복확인</button>
+                    <div class="ml_10" style="display: none; position: relative; left: 600px;">
+                        <button type="button" class="btn_small color_basic" onclick="fnVerifyName()" style="width:60px; position:absolute; bottom:2px; display:block;">중복확인</button>
+                        <div id="verifyInfo" stat="false" style="display:none; position: relative; font-size: smaller; margin: auto 70px; color: blue;">* 사용가능한 출입문 알람그룹명</div>
                     </div>
-                    <div id="verifyInfo" stat="false" style="display:none; position: relative; font-size: smaller; margin: auto 70px; color: blue;">* 사용가능한 출입문 알람그룹명</div>
                 </td>
             </tr>
             <tr>

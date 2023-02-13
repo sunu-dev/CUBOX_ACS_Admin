@@ -40,7 +40,6 @@ public class DoorAlarmDAO extends EgovAbstractMapper {
         return selectOne(sqlNameSpace+"selectDoorAlarmGrpNameVerification", param);
     }
 
-
     public void addDoorInDoorAlarmGroup(Map<String, Object> paramMap) {
         insert(sqlNameSpace+"insertDoorInDoorAlarmGroup", paramMap);
     }
@@ -61,4 +60,15 @@ public class DoorAlarmDAO extends EgovAbstractMapper {
         return selectList(sqlNameSpace+"selectAlarmUseTypeList");
     }
 
+    public void updateDoorAlarmGrpId(Map<String, Object> paramMap) {
+        update(sqlNameSpace + "updateDoorAlarmGrpId", paramMap);
+    }
+
+    public void updateDoorAlarmGrpIdInit(Map<String, Object> paramMap) {
+        update(sqlNameSpace + "updateDoorAlarmGrpIdInit", paramMap);
+    }
+
+    public void addDoorAlarmGrpId(Map<String, Object> paraMap) {
+        update(sqlNameSpace + "addDoorAlarmGrpId", paraMap);
+    }
 }
