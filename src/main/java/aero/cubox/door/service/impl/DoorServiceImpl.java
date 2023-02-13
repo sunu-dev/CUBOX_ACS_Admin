@@ -492,8 +492,8 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             // 행이 없으면 패스
             if (row == null) continue;
 
-            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");                                               // 빌딩 명
-            String buildingCd = getValue(row.getCell(5)).replaceAll("\n", "<br>");                                               // 빌딩 코드
+            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                               // 빌딩 명
+            String buildingCd = getValue(row.getCell(5)).replaceAll("\n", "<br>").replaceAll("\\s", "");                                               // 빌딩 코드
 
             if (!buildingMap.containsValue(String.format("%02d", Integer.parseInt(buildingCd)))) { // buildingCd가 buildingMap에 없는 경우
                 buildingMap.put(buildingNm, String.format("%02d", Integer.parseInt(buildingCd)));
@@ -518,11 +518,11 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             if (row == null) continue;
 
             HashMap<String, String> floorInfo = replaceFloorInfo
-                                (getValue(row.getCell(2)).replaceAll("\n", "<br>")
-                                , getValue(row.getCell(6)).replaceAll("\n", "<br>"));
+                                (getValue(row.getCell(2)).replaceAll("\n", "<br>").trim()
+                                , getValue(row.getCell(6)).replaceAll("\n", "<br>").replaceAll("\\s", ""));
 
-            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");                                            // 빌딩 명
-            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).replaceAll("\n", "<br>")));   // 빌딩 코드
+            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                            // 빌딩 명
+            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).replaceAll("\n", "<br>").replaceAll("\\s", "")));   // 빌딩 코드
             String buildingId = getBuildingId(buildingList, buildingNm, buildingCd);                                                                 // 빌딩 id
             String floorNm = floorInfo.get("floorNm");                                                                                               // 층 명
             String floorCd = floorInfo.get("floorCd");                                                                                               // 층 코드
@@ -551,16 +551,20 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
             Row row = sheet.getRow(i);
 
             if (row == null) continue;
+            HashMap<String, String> floorInfo = replaceFloorInfo(
+                      getValue(row.getCell(2)).replaceAll("\n", "<br>").trim()
+                    , getValue(row.getCell(6)).replaceAll("\n", "<br>").replaceAll("\\s", ""));
 
-            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");                                              // 빌딩 명
-            String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>");                                                  // 출입문 명
-            String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>");                                             // 단말기 코드
-            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).replaceAll("\n", "<br>")));     // 빌딩 코드 (2자리로 넣어야함)
-            String floorCd = getValue(row.getCell(6)).replaceAll("\n", "<br>");                                                 // 층 코드 (2자리로 넣어야함)
-            String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>");                                                  // 출입문 코드
-            String authGrIds = getValue(row.getCell(8)).replaceAll("\n", "<br>");                                               // 빌딩 명
-            String buildingId = getBuildingId(buildingList, buildingNm, buildingCd);                                                                   // 빌딩 id
-            String floorId = getFloorId(floorList, floorCd, buildingCd);                                                                               // 층 id
+            String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                   // 빌딩 명
+            String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>").trim();                                       // 출입문 명
+            String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>").replaceAll("\\s", "");    // 단말기 코드
+            String buildingCd = String.format("%02d", Integer.parseInt(getValue(row.getCell(5)).
+                                replaceAll("\n", "<br>").replaceAll("\\s", "")));                                  // 빌딩 코드 (2자리로 넣어야함)
+            String floorCd = floorInfo.get("floorCd");                                                                                             // 층 코드 (2자리로 넣어야함)
+            String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>").replaceAll("\\s", "");        // 출입문 코드
+            String authGrIds = getValue(row.getCell(8)).replaceAll("\n", "<br>");                                           // 빌딩 명
+            String buildingId = getBuildingId(buildingList, buildingNm, buildingCd);                                                               // 빌딩 id
+            String floorId = getFloorId(floorList, floorCd, buildingCd);                                                                           // 층 id
 
             // doorCd 6자리수 변형
             if (doorCd.length() < 6) {

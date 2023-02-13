@@ -469,6 +469,11 @@
 
     // 출입문 속성 뿌려주기
     function getDoorDetail(id) {
+
+        if ($("#" + id).parent().hasClass("node")) {
+            $("#" + id).parent().toggleClass("node nodeSel");
+        }
+
         setType("door");
         initDetail();
         fnCancelEditMode();
@@ -502,7 +507,7 @@
                 $("#mgmtNum").val(dInfo.mgmt_num);                                      // 단말기 관리번호
                 $("#authGroupId").val(dInfo.auth_ids);                                  // 권한그룹 id
                 if (dInfo.auth_nms != undefined || dInfo.auth_nms != null) {            // 권한그룹 이름
-                    $("#authGroupNm").val(dInfo.auth_nms.split("/ ").join("\r\n"));
+                    $("#authGroupNm").val(dInfo.auth_nms.split("/").join("\r\n"));
                 }
                 path = [$(".doorDetailList #dBuilding option:checked").text(), $(".doorDetailList #dFloor option:checked").text(), dInfo.door_nm];
                 $("#doorPath").text(path.join(" > "));                                   // 경로
@@ -593,6 +598,8 @@
             }
 
             $(".nodeSel").toggleClass("nodeSel node");
+        } else {
+            alert("추가할 항목을 선택해주세요");
         }
     }
 
@@ -949,7 +956,7 @@
                     });
 
                     if ($("#authGroupId").val() !== "") {
-                        let authGroupId = $("#authGroupId").val().split("/ ");
+                        let authGroupId = $("#authGroupId").val().split("/");
                         $.each(authGroupId, function(j, authId) {
                             $('input[name=chkAuth]:input[value=' + authId + ']').prop("checked", true);
                             $("#add_auth").click();
