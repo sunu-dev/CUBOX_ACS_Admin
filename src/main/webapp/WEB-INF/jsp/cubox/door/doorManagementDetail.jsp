@@ -136,8 +136,12 @@
             } else if (authType === "door") {
                 options = $(".doorDetailList #dFloor option");
                 $(".doorDetailList .dFloor").css("display", "block");
-                pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#doorNm").val()];
-                $("#doorPath").text(pathArr.join(" > "));
+                if ($(".doorDetailList #dBuilding option:checked").val() != "") {
+                    pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#doorNm").val()];
+                    $("#doorPath").text(pathArr.join(" > "));
+                } else {
+                    $("#doorPath").text("");
+                }
             }
 
             options.each(function (i, option) {
