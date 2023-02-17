@@ -121,6 +121,35 @@
             $(".paddingForBtn").attr("colspan", "2").removeClass("paddingForBtn"); // 단말기코드, 권한그룹 길이 조정
         }
 
+        // 출입문 명 변경 시 path 변경
+        $(".doorDetailList #doorNm").on('keyup change blur', function() {
+            let pathArr = [];
+
+            if ($(".doorDetailList #dBuilding option:checked").val() != "") {
+                pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $(".doorDetailList #dFloor option:checked").text(), $("#doorNm").val()];
+                $("#doorPath").text(pathArr.join(" > "));
+            } else {
+                $("#doorPath").text($("#doorNm").val());
+            }
+        });
+
+        // 층 명 변경 시 path 변경
+        $(".floorDetailList #floorNm").on('keyup change blur', function() {
+            let pathArr = [];
+
+            if ($(".floorDetailList #dBuilding option:checked").val() != "") {
+                pathArr = [$(".floorDetailList #dBuilding option:checked").text(), $("#floorNm").val()];
+                $("#floorPath").text(pathArr.join(" > "));
+            } else {
+                $("#floorPath").text($("#floorNm").val());
+            }
+        });
+
+        // 빌딩 명 변경 시 path 변경
+        $(".buildingDetailList #buildingNm").on('keyup change blur', function() {
+            $("#buildingPath").text($("#buildingNm").val());
+        });
+
         // 빌딩 선택 시,
         $(".selectBuilding").on('click', function() {
             let val = $(this).val();
@@ -129,8 +158,13 @@
             let pathArr = [];
 
             if (authType === "floor") {
-                pathArr[0] = $(".floorDetailList #dBuilding option:checked").text();
-                $("#floorPath").text(pathArr.join(" > "));
+                // pathArr[0] = $(".floorDetailList #dBuilding option:checked").text();
+                if ($(".floorDetailList #dBuilding option:checked").val() != "") {
+                    pathArr = [$(".floorDetailList #dBuilding option:checked").text(), $("#floorNm").val()];
+                    $("#floorPath").text(pathArr.join(" > "));
+                } else {
+                    $("#floorPath").text("");
+                }
                 return;
 
             } else if (authType === "door") {
@@ -1520,13 +1554,13 @@
                     <tr>
                         <th>출입문 명</th>
                         <td colspan="2">
-                            <input type="text" id="doorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                            <input type="text" id="doorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                         </td>
                     </tr>
                     <tr>
                         <th>출입문 코드</th>
                         <td colspan="2">
-                            <input type="text" id="doorCd" name="doorEdit" maxlength="6" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                            <input type="text" id="doorCd" name="doorEdit" maxlength="6" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                         </td>
                     </tr>
                     <jsp:include page="/WEB-INF/jsp/cubox/common/buildingSelect.jsp" flush="false" />
@@ -1643,13 +1677,13 @@
                         <tr>
                             <th>빌딩 명</th>
                             <td colspan="2">
-                                <input type="text" id="buildingNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="buildingNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                         <tr>
                             <th>빌딩 코드</th>
                             <td colspan="2">
-                                <input type="text" id="buildingCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="buildingCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                     </tbody>
@@ -1665,13 +1699,13 @@
                         <tr>
                             <th>층 명</th>
                             <td colspan="2">
-                                <input type="text" id="floorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="floorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                         <tr>
                             <th>층 코드</th>
                             <td colspan="2">
-                                <input type="text" id="floorCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="floorCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                         <%-- 빌딩 선택 --%>
@@ -1714,7 +1748,7 @@
             <div class="search_in">
                 <div class="comm_search mr_10">
                     <input type="text" class="input_com" id="srchMachine" name="srchMachine" value="" placeholder="단말기코드 / 관리번호" maxlength="30"
-                           onkeyup="charCheck(this)" onkeydown="charCheck(this)"style="width: 629px;">
+                           onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" style="width: 629px;">
                 </div>
                 <div class="comm_search ml_5 mr_10">
                     <input type="checkbox" id="unregisteredDoor" name="unregisteredDoor" value="unregistered">
@@ -1770,7 +1804,7 @@
             <div class="search_in">
                 <div class="comm_search mr_10">
                     <input type="text" class="input_com" id="srchAuth" name="srchAuth" value="" placeholder="권한그룹명" maxlength="30"
-                           onkeyup="charCheck(this)" onkeydown="charCheck(this)" style="width: 765px;">
+                           onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" style="width: 765px;">
                 </div>
                 <div class="comm_search ml_40">
                     <div class="search_btn2" id="btnSearchAuthGroup"></div>
