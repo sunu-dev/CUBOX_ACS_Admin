@@ -300,7 +300,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
     public void updateBuilding(Map<String, Object> paramMap) {
         doorDAO.updateBuilding(paramMap);
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) paramMap.get("authGrIds"))){
+        if (!StringUtil.isEmpty((String) paramMap.get("authGrIds"))) {
 
             String authGrIds = "";
             authGrIds = paramMap.get("authGrIds").toString();

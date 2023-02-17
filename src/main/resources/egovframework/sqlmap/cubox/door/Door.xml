@@ -377,7 +377,10 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 
 	<update id="updateFloor" parameterType="HashMap">
 		UPDATE T_FLOOR
-		   SET building_cd = #{buildingCd}
+		   SET building_cd = (SELECT building_cd
+							  FROM
+								  T_BUILDING
+							  WHERE id = #{buildingId})
 			 , floor_cd = #{floorCd}
 		     , building_id = #{buildingId}
 		     , area_id = #{areaId}
