@@ -465,15 +465,15 @@ public class DoorController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jsonView");
 
-        String  buildingCd = StringUtil.nvl(commandMap.get("buildingCd"), "");;
-        String  buildingNm = StringUtil.nvl(commandMap.get("buildingNm"), "");;
+        String  buildingCd = StringUtil.nvl(commandMap.get("buildingCd"), "");
+        String  buildingNm = StringUtil.nvl(commandMap.get("buildingNm"), "");
         String workplaceId = StringUtil.nvl(commandMap.get("workplaceId"), "");
 
         HashMap param = new HashMap();
 
-        param.put( "buildingCd", buildingCd );        //빌딩 코드
-        param.put( "buildingNm", buildingNm );        //빌딩 명
-        param.put("workplaceId", workplaceId );//빌딩 ID
+        param.put("buildingCd", buildingCd);        //빌딩 코드
+        param.put("buildingNm", buildingNm);        //빌딩 명
+        param.put("workplaceId", workplaceId);//빌딩 ID
 
         String newBuildingId = "";
         try {
@@ -482,7 +482,7 @@ public class DoorController {
             e.getStackTrace();
             modelAndView.addObject("resultCode", "N");
         }
-        modelAndView.addObject("newBuildingId", newBuildingId );
+        modelAndView.addObject("newBuildingId", newBuildingId);
         modelAndView.addObject("resultCode", "Y");
 
         return modelAndView;
@@ -639,20 +639,21 @@ public class DoorController {
 
         HashMap param = new HashMap();
 
-        if (StringUtil.isEmpty(commandMap.get("buildingId").toString() ) ){
+        if (StringUtil.isEmpty(commandMap.get("buildingId").toString())) {
             modelAndView.addObject("resultCode", "N");
             modelAndView.addObject("resultMsg", "no id");
         } else {
             String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
-            String buildingNm = StringUtil.nvl(commandMap.get("buildingNm"), "");;
+            String buildingNm = StringUtil.nvl(commandMap.get("buildingNm"), "");
+            String buildingCd = StringUtil.nvl(commandMap.get("buildingCd"), "");
             String workplaceId = StringUtil.nvl(commandMap.get("workplaceId"), "");
-            String authGrIds = StringUtil.nvl(commandMap.get("authGrIds"), "");
-
+//            String authGrIds = StringUtil.nvl(commandMap.get("authGrIds"), "");
 
             param.put("buildingId", buildingId);
             param.put("buildingNm", buildingNm);
-            param.put("workplaceId", workplaceId);;
-            param.put("authGrIds", authGrIds);
+            param.put("buildingCd", buildingCd);
+            param.put("workplaceId", workplaceId);
+//            param.put("authGrIds", authGrIds);
         }
         try {
             doorService.updateBuilding(param);
@@ -785,11 +786,13 @@ public class DoorController {
         } else {
             String floorId = StringUtil.nvl(commandMap.get("floorId"), "");
             String floorNm = StringUtil.nvl(commandMap.get("floorNm"), "");
+            String floorCd = StringUtil.nvl(commandMap.get("floorCd"), "");
             String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
             //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
 
             param.put("floorId", floorId);
             param.put("floorNm", floorNm);
+            param.put("floorCd", floorCd);
             param.put("buildingId", buildingId);
             //param.put("areaId", areaId);
         }
