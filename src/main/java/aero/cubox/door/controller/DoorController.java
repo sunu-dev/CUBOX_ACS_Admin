@@ -896,6 +896,7 @@ public class DoorController {
         HashMap<String, Object> param = new HashMap<String, Object>();
 
         param.put("floorNm", commandMap.get("floorNm"));
+        param.put("buildingId", commandMap.get("buildingId"));
 
         int floorNameVerificationCnt = doorService.getFloorNameVerification(param);
 
