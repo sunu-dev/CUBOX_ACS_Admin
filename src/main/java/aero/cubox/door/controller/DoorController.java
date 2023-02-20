@@ -649,7 +649,7 @@ public class DoorController {
             String workplaceId = StringUtil.nvl(commandMap.get("workplaceId"), "");
 //            String authGrIds = StringUtil.nvl(commandMap.get("authGrIds"), "");
 
-            param.put("id", buildingId);
+            param.put("buildingId", buildingId);
             param.put("buildingNm", buildingNm);
             param.put("buildingCd", buildingCd);
             param.put("workplaceId", workplaceId);
@@ -790,7 +790,7 @@ public class DoorController {
             String buildingId = StringUtil.nvl(commandMap.get("buildingId"), "");
             //String areaId = StringUtil.nvl(commandMap.get("areaId"), "");
 
-            param.put("id", floorId);
+            param.put("floorId", floorId);
             param.put("floorNm", floorNm);
             param.put("floorCd", floorCd);
             param.put("buildingId", buildingId);

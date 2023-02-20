@@ -175,7 +175,7 @@
                     $("#doorPath").text(pathArr.join(" > "));
                 } else {
                     $(".doorDetailList #dFloor").prop("disabled", true);
-                    $("#doorPath").text("");
+                    $("#doorPath").text($("#doorNm").val());
                 }
             }
 
