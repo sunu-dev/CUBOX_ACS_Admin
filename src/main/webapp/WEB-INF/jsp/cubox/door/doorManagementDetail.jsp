@@ -363,6 +363,9 @@
             $(".doorDetailList [name=doorEditDisabled]").prop("disabled", true);
         }
 
+        if ($(".nodeSel").length != 0) {
+            $(".nodeSel").toggleClass("nodeSel node");
+        }
         $("option[name='selected']").prop("selected", true);
         $("#titleProp").text("속성");
     }
@@ -447,11 +450,6 @@
 
     // 빌딩 속성 뿌려주기
     function getBuildingDetail(id) {
-
-        if ($(".nodeSel").length != 0) {
-            $(".nodeSel").toggleClass("nodeSel node");
-        }
-
         setType("building");
         initDetail();
         fnCancelEditMode();
@@ -483,11 +481,6 @@
 
     // 층 속성 뿌려주기
     function getFloorDetail(id) {
-
-        if ($(".nodeSel").length != 0) {
-            $(".nodeSel").toggleClass("nodeSel node");
-        }
-
         setType("floor");
         initDetail();
         fnCancelEditMode();
@@ -519,16 +512,10 @@
                 }
             }
         });
-
     }
 
     // 출입문 속성 뿌려주기
     function getDoorDetail(id) {
-
-        if ($(".nodeSel").length != 0) {
-            $(".nodeSel").toggleClass("nodeSel node");
-        }
-
         setType("door");
         initDetail();
         fnCancelEditMode();
