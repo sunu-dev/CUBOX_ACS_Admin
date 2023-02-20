@@ -174,6 +174,7 @@
                     pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#doorNm").val()];
                     $("#doorPath").text(pathArr.join(" > "));
                 } else {
+                    $(".doorDetailList #dFloor").prop("disabled", true);
                     $("#doorPath").text("");
                 }
             }
