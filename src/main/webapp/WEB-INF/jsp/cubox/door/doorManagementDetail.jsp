@@ -509,8 +509,8 @@
     // 출입문 속성 뿌려주기
     function getDoorDetail(id) {
 
-        if ($("#" + id).parent().hasClass("node")) {
-            $("#" + id).parent().toggleClass("node nodeSel");
+        if ($(".nodeSel").length != 0) {
+            $(".nodeSel").toggleClass("nodeSel node");
         }
 
         setType("door");
@@ -551,6 +551,9 @@
                 path = [$(".doorDetailList #dBuilding option:checked").text(), $(".doorDetailList #dFloor option:checked").text(), dInfo.door_nm];
                 $("#doorPath").text(path.join(" > "));                                   // 경로
                 validValue();
+                if ($("#" + id).parent().hasClass("node")) {
+                    $("#" + id).parent().toggleClass("node nodeSel");
+                }
             }
         });
     }
