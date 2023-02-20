@@ -447,6 +447,11 @@
 
     // 빌딩 속성 뿌려주기
     function getBuildingDetail(id) {
+
+        if ($(".nodeSel").length != 0) {
+            $(".nodeSel").toggleClass("nodeSel node");
+        }
+
         setType("building");
         initDetail();
         fnCancelEditMode();
@@ -469,12 +474,20 @@
                 $("#buildingId").val(dInfo.id);                 // 빌딩 id
                 $("#buildingNm").val(dInfo.building_nm);        // 빌딩 명
                 $("#buildingCd").val(dInfo.building_cd);        // 빌딩 코드
+                if ($("#" + id).parent().hasClass("node")) {
+                    $("#" + id).parent().toggleClass("node nodeSel");
+                }
             }
         });
     }
 
     // 층 속성 뿌려주기
     function getFloorDetail(id) {
+
+        if ($(".nodeSel").length != 0) {
+            $(".nodeSel").toggleClass("nodeSel node");
+        }
+
         setType("floor");
         initDetail();
         fnCancelEditMode();
@@ -501,6 +514,9 @@
 
                 path = [$(".floorDetailList #dBuilding option:checked").text(), dInfo.floor_nm];
                 $("#floorPath").text(path.join(" > "));                        // 경로
+                if ($("#" + id).parent().hasClass("node")) {
+                    $("#" + id).parent().toggleClass("node nodeSel");
+                }
             }
         });
 
