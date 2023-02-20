@@ -775,7 +775,7 @@
             $(".floorDetailList #dBuilding").focus();
             return false;
         }
-        if ($("#floorId").val() == "" && !fnFloorNameValidAjax()) {
+        if ($("#floorId").val() == "" && !fnFloorNameValidAjax()) { //수정 시
             return false;
         }
         return true;
@@ -1351,7 +1351,6 @@
     /////////////////  빌딩 명 중복 확인 ajax - start  /////////////////////
 
     function fnBuildingNameValidAjax() {
-
         let rtnData;
         $.ajax({
             type: "GET",
@@ -1379,12 +1378,14 @@
     /////////////////  층 명 중복 확인 ajax - start  /////////////////////
 
     function fnFloorNameValidAjax() {
-
         let rtnData;
         $.ajax({
             type: "GET",
             url: "<c:url value='/door/floor/name/verification.do' />",
-            data: { floorNm: $(".floorDetailList #floorNm").val() },
+            data: {
+                  floorNm: $(".floorDetailList #floorNm").val()
+                , buildingId: $(".floorDetailList #dBuilding").val()
+            },
             async: false,
             dataType: "json",
             success: function (result) {
@@ -1409,7 +1410,6 @@
     /////////////////  출입문 명 중복 확인 ajax - start  /////////////////////
 
     function fnDoorNameValidAjax() {
-
         let rtnData;
         $.ajax({
             type: "GET",
