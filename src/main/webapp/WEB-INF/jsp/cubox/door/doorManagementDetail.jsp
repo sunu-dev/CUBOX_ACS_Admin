@@ -213,7 +213,6 @@
             } else {
                 pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#dFloor option:checked").text()];
             }
-            // console.log(pathArr);
             $("#doorPath").text(pathArr.join(" > "));
         });
 
@@ -466,7 +465,6 @@
             data: { buildingId: buildingId },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
                 let dInfo = result.doorInfo;
                 $("#buildingPath").text(dInfo.building_nm);     // 경로
                 $("#buildingId").val(dInfo.id);                 // 빌딩 id
@@ -497,7 +495,6 @@
             data: { floorId: floorId },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
                 let path = [];
                 let dInfo = result.doorInfo;
                 $("#floorId").val(dInfo.id);                                   // 층 id
@@ -532,8 +529,6 @@
             data: { doorId: doorId },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
-
                 let path = [];
                 let dInfo = result.doorInfo;
                 $("#doorId").val(dInfo.id);                                             // doorId
@@ -958,8 +953,6 @@
             async: false,
             url: "<c:url value='/door/list.do' />",
             success: function (result) {
-                // console.log(result);
-
                 // tree 생성
                 createTree(crudType, true, result, $("#treeDiv"));
 
@@ -999,7 +992,6 @@
                 // 값 초기화
                 $("#tbTerminal").empty();
                 $("#srchMachine").val("");
-                // console.log(result.terminalList);
 
                 if (result.terminalList.length > 0) {
                     $.each(result.terminalList, function (i, terminal) {
@@ -1049,7 +1041,6 @@
             },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
                 $("#tdAuthTotal").empty();
                 $("#tdAuthConf").empty();
                 $("#srchAuth").val("");
@@ -1096,8 +1087,6 @@
             authGrIds: $("#authGroupId").val()
         };
 
-        // console.log(data);
-
         if (doorId === "") { // 등록 시
             url = "<c:url value='/door/add.do' />";
             data = data;
@@ -1115,8 +1104,6 @@
             async: true,
             dataType: "json",
             success: function (returnData) {
-                // console.log(returnData);
-
                 if (returnData.resultCode === "Y" && returnData.newDoorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
@@ -1168,14 +1155,11 @@
             async: true,
             dataType: "json",
             success: function (returnData) {
-                // console.log(returnData);
-
                 if (returnData.resultCode == "Y" && returnData.newBuildingId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
 
                     if ("C" === mode ) {
-                        // console.log(returnData.newBuildingId);
                         getBuildingDetail(returnData.newBuildingId);
                     } else if ("U" === mode) {
                         getBuildingDetail(buildingId);
@@ -1223,8 +1207,6 @@
             async: true,
             dataType: "json",
             success: function (returnData) {
-                // console.log(returnData);
-
                 if (returnData.resultCode === "Y" && returnData.newFloorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
@@ -1266,8 +1248,6 @@
                 async: true,
                 dataType: "json",
                 success: function (returnData) {
-                    // console.log(returnData);
-
                     if (returnData.resultCode === "Y") {
                         // 삭제 성공
                         alert("해당 출입문 정보를 삭제하였습니다.");
@@ -1297,8 +1277,6 @@
                 async: true,
                 dataType: "json",
                 success: function (returnData) {
-                    // console.log(returnData);
-
                     if (returnData.resultCode === "Y") {
                         alert("해당 빌딩 정보를 삭제하였습니다.");
                         fnGetDoorListAjax();
@@ -1328,8 +1306,6 @@
                 async: true,
                 dataType: "json",
                 success: function (returnData) {
-                    // console.log(returnData);
-
                     if (returnData.resultCode == "Y") {
                         // 삭제 성공
                         alert("해당 층 정보를 삭제하였습니다.");
@@ -1389,8 +1365,6 @@
             async: false,
             dataType: "json",
             success: function (result) {
-                // console.log(result.floorNameVerificationCnt);
-
                 if (result.floorNameVerificationCnt != 0) {  // 사용 불가능
                     alert("이미 사용중인 층 명 입니다.");
                     $("#floorNm").val("");
@@ -1454,9 +1428,6 @@
             contentType: false,
             data: formData,
             success: function (result) {
-                // console.log(result.resultCode);
-                // console.log(result.message);
-
                 if (result.resultCode === "Y") {
                     alert("출입문 일괄등록이 완료되었습니다.");
                     fnGetDoorListAjax();
