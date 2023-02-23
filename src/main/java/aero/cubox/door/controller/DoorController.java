@@ -66,13 +66,18 @@ public class DoorController {
     // 오류코드 정의
     final String EB01 = "EB01";     // 빌딩 명 없음
     final String EB02 = "EB02";     // 빌딩 코드 없음
+    final String EB03 = "EB03";     // 빌딩 코드 자릿수 초과
     final String EF01 = "EF01";     // 층 명 없음
     final String EF02 = "EF02";     // 층 코드 없음
+    final String EF03 = "EF03";     // 층 코드 자릿수 초과
     final String ED01 = "ED01";     // 출입문 명 없음
     final String ED02 = "ED02";     // 출입문 코드 없음
-    final String ED03 = "ED03";     // 출입문 코드 중복
+    final String ED03 = "ED03";     // 출입문 코드 자릿수 초과
+    final String ED04 = "ED04";     // 출입문 코드 중복
 
-
+    final int buildingCdLength = 2; // 빌딩 코드 자릿수
+    final int floorCdLength = 2;    // 층 코드 자릿수
+    final int doorCdLength = 6;     // 출입문 코드 자릿수
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DoorController.class);
 
@@ -946,14 +951,13 @@ public class DoorController {
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
-
-                String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>");              // 빌딩 명
-                String buildingCd = getValue(row.getCell(5)).replaceAll("\n", "<br>");              // 빌딩 코드
-                String floorNm = getValue(row.getCell(2)).replaceAll("\n", "<br>");                 // 층 명
-                String floorCd = getValue(row.getCell(6)).replaceAll("\n", "<br>");                 // 층 코드
-                String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>");                  // 출입문 명
-                String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>");                  // 출입문 코드
-                String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>");              // 단말기 코드
+                String buildingNm = getValue(row.getCell(1)).replaceAll("\n", "<br>").trim();                                             // 빌딩 명
+                String buildingCd = getValue(row.getCell(5)).replaceAll("\n", "<br>").replaceAll("\\s", "");              // 빌딩 코드
+                String floorNm = getValue(row.getCell(2)).replaceAll("\n", "<br>").trim();                                                // 층 명
+                String floorCd = getValue(row.getCell(6)).replaceAll("\n", "<br>").replaceAll("\\s", "");                 // 층 코드
+                String doorNm = getValue(row.getCell(3)).replaceAll("\n", "<br>").trim();                                                 // 출입문 명
+                String doorCd = getValue(row.getCell(7)).replaceAll("\n", "<br>").replaceAll("\\s", "");                  // 출입문 코드
+                String terminalCd = getValue(row.getCell(4)).replaceAll("\n", "<br>").replaceAll("\\s", "");              // 단말기 코드
 
                 String errorMsg = validExcel(buildingNm, buildingCd, floorNm, floorCd, doorNm, doorCd, terminalCd);
                 if (!errorMsg.equals("")) {
@@ -975,7 +979,7 @@ public class DoorController {
                     modelAndView.addObject("message", "Fail - 출입문 갯수 불일치");
                 }
             } else if (doorCnt == -1) {
-                String errorMsg = "=== ErrorCode (" + ED03 + ") ===\n중복된 출입문 코드가 있습니다. \n관리자에게 문의하세요.";
+                String errorMsg = "=== ErrorCode (" + ED04 + ") ===\n중복된 출입문 코드가 있습니다. \n관리자에게 문의하세요.";
                 modelAndView.addObject("resultCode", "N");
                 modelAndView.addObject("message", errorMsg);
             } else {
@@ -985,7 +989,7 @@ public class DoorController {
 
         } catch (Exception e) {
             modelAndView.addObject("resultCode", "N");
-            modelAndView.addObject("message", e);
+            modelAndView.addObject("message", "Fail - 업로드 실패");
             e.printStackTrace();
         }
 
@@ -1000,14 +1004,20 @@ public class DoorController {
             errorMsg = "=== ErrorCode (" + EB01 + ") ===\n빌딩 이름이 누락되었습니다. \n관리자에게 문의하세요.";
         } else if (buildingCd.equals("") || buildingCd == null) {
             errorMsg = "=== ErrorCode (" + EB02 + ") ===\n빌딩 코드가 누락되었습니다. \n관리자에게 문의하세요.";
+        } else if (buildingCd.length() > buildingCdLength) {
+            errorMsg = "=== ErrorCode (" + EB03 + ") ===\n빌딩 코드의 최대 자릿수는 2자리 입니다. \n관리자에게 문의하세요.";
         } else if (floorNm.equals("") || floorNm == null) {
             errorMsg = "=== ErrorCode (" + EF01 + ") ===\n층 이름이 누락되었습니다. \n관리자에게 문의하세요.";
         } else if (floorCd.equals("") || floorCd == null) {
             errorMsg = "=== ErrorCode (" + EF02 + ") ===\n층 코드가 누락되었습니다. \n관리자에게 문의하세요.";
+        } else if (floorCd.length() > floorCdLength) {
+            errorMsg = "=== ErrorCode (" + EF03 + ") ===\n층 코드의 최대 자릿수는 2자리 입니다. \n관리자에게 문의하세요.";
         } else if (doorNm.equals("") || doorNm == null) {
             errorMsg = "=== ErrorCode (" + ED01 + ") ===\n출입문 이름이 누락되었습니다. \n관리자에게 문의하세요.";
         } else if (doorCd.equals("") || doorCd == null) {
             errorMsg = "=== ErrorCode (" + ED02 + ") ===\n출입문 코드가 누락되었습니다. \n관리자에게 문의하세요.";
+        } else if (doorCd.length() > doorCdLength) {
+            errorMsg = "=== ErrorCode (" + ED03 + ") ===\n출입문 코드의 최대 자릿수는 6자리 입니다. \n관리자에게 문의하세요.";
         } else if (terminalCd.equals("") || terminalCd == null) {
             System.out.println("터미널코드 누락");
         }
