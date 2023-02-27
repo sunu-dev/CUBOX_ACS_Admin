@@ -268,7 +268,9 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 			 , door_cd = NULL
 		     , use_yn = 'N'
 		     , updated_at = NOW(6)
-		 WHERE door_id = #{doorId};
+		<if test='@aero.cubox.util.CommonUtils@notEmpty(doorId)'>
+			WHERE door_id = #{doorId};
+		</if>
 	</update>
 
 
@@ -318,7 +320,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		     , workplace_id = #{workplaceId}
 		     , building_nm = #{buildingNm}
 		     , updated_at = NOW(6)
-		 WHERE id = #{id}
+		 WHERE id = #{buildingId}
 	</update>
 
 	<select id="selectBuildingCd" parameterType="String" resultType="String">
@@ -326,6 +328,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		  FROM T_BUILDING
 		 WHERE 1 = 1
 		   AND id = #{buildingId}
+		 LIMIT 1
 	</select>
 
 	<insert id="insertArea" parameterType="HashMap" useGeneratedKeys="true" keyProperty="areaId" keyColumn="id">
@@ -383,7 +386,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		     , area_id = #{areaId}
 		     , floor_nm= #{floorNm}
 			 , updated_at = NOW(6)
-		 WHERE id = #{id}
+		 WHERE id = #{floorId}
 	</update>
 
 	<insert id="insertBuildingIdForAuthBuilding" parameterType="HashMap">
@@ -483,6 +486,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		SELECT COUNT(TF.id) AS vCnt
 		FROM T_FLOOR TF
 		WHERE 1 = 1
+		  AND TF.building_id = ${buildingId}
 		  AND replace(TF.floor_nm, ' ', '') = replace(#{floorNm}, ' ', '')
 	</select>
 

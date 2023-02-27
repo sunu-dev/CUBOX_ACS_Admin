@@ -16,7 +16,6 @@
 
     String CRUD_TYPE  = resource.getString("Globals.door.crud.type");
 %>
-
 <style>
     .tb_write_p1 tbody th {
         text-align: center;
@@ -109,7 +108,7 @@
         modalPopup("excelUploadPopup", "엑셀 업로드", 450, 290);
 
         fnGetDoorListAjax();    //출입문 목록
-        fnAdd(); // 최초 등록 상태
+        fnAddInit(); // 최초 등록 상태
 
         // 읽기 모드일 때
         if (crudType === "R") {
@@ -121,6 +120,35 @@
             $(".paddingForBtn").attr("colspan", "2").removeClass("paddingForBtn"); // 단말기코드, 권한그룹 길이 조정
         }
 
+        // 출입문 명 변경 시 path 변경
+        $(".doorDetailList #doorNm").on('keyup change blur', function() {
+            let pathArr = [];
+
+            if ($(".doorDetailList #dBuilding option:checked").val() != "") {
+                pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $(".doorDetailList #dFloor option:checked").text(), $("#doorNm").val()];
+                $("#doorPath").text(pathArr.join(" > "));
+            } else {
+                $("#doorPath").text($("#doorNm").val());
+            }
+        });
+
+        // 층 명 변경 시 path 변경
+        $(".floorDetailList #floorNm").on('keyup change blur', function() {
+            let pathArr = [];
+
+            if ($(".floorDetailList #dBuilding option:checked").val() != "") {
+                pathArr = [$(".floorDetailList #dBuilding option:checked").text(), $("#floorNm").val()];
+                $("#floorPath").text(pathArr.join(" > "));
+            } else {
+                $("#floorPath").text($("#floorNm").val());
+            }
+        });
+
+        // 빌딩 명 변경 시 path 변경
+        $(".buildingDetailList #buildingNm").on('keyup change blur', function() {
+            $("#buildingPath").text($("#buildingNm").val());
+        });
+
         // 빌딩 선택 시,
         $(".selectBuilding").on('click', function() {
             let val = $(this).val();
@@ -129,15 +157,25 @@
             let pathArr = [];
 
             if (authType === "floor") {
-                pathArr[0] = $(".floorDetailList #dBuilding option:checked").text();
-                $("#floorPath").text(pathArr.join(" > "));
+                // pathArr[0] = $(".floorDetailList #dBuilding option:checked").text();
+                if ($(".floorDetailList #dBuilding option:checked").val() != "") {
+                    pathArr = [$(".floorDetailList #dBuilding option:checked").text(), $("#floorNm").val()];
+                    $("#floorPath").text(pathArr.join(" > "));
+                } else {
+                    $("#floorPath").text("");
+                }
                 return;
 
             } else if (authType === "door") {
                 options = $(".doorDetailList #dFloor option");
                 $(".doorDetailList .dFloor").css("display", "block");
-                pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#doorNm").val()];
-                $("#doorPath").text(pathArr.join(" > "));
+                if ($(".doorDetailList #dBuilding option:checked").val() != "") {
+                    pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#doorNm").val()];
+                    $("#doorPath").text(pathArr.join(" > "));
+                } else {
+                    $(".doorDetailList #dFloor").prop("disabled", true);
+                    $("#doorPath").text($("#doorNm").val());
+                }
             }
 
             options.each(function (i, option) {
@@ -174,7 +212,6 @@
             } else {
                 pathArr = [$(".doorDetailList #dBuilding option:checked").text(), $("#dFloor option:checked").text()];
             }
-            // console.log(pathArr);
             $("#doorPath").text(pathArr.join(" > "));
         });
 
@@ -324,6 +361,9 @@
             $(".doorDetailList [name=doorEditDisabled]").prop("disabled", true);
         }
 
+        if ($(".nodeSel").length != 0) {
+            $(".nodeSel").toggleClass("nodeSel node");
+        }
         $("option[name='selected']").prop("selected", true);
         $("#titleProp").text("속성");
     }
@@ -424,12 +464,14 @@
             data: { buildingId: buildingId },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
                 let dInfo = result.doorInfo;
                 $("#buildingPath").text(dInfo.building_nm);     // 경로
                 $("#buildingId").val(dInfo.id);                 // 빌딩 id
                 $("#buildingNm").val(dInfo.building_nm);        // 빌딩 명
                 $("#buildingCd").val(dInfo.building_cd);        // 빌딩 코드
+                if ($("#" + id).parent().hasClass("node")) {
+                    $("#" + id).parent().toggleClass("node nodeSel");
+                }
             }
         });
     }
@@ -452,7 +494,6 @@
             data: { floorId: floorId },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
                 let path = [];
                 let dInfo = result.doorInfo;
                 $("#floorId").val(dInfo.id);                                   // 층 id
@@ -462,18 +503,15 @@
 
                 path = [$(".floorDetailList #dBuilding option:checked").text(), dInfo.floor_nm];
                 $("#floorPath").text(path.join(" > "));                        // 경로
+                if ($("#" + id).parent().hasClass("node")) {
+                    $("#" + id).parent().toggleClass("node nodeSel");
+                }
             }
         });
-
     }
 
     // 출입문 속성 뿌려주기
     function getDoorDetail(id) {
-
-        if ($("#" + id).parent().hasClass("node")) {
-            $("#" + id).parent().toggleClass("node nodeSel");
-        }
-
         setType("door");
         initDetail();
         fnCancelEditMode();
@@ -490,8 +528,6 @@
             data: { doorId: doorId },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
-
                 let path = [];
                 let dInfo = result.doorInfo;
                 $("#doorId").val(dInfo.id);                                             // doorId
@@ -512,6 +548,9 @@
                 path = [$(".doorDetailList #dBuilding option:checked").text(), $(".doorDetailList #dFloor option:checked").text(), dInfo.door_nm];
                 $("#doorPath").text(path.join(" > "));                                   // 경로
                 validValue();
+                if ($("#" + id).parent().hasClass("node")) {
+                    $("#" + id).parent().toggleClass("node nodeSel");
+                }
             }
         });
     }
@@ -570,37 +609,88 @@
         }
     }
 
+    // 추가 유형
+    function fnSwitchAddMode() {
+        let val = $("input[name=createNode]:checked").val();
+        setType(val);
+        initDetail();
+        fnEditMode("C");
+
+        if (val === "building") {
+            setTitle("add", "빌딩(동)");
+            viewBuildingDetail();
+            $("#buildingNm").focus();
+
+        } else if (val === "floor") {
+            setTitle("add", "층");
+            viewFloorDetail();
+            $("#floorNm").focus();
+
+        } else if (val === "door") {
+            setTitle("add", "출입문");
+            viewDoorDetail();
+            $(".notShown").addClass("hidden"); // 스케쥴 그룹, 스케쥴 행 display hidden
+            $(".tb_write_02 tbody tr").addClass("h_65");
+            $("#doorNm").focus();
+        }
+
+        $(".nodeSel").toggleClass("nodeSel node");
+    }
+
     // 출입문 관리 - 추가
     function fnAdd() {
-        let val = $("input[name=createNode]:checked").val();
-
         if ($("input[name=createNode]:checked").length > 0) {
-            setType(val);
-            initDetail();
-            fnEditMode("C");
-
-            if (val === "building") {
-                setTitle("add", "빌딩(동)");
-                viewBuildingDetail();
-                $("#buildingNm").focus();
-
-            } else if (val === "floor") {
-                setTitle("add", "층");
-                viewFloorDetail();
-                $("#floorNm").focus();
-
-            } else if (val === "door") {
-                setTitle("add", "출입문");
-                viewDoorDetail();
-                $(".notShown").addClass("hidden"); // 스케쥴 그룹, 스케쥴 행 display hidden
-                $(".tb_write_02 tbody tr").addClass("h_65");
-                $("#doorNm").focus();
+            if (fnHaveUnsavedData()) {
+                if (confirm("저장되지 않은 정보가 있습니다. 계속 진행하시겠습니까?")) fnSwitchAddMode();
+                else return;
+            } else {
+                fnSwitchAddMode();
             }
+        } else { // 타입이 선택되어있지 않은 경우
+            alert("추가할 항목을 선택해주세요");
+        }
+    }
 
-            $(".nodeSel").toggleClass("nodeSel node");
+    // 최초 추가 모드
+    function fnAddInit() {
+        if ($("input[name=createNode]:checked").length > 0) {
+            fnSwitchAddMode();
         } else {
             alert("추가할 항목을 선택해주세요");
         }
+    }
+
+    // 저장되지 않은 변경된 항목 체크
+    function fnHaveUnsavedData() {
+        let val = $("#authType").val();
+        let result = false;
+
+        if (!$("[name=doorEdit]").prop("disabled")) { // 현재 detail모드 아닐 때
+            if (val === "building") {
+                if (!fnIsEmpty($(".buildingDetailList #buildingNm").val()) ||
+                    !fnIsEmpty($(".buildingDetailList #buildingCd").val())) {
+                    result = true;
+                }
+            } else if (val === "floor") {
+                if (!fnIsEmpty($(".floorDetailList #floorNm").val()) ||
+                    !fnIsEmpty($(".floorDetailList #floorCd").val()) ||
+                    !fnIsEmpty($(".floorDetailList #dBuilding").val())) {
+                    result = true;
+                }
+            } else if (val === "door") {
+                if (!fnIsEmpty($(".doorDetailList #doorNm").val()) ||
+                    !fnIsEmpty($(".doorDetailList #doorCd").val()) ||
+                    !fnIsEmpty($(".doorDetailList #dBuilding").val()) ||
+                    !fnIsEmpty($(".doorDetailList #dFloor").val()) ||
+                    !fnIsEmpty($(".doorDetailList #doorAlarmGroup").val()) ||
+                    !fnIsEmpty($(".doorDetailList #terminalCd").val()) ||
+                    !fnIsEmpty($(".doorDetailList #authGroupNm").val())) {
+                    result = true;
+                }
+            }
+        }
+
+        return result;
     }
 
     // 출입문 관리 - 취소
@@ -651,6 +741,11 @@
             $("#buildingNm").focus();
             return false;
         }
+        if (fnIsEmpty($("#buildingCd").val())) {
+            alert("빌딩코드를 입력하세요.");
+            $("#buildingCd").focus();
+            return false;
+        }
         if ($("#buildingId").val() == "" && !fnBuildingNameValidAjax()) {
             return false;
         }
@@ -664,12 +759,17 @@
             $("#floorNm").focus();
             return false;
         }
+        if (fnIsEmpty($("#floorCd").val())) {
+            alert("층 코드를 입력하세요.");
+            $("#floorCd").focus();
+            return false;
+        }
         if (fnIsEmpty($(".floorDetailList #dBuilding").val())) {
             alert("빌딩(동)을 선택해주세요.");
             $(".floorDetailList #dBuilding").focus();
             return false;
         }
-        if ($("#floorId").val() == "" && !fnFloorNameValidAjax()) {
+        if ($("#floorId").val() == "" && !fnFloorNameValidAjax()) { //수정 시
             return false;
         }
         return true;
@@ -852,8 +952,6 @@
             async: false,
             url: "<c:url value='/door/list.do' />",
             success: function (result) {
-                // console.log(result);
-
                 // tree 생성
                 createTree(crudType, true, result, $("#treeDiv"));
 
@@ -893,7 +991,6 @@
                 // 값 초기화
                 $("#tbTerminal").empty();
                 $("#srchMachine").val("");
-                // console.log(result.terminalList);
 
                 if (result.terminalList.length > 0) {
                     $.each(result.terminalList, function (i, terminal) {
@@ -943,7 +1040,6 @@
             },
             dataType: "json",
             success: function (result) {
-                // console.log(result);
                 $("#tdAuthTotal").empty();
                 $("#tdAuthConf").empty();
                 $("#srchAuth").val("");
@@ -990,8 +1086,6 @@
             authGrIds: $("#authGroupId").val()
         };
 
-        // console.log(data);
-
         if (doorId === "") { // 등록 시
             url = "<c:url value='/door/add.do' />";
             data = data;
@@ -1006,10 +1100,9 @@
             type: "POST",
             url: url,
             data: data,
+            async: true,
             dataType: "json",
             success: function (returnData) {
-                // console.log(returnData);
-
                 if (returnData.resultCode === "Y" && returnData.newDoorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
@@ -1058,16 +1151,14 @@
             type: "POST",
             url: url,
             data: data,
+            async: true,
             dataType: "json",
             success: function (returnData) {
-                // console.log(returnData);
-
                 if (returnData.resultCode == "Y" && returnData.newBuildingId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
 
                     if ("C" === mode ) {
-                        // console.log(returnData.newBuildingId);
                         getBuildingDetail(returnData.newBuildingId);
                     } else if ("U" === mode) {
                         getBuildingDetail(buildingId);
@@ -1112,10 +1203,9 @@
             type: "POST",
             url: url,
             data: data,
+            async: true,
             dataType: "json",
             success: function (returnData) {
-                // console.log(returnData);
-
                 if (returnData.resultCode === "Y" && returnData.newFloorId !== "") {
                     alert("저장되었습니다.");
                     fnGetDoorListAjax();
@@ -1144,7 +1234,6 @@
 
         let data = {
             id: $("#doorId").val(),
-            doorCd : $("#doorCd").val(),
             terminalIds: $("#terminalId").val(),
             authGrIds: $("#authGroupId").val()
         }
@@ -1154,10 +1243,9 @@
                 type: "POST",
                 url: "<c:url value='/door/delete.do' />",
                 data: data,
+                async: true,
                 dataType: "json",
                 success: function (returnData) {
-                    // console.log(returnData);
-
                     if (returnData.resultCode === "Y") {
                         // 삭제 성공
                         alert("해당 출입문 정보를 삭제하였습니다.");
@@ -1184,10 +1272,9 @@
                 type: "POST",
                 url: "<c:url value='/door/building/delete.do' />",
                 data: { id: $("#buildingId").val() },
+                async: true,
                 dataType: "json",
                 success: function (returnData) {
-                    // console.log(returnData);
-
                     if (returnData.resultCode === "Y") {
                         alert("해당 빌딩 정보를 삭제하였습니다.");
                         fnGetDoorListAjax();
@@ -1214,10 +1301,9 @@
                 type: "POST",
                 url: "<c:url value='/door/floor/delete.do' />",
                 data: { id: $("#floorId").val() },
+                async: true,
                 dataType: "json",
                 success: function (returnData) {
-                    // console.log(returnData);
-
                     if (returnData.resultCode == "Y") {
                         // 삭제 성공
                         alert("해당 층 정보를 삭제하였습니다.");
@@ -1239,7 +1325,6 @@
     /////////////////  빌딩 명 중복 확인 ajax - start  /////////////////////
 
     function fnBuildingNameValidAjax() {
-
         let rtnData;
         $.ajax({
             type: "GET",
@@ -1267,17 +1352,17 @@
     /////////////////  층 명 중복 확인 ajax - start  /////////////////////
 
     function fnFloorNameValidAjax() {
-
         let rtnData;
         $.ajax({
             type: "GET",
             url: "<c:url value='/door/floor/name/verification.do' />",
-            data: { floorNm: $(".floorDetailList #floorNm").val() },
+            data: {
+                  floorNm: $(".floorDetailList #floorNm").val()
+                , buildingId: $(".floorDetailList #dBuilding").val()
+            },
             async: false,
             dataType: "json",
             success: function (result) {
-                // console.log(result.floorNameVerificationCnt);
-
                 if (result.floorNameVerificationCnt != 0) {  // 사용 불가능
                     alert("이미 사용중인 층 명 입니다.");
                     $("#floorNm").val("");
@@ -1297,7 +1382,6 @@
     /////////////////  출입문 명 중복 확인 ajax - start  /////////////////////
 
     function fnDoorNameValidAjax() {
-
         let rtnData;
         $.ajax({
             type: "GET",
@@ -1342,9 +1426,6 @@
             contentType: false,
             data: formData,
             success: function (result) {
-                // console.log(result.resultCode);
-                // console.log(result.message);
-
                 if (result.resultCode === "Y") {
                     alert("출입문 일괄등록이 완료되었습니다.");
                     fnGetDoorListAjax();
@@ -1449,13 +1530,13 @@
                     <tr>
                         <th>출입문 명</th>
                         <td colspan="2">
-                            <input type="text" id="doorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                            <input type="text" id="doorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                         </td>
                     </tr>
                     <tr>
                         <th>출입문 코드</th>
                         <td colspan="2">
-                            <input type="text" id="doorCd" name="doorEdit" maxlength="6" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                            <input type="text" id="doorCd" name="doorEdit" maxlength="6" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                         </td>
                     </tr>
                     <jsp:include page="/WEB-INF/jsp/cubox/common/buildingSelect.jsp" flush="false" />
@@ -1572,13 +1653,13 @@
                         <tr>
                             <th>빌딩 명</th>
                             <td colspan="2">
-                                <input type="text" id="buildingNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="buildingNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                         <tr>
                             <th>빌딩 코드</th>
                             <td colspan="2">
-                                <input type="text" id="buildingCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="buildingCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                     </tbody>
@@ -1594,13 +1675,13 @@
                         <tr>
                             <th>층 명</th>
                             <td colspan="2">
-                                <input type="text" id="floorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="floorNm" name="doorEdit" maxlength="30" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                         <tr>
                             <th>층 코드</th>
                             <td colspan="2">
-                                <input type="text" id="floorCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" disabled/>
+                                <input type="text" id="floorCd" name="doorEdit" maxlength="2" class="input_com" value="" onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" disabled/>
                             </td>
                         </tr>
                         <%-- 빌딩 선택 --%>
@@ -1642,8 +1723,8 @@
         <div class="search_box mb_20">
             <div class="search_in">
                 <div class="comm_search mr_10">
-                    <input type="text" class="input_com" id="srchMachine" name="srchMachine" value="" placeholder="단말기명 / 관리번호 / 단말기 코드" maxlength="30"
-                           onkeyup="charCheck(this)" onkeydown="charCheck(this)"style="width: 629px;">
+                    <input type="text" class="input_com" id="srchMachine" name="srchMachine" value="" placeholder="단말기코드 / 관리번호" maxlength="30"
+                           onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" style="width: 629px;">
                 </div>
                 <div class="comm_search ml_5 mr_10">
                     <input type="checkbox" id="unregisteredDoor" name="unregisteredDoor" value="unregistered">
@@ -1699,7 +1780,7 @@
             <div class="search_in">
                 <div class="comm_search mr_10">
                     <input type="text" class="input_com" id="srchAuth" name="srchAuth" value="" placeholder="권한그룹명" maxlength="30"
-                           onkeyup="charCheck(this)" onkeydown="charCheck(this)" style="width: 765px;">
+                           onkeyup="charCheck(this)" onkeydown="charCheck(this)" autocomplete="off" style="width: 765px;">
                 </div>
                 <div class="comm_search ml_40">
                     <div class="search_btn2" id="btnSearchAuthGroup"></div>

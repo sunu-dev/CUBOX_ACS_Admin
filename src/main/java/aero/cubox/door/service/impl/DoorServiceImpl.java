@@ -298,14 +298,15 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
      */
     @Override
     public void updateBuilding(Map<String, Object> paramMap) {
-        doorDAO.updateBuilding(paramMap);
+      doorDAO.updateBuilding(paramMap);
+
         //출입권한-출입문 table에 door_id Delete-Insert
-        if( !StringUtil.isEmpty((String) paramMap.get("authGrIds"))){
+        if (!StringUtil.isEmpty((String) paramMap.get("authGrIds"))) {
 
             String authGrIds = "";
             authGrIds = paramMap.get("authGrIds").toString();
 
-            if( authGrIds.length() > 0 ){
+            if (authGrIds.length() > 0) {
                 String[] authGrIdArr = authGrIds.split("/");
                 for (int i = 0; i < authGrIdArr.length; i++) {
                     paramMap.put("authId", authGrIdArr[i]);
@@ -414,6 +415,8 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
 
     @Override
     public void updateFloor(Map<String, Object> paramMap) {
+        String buildingCd = doorDAO.getBuildingCd((String) paramMap.get("buildingId"));
+        paramMap.put("buildingCd", buildingCd);
         doorDAO.updateFloor(paramMap);
     }
 
@@ -478,6 +481,9 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         doorDAO.deleteFloorAll();
         doorDAO.deleteAreaAll();
         doorDAO.deleteBuildingAll();
+
+        HashMap empParamMap = new HashMap();
+        doorDAO.updateDoorIdForTerminalInit(empParamMap);
 
         int cnt = 0;
         HashMap paramMap;
@@ -576,7 +582,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
                 doorCd = preNum + doorCd;
             }
 
-            // TODO: terminalCd로 terminalId 가져오기
+            // terminalId 가져오기
             String terminalId = doorDAO.getTerminalId(terminalCd);
 
             // TODO: authGroupIds 가공
