@@ -482,6 +482,9 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
         doorDAO.deleteAreaAll();
         doorDAO.deleteBuildingAll();
 
+        HashMap empParamMap = new HashMap();
+        doorDAO.updateDoorIdForTerminalInit(empParamMap);
+
         int cnt = 0;
         HashMap paramMap;
         HashMap buildingMap = new HashMap();
@@ -579,7 +582,7 @@ public class DoorServiceImpl extends EgovAbstractServiceImpl implements DoorServ
                 doorCd = preNum + doorCd;
             }
 
-            // TODO: terminalCd로 terminalId 가져오기
+            // terminalId 가져오기
             String terminalId = doorDAO.getTerminalId(terminalCd);
 
             // TODO: authGroupIds 가공

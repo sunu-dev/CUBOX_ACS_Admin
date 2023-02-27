@@ -268,7 +268,9 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 			 , door_cd = NULL
 		     , use_yn = 'N'
 		     , updated_at = NOW(6)
-		 WHERE door_id = #{doorId};
+		<if test='@aero.cubox.util.CommonUtils@notEmpty(doorId)'>
+			WHERE door_id = #{doorId};
+		</if>
 	</update>
 
 
@@ -484,6 +486,7 @@ LEFT OUTER JOIN	T_DOOR TD ON TM.door_id = TD.id
 		SELECT COUNT(TF.id) AS vCnt
 		FROM T_FLOOR TF
 		WHERE 1 = 1
+		  AND TF.building_id = ${buildingId}
 		  AND replace(TF.floor_nm, ' ', '') = replace(#{floorNm}, ' ', '')
 	</select>
 
