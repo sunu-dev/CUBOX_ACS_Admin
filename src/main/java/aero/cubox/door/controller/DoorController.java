@@ -478,7 +478,7 @@ public class DoorController {
 
         param.put("buildingCd", buildingCd);        //빌딩 코드
         param.put("buildingNm", buildingNm);        //빌딩 명
-        param.put("workplaceId", workplaceId);//빌딩 ID
+        param.put("workplaceId", workplaceId);
 
         String newBuildingId = "";
         try {

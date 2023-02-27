@@ -16,7 +16,6 @@
 
     String CRUD_TYPE  = resource.getString("Globals.door.crud.type");
 %>
-
 <style>
     .tb_write_p1 tbody th {
         text-align: center;
@@ -1235,7 +1234,6 @@
 
         let data = {
             id: $("#doorId").val(),
-            doorCd : $("#doorCd").val(),
             terminalIds: $("#terminalId").val(),
             authGrIds: $("#authGroupId").val()
         }
