@@ -117,7 +117,7 @@
             data : {
                 nm: doorSchNm
                 ,useYn: useYn
-                ,doorGroupIds: doorIds
+                // ,doorGroupIds: doorIds
                 // ,doorIds: doorIds
             },
             dataType : "json",
