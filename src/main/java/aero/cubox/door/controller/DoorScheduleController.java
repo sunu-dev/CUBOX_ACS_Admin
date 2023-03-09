@@ -632,9 +632,9 @@ public class DoorScheduleController {
         int rowNum = 0;
 
         //// Header ////
-        final String[] colNames = {"번호", "출입문 스케쥴명", "사용", "등록일자", "수정일자"};
+        final String[] colNames = {"번호", "출입문 스케쥴명", "사용여부", "등록일자", "수정일자"};
         // Header size
-        final int[] colWidths = {1500, 6000, 3000, 3500, 3500};
+        final int[] colWidths = {1500, 8000, 3000, 3500, 3500};
         // Header font
         Font fontHeader = wb.createFont();
         fontHeader.setBoldweight(Font.BOLDWEIGHT_BOLD);

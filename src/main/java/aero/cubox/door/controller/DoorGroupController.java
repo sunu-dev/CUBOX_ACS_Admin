@@ -326,7 +326,7 @@ public class DoorGroupController {
         //// Header ////
         final String[] colNames = {"번호", "출입문 그룹명", "출입문 스케쥴명", "출입문 수", "등록일자", "수정일자"};
         // Header size
-        final int[] colWidths = {1500, 6000, 5000, 2500, 3500, 3500};
+        final int[] colWidths = {1500, 8000, 6000, 2500, 3500, 3500};
         // Header font
         Font fontHeader = wb.createFont();
         fontHeader.setBoldweight(Font.BOLDWEIGHT_BOLD);
