@@ -362,8 +362,12 @@ public class DoorGroupController {
                 row.createCell(2).setCellValue(schDoorGroupList.get(i).get("door_sch_nm").toString());
             }
             row.createCell(3).setCellValue(Integer.parseInt(schDoorGroupList.get(i).get("door_cnt").toString()));
-            row.createCell(4).setCellValue(schDoorGroupList.get(i).get("created_at").toString());
-            row.createCell(5).setCellValue(schDoorGroupList.get(i).get("updated_at").toString());
+            if (schDoorGroupList.get(i).containsKey("created_at")) {
+                row.createCell(4).setCellValue(schDoorGroupList.get(i).get("created_at").toString());
+            }
+            if (schDoorGroupList.get(i).containsKey("updated_at")) {
+                row.createCell(5).setCellValue(schDoorGroupList.get(i).get("updated_at").toString());
+            }
         }
 
         // Date
