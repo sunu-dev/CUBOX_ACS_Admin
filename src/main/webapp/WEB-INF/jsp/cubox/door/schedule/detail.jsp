@@ -752,7 +752,7 @@
 
         let doorSchNm = $("#schNm").val();
         let useYn = $("#schUseYn").val();
-        let doorGroupIds = $("#doorIds").val();
+        // let doorGroupIds = $("#doorIds").val();
         let url = "<c:url value='/door/schedule/modify/${doorScheduleDetail.id}'/>";
 
         $.ajax({
@@ -760,7 +760,7 @@
             data : {
                   doorSchNm: doorSchNm
                 , useYn: useYn
-                , doorGroupIds: doorGroupIds
+                // , doorGroupIds: doorGroupIds
             },
             dataType : "json",
             url : url,
