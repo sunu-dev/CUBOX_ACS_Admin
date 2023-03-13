@@ -371,7 +371,7 @@ public class DoorGroupController {
         }
 
         // Date
-        SimpleDateFormat fmt = new SimpleDateFormat("yyMMdd-HH_mm_ss");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyMMdd-HHmmss");
         Date date = new Date();
 
         // File name
