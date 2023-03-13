@@ -74,7 +74,7 @@
     }
 
 
-    /////////////////  출입문 알람 그룹 명 중복체크 ajax - start  /////////////////////
+    /////////////////  출입문 스케쥴 명 중복체크 ajax - start  /////////////////////
 
     function fnVerifyName() {
         let nm = $("#schNm").val();
@@ -101,7 +101,7 @@
         });
     }
 
-    /////////////////  출입문 알람 그룹 명 중복체크 ajax - start  /////////////////////
+    /////////////////  출입문 스케쥴 명 중복체크 ajax - start  /////////////////////
 
 
     /////////////////  출입문 스케쥴 저장 ajax - start  /////////////////////
@@ -117,7 +117,7 @@
             data : {
                 nm: doorSchNm
                 ,useYn: useYn
-                ,doorGroupIds: doorIds
+                // ,doorGroupIds: doorIds
                 // ,doorIds: doorIds
             },
             dataType : "json",

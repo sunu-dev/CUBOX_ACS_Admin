@@ -313,9 +313,9 @@ public class DoorAlarmController {
         int rowNum = 0;
 
         //// Header ////
-        final String[] colNames = {"번호", "출입문 알람 그룹명", "유형", "시간", "출입문 수", "사용", "등록일자", "수정일자"};
+        final String[] colNames = {"번호", "출입문 알람 그룹명", "알람유형", "시간(초)", "출입문 수", "사용", "등록일자", "수정일자"};
         // Header size
-        final int[] colWidths = {1500, 5000, 2000, 2000, 3000, 2000, 3500, 3500};
+        final int[] colWidths = {1500, 8000, 3500, 2000, 2000, 3500, 3500, 3500};
         // Header font
         Font fontHeader = wb.createFont();
         fontHeader.setBoldweight(Font.BOLDWEIGHT_BOLD);
@@ -344,27 +344,43 @@ public class DoorAlarmController {
 
         //// Body ////
         for (int i = 0; i < doorAlarmGroupList.size(); i++) {
+
             row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(i + 1);
             row.createCell(1).setCellValue(doorAlarmGroupList.get(i).get("nm").toString());
-            if (doorAlarmGroupList.get(i).get("env_yn").toString().equals("Y")) {
-                row.createCell(2).setCellValue("사용");
-            } else {
-                row.createCell(2).setCellValue("미사용");
-            }
+            row.createCell(2).setCellValue(doorAlarmGroupList.get(i).get("door_alarm_nm").toString());
             row.createCell(3).setCellValue(Integer.parseInt(doorAlarmGroupList.get(i).get("time").toString()));
             row.createCell(4).setCellValue(Integer.parseInt(doorAlarmGroupList.get(i).get("door_cnt").toString()));
-            if (doorAlarmGroupList.get(i).get("delete_yn").toString().equals("Y")) {
-                row.createCell(5).setCellValue("사용");
-            } else {
-                row.createCell(5).setCellValue("미사용");
-            }
+            row.createCell(5).setCellValue(doorAlarmGroupList.get(i).get("alarm_use_nm").toString());
             if (doorAlarmGroupList.get(i).containsKey("created_at")) {
                 row.createCell(6).setCellValue(doorAlarmGroupList.get(i).get("created_at").toString());
             }
             if (doorAlarmGroupList.get(i).containsKey("updated_at")) {
                 row.createCell(7).setCellValue(doorAlarmGroupList.get(i).get("updated_at").toString());
             }
+//            row = sheet.createRow(rowNum++);
+//            row.createCell(0).setCellValue(i + 1);
+//            row.createCell(1).setCellValue(doorAlarmGroupList.get(i).get("nm").toString());
+//            if (doorAlarmGroupList.get(i).get("env_yn").toString().equals("Y")) {
+//                row.createCell(2).setCellValue("사용");
+//            } else {
+//                row.createCell(2).setCellValue("미사용");
+//            }
+//            row.createCell(3).setCellValue(Integer.parseInt(doorAlarmGroupList.get(i).get("time").toString()));
+//            row.createCell(4).setCellValue(Integer.parseInt(doorAlarmGroupList.get(i).get("door_cnt").toString()));
+//            if (doorAlarmGroupList.get(i).get("delete_yn").toString().equals("Y")) {
+//                row.createCell(5).setCellValue("사용");
+//            } else {
+//                row.createCell(5).setCellValue("미사용");
+//            }
+//            if (doorAlarmGroupList.get(i).containsKey("created_at")) {
+//                row.createCell(6).setCellValue(doorAlarmGroupList.get(i).get("created_at").toString());
+//            }
+//            if (doorAlarmGroupList.get(i).containsKey("updated_at")) {
+//                row.createCell(7).setCellValue(doorAlarmGroupList.get(i).get("updated_at").toString());
+//            }
+
+
         }
 
         // Date
