@@ -592,6 +592,13 @@
         // type - "C" : 추가모드 / "U" : 수정모드
         let authType = $("#authType").val();
 
+        if (type === "U") {
+            if (confirm("수정하시겠습니까?")) {
+                $(".doorDetailList [name=doorEditSelect]").prop("disabled", false);
+            } else {
+                return;
+            }
+        }
         // [수정, 삭제] --> [확인, 취소] 버튼으로 변환
         $("#btnEdit").css("display", "none");
         $("#btnDelete").css("display", "none");
@@ -602,10 +609,7 @@
         if (authType === "floor") {
             // $("#btnFloorAuthPick").removeClass("disabled");
         } else if (authType === "door") {
-           $("#btnTerminalPick, #btnDoorAuthPick").removeClass("disabled");
-        }
-        if (type === "U") {
-            $(".doorDetailList [name=doorEditSelect]").prop("disabled", false);
+            $("#btnTerminalPick, #btnDoorAuthPick").removeClass("disabled");
         }
     }
 
@@ -689,7 +693,6 @@
                 }
             }
         }
-
         return result;
     }
 
